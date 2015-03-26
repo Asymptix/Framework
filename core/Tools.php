@@ -92,6 +92,16 @@ class Tools {
     }
 
     /**
+     * Returns TRUE if filter exists or FALSE otherwise.
+     *
+     * @param string $filterName Name of the filter field.
+     * @return boolean
+     */
+    public static function isFilterExists($filterName) {
+        return isset($_FILTER[$filterName]);
+    }
+
+    /**
      * Returns global filter value if exists.
      *
      * @global array $_FILTER Global filters array.
