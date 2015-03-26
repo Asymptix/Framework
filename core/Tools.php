@@ -13,10 +13,13 @@ class Tools {
     /**
      * Check if form was submitted.
      *
+     * @param string $submitFieldName Name of the submit field (button).
+     *           Default: "submitBtn"
+     *
      * @return boolean
      */
-    public static function isFormSubmitted() {
-        return (self::getFieldValue("submitBtn") !== null);
+    public static function isFormSubmitted($submitFieldName = "submitBtn") {
+        return (self::getFieldValue($submitFieldName) !== null);
     }
 
     /**
