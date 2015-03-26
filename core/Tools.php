@@ -159,7 +159,7 @@ class Tools {
     }
 
     /**
-     * Cast value if the existing field to specified type.
+     * Casts value if the existing field to specified type.
      *
      * @global array<mixed> $_FIELDS Global fields list.
      * @param string $fieldName Name of the field.
@@ -267,22 +267,35 @@ class Tools {
         return (is_double($input));
     }
 
+    /**
+     * Verify if some string is string representation of some double value.
+     * Decimal point may be `.` and `,`.
+     *
+     * @param string $input
+     * @return boolean
+     */
     public static function isDoubleString($input) {
-        $doubleValue = (double) $input;
-        $stringValue = str_replace(",", ".", (string) $input);
+        $doubleValue = (double)$input;
+        $stringValue = str_replace(",", ".", (string)$input);
 
         if (is_numeric($stringValue)) {
             return true;
         }
 
-        if ($stringValue === (string) $doubleValue) {
+        if ($stringValue === (string)$doubleValue) {
             return true;
         }
         return false;
     }
 
+    /**
+     * Convert string representation of some double value to double.
+     *
+     * @param string $value
+     * @return double
+     */
     public static function toDouble($value) {
-        return (double) str_replace(",", ".", (string) $value);
+        return (double)str_replace(",", ".", (string)$value);
     }
 
     /**
