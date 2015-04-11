@@ -53,7 +53,7 @@ $user->email = "dmytro@asymptix.com";
 $user->save();
 ```
 
-If ID of the __DBObject__ is empty - then __INSERT__ SQL instruction will be executed of not empty - then __UPDATE__.
+If ID of the __DBObject__ is empty - then __INSERT__ SQL instruction will be executed, if not empty - then __UPDATE__.
 
 ```php
 // Delete record
