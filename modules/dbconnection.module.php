@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Database connections module.
+ *
+ * @category Asymptix PHP Framework
+ * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
+ * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @license http://opensource.org/licenses/MIT
+ */
+
 $mysqli = new mysqli(
         Config::getDBConfigParam('HOST'),
         Config::getDBConfigParam('USER'), Config::getDBConfigParam('PASSWORD'),

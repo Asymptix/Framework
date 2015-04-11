@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Session module and manipulations with User DBObject in session.
+ *
+ * @category Asymptix PHP Framework
+ * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
+ * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @license http://opensource.org/licenses/MIT
+ */
+
 require_once("core/db/beans/User.php");
 
 $_USER = null;
