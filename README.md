@@ -11,6 +11,15 @@ The Fast and Easy PHP Framework for Rapid Development.
 * __$\_MENU__ -	Multi-level array with main menu structure. Can be as global variable or as static property of the __Menu__ class.
 * __~~$\_PATH~~__ -	Old version to set absolute path to the project's folder _(deprecated)_.
 
+##### Session variables
+* __$_USER__ - Variable stores serialized object of the __User__ class or simple array with user data.
+
+##### Pages view and representation
+* __$_ROUTE__ - Global instance of the __Route__ class with public properties controller, action and id - represents current page URL or rules to display this page.
+* __$_TPL__	- String variable with a path to the needed template of the page.
+* __$_JS__ - Controller local array with paths to needed for the current page JavaScript files.
+* __$_CSS__	- Controller local array with paths to needed for the current page CSS files.
+
 ### Work with DataBase
 
 You can get __DBObject__ with __DBSelector__:
