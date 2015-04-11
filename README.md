@@ -32,7 +32,13 @@ The Fast and Easy PHP Framework for Rapid Development.
 
 ### Work with DataBase
 
-You can get __DBObject__ with __DBSelector__:
+You can create new __DBObject__:
+
+```php
+$user = new User();
+```
+
+or you can get __DBObject__ with __DBSelector__:
 
 ```php
 $userSelector = new DBSelector(new User());
@@ -45,7 +51,11 @@ You can manipulate with DataBase records this way:
 // Save (insert/update) record
 $user->email = "dmytro@asymptix.com";
 $user->save();
+```
 
+If ID of the __DBObject__ is empty - then __INSERT__ SQL instruction will be executed of not empty - then __UPDATE__.
+
+```php
 // Delete record
 $user->delete();
 ```
