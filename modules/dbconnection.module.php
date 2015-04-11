@@ -16,11 +16,8 @@ $mysqli = new mysqli(
 if ($mysqli->connect_error) {
     die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
 } else {
-    //change character set to utf8
     if (!$mysqli->set_charset(Config::DB_CHARSET)) {
         printf("Error loading character set " . Config::DB_CHARSET . ": %s\n", $mysqli->error);
-    } else {
-        //printf("Current character set: %s\n", $mysqli->character_set_name());
     }
 
     $manager = DBCore::getInstance();
@@ -38,6 +35,5 @@ function onExit() {
     }
 }
 register_shutdown_function("onExit");
-
 
 ?>
