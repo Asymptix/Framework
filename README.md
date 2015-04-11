@@ -24,7 +24,7 @@ The Fast and Easy PHP Framework for Rapid Development.
 * __$\_FIELDS__ - List with pairs key → value merged from __$\_REQUEST__ (__$\_POST__ and __$\_GET__) also used in form output if some data is invalid. Fields values may be changed on the way from data receiving before output in form fields.
 * __$\_ARGS__ -	List with pairs key → value from __$\_GET__ string, so it's not a copy of __$\_GET__ but received from URL string data after ‘?’ sign.
 * __$\_ERRORS__	List of the errors for invalid or notable fields after validation process or some notification process.
-* __$\_MESSAGES__	List of messages shown after form submittion if some errors or notifications. Not connected to fields but common for all forms.
+* __$\_MESSAGES__	List of messages shown after form submission if some errors or notifications. Not connected to fields but common for all forms.
 * __$\_FILTER__	List of filters (data selection rules) for some forms.
 
 ##### Email functionality
