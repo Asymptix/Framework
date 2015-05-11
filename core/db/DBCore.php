@@ -356,14 +356,23 @@ class DBCore {
         return $typesString;
     }
 
+    /**
+     * Returns type of the parameter by it's value.
+     *
+     * @param mixed $fieldValue
+     *
+     * @return string Types of the parameter ("idsb").
+     * 
+     * @throws Exception
+     */
     private static function getFieldType($fieldValue) {
         if (Tools::isInteger($fieldValue)) {
             return "i";
-        } elseif (isDouble($fieldValue)) {
+        } elseif (Tools::isDouble($fieldValue)) {
             return "d";
-        } elseif (isBoolean($fieldValue)) {
+        } elseif (Tools::isBoolean($fieldValue)) {
             return "b";
-        } elseif (isString($fieldValue)) {
+        } elseif (Tools::isString($fieldValue)) {
             return "s";
         } else {
             throw new Exception("Invalid field value type");
@@ -409,6 +418,48 @@ class DBCore {
     }
 
     /**
+     * Checks query parameters types correspondence.
+     *
+     * @param array $params Parameters of the query.
+     * @param array $types Types of the parameters ("idsb").
+     *
+     * @throws DBCoreException
+     */
+    private static function checkParameterTypes($params, $types) {
+        if (count($params) == strlen($types)) {
+            foreach ($params as $key => $value) {
+                $type = $types[$key];
+                $typeByValue = self::getFieldType($value);
+                if ($typeByValue != 's') {
+                    if ($type != $typeByValue) {
+                        throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . "' type but '" . $typeByValue . "' detected)");
+                    }
+                } else { // in case if we try send non-string parameters as a string value
+                    switch ($type) {
+                        case 'i':
+                            if (!(Tools::isNumeric($value) && ((string)(integer)$value === $value))) {
+                                throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . ")");
+                            }
+                            break;
+                        case 'd':
+                            if (!Tools::isDoubleString($value)) {
+                                throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . ")");
+                            }
+                            break;
+                        case 'b':
+                            if (!in_array(strtolower($value), array('true', 'false'))) {
+                                throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . ")");
+                            }
+                            break;
+                    }
+                }
+            }
+        } else {
+            throw new DBCoreException("Number of types is not equal parameters number");
+        }
+    }
+
+    /**
      * Bind parameters to the statment with dynamic number of parameters.
      *
      * @param resource $stmt Statement.
@@ -416,6 +467,8 @@ class DBCore {
      * @param array $params Parameters.
      */
     private static function bindParameters($stmt, $types, $params) {
+        self::checkParameterTypes($params, $types);
+
         $args   = array();
         $args[] = $types;
 
