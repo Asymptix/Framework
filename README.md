@@ -17,6 +17,7 @@ The Fast and Easy PHP Framework for Rapid Development.
 ##### Pages view and representation
 * __$\_ROUTE__ - Global instance of the __Route__ class with public properties controller, action and id - represents current page URL or rules to display this page.
 * __$\_TPL__	- String variable with a path to the needed template of the page.
+* __$\_BREADCRUMBS__ - Array with page breadcrumbs data.
 * __$\_JS__ - Controller local array with paths to needed for the current page JavaScript files.
 * __$\_CSS__	- Controller local array with paths to needed for the current page CSS files.
 
