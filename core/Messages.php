@@ -147,6 +147,9 @@ class Messages {
 
 }
 
+/**
+ * Message item helper class.
+ */
 class __MSG {
 
     public $type = null;
