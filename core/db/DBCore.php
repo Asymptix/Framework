@@ -362,7 +362,7 @@ class DBCore {
      * @param mixed $fieldValue
      *
      * @return string Types of the parameter ("idsb").
-     * 
+     *
      * @throws Exception
      */
     private static function getFieldType($fieldValue) {
@@ -659,7 +659,7 @@ class DBCore {
         $fieldsList = $dbObject->getFieldsList();
         $idFieldName = $dbObject->getIdFieldName();
 
-            if (Tools::isInteger($fieldsList[$idFieldName])) {
+        if (Tools::isInteger($fieldsList[$idFieldName])) {
             $query = "INSERT INTO " . $dbObject->getTableName() . "
                           SET " . self::createSQLQMValuesString($fieldsList, $idFieldName);
             $typesString = self::createSQLTypesString($fieldsList, $idFieldName);
