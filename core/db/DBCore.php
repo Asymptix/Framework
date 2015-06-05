@@ -13,6 +13,8 @@ class DBCoreException extends Exception {}
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
 class DBCore {
