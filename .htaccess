@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /
+
+# Admin panel
+RewriteCond %{REQUEST_URI} ^/admin/(.*)
+RewriteCond %{REQUEST_URI} !(\.js|\.ico|\.gif|\.jpg|\.PNG|\.png|\.css|\.xml|\.zip|\.html|\.cur|api\.php|phpinfo\.php|ajax\.php|fonts/.+)$
+RewriteRule ^admin/(.*) admin/index.php [L]
+
+# Public part
+RewriteRule !(\.js|\.ico|\.gif|\.jpg|\.PNG|\.png|\.css|\.xml|\.zip|\.html|\.cur|api\.php|phpinfo\.php|ajax\.php|test\.php|fonts/.+)$ index.php
