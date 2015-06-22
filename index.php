@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+header('X-Powered-By: Asymptix PHP Framework, PHP/' . phpversion());
 
 require_once("conf/Config.php");
 
