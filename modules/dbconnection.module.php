@@ -6,6 +6,8 @@
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
 
@@ -16,8 +18,8 @@ $mysqli = new mysqli(
 if ($mysqli->connect_error) {
     die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
 } else {
-    if (!$mysqli->set_charset(Config::DB_CHARSET)) {
-        printf("Error loading character set " . Config::DB_CHARSET . ": %s\n", $mysqli->error);
+    if (!$mysqli->set_charset(Config::getDBConfigParam('DB_CHARSET'))) {
+        printf("Error loading character set " . Config::getDBConfigParam('DB_CHARSET') . ": %s\n", $mysqli->error);
     }
 
     $manager = DBCore::getInstance();
