@@ -31,6 +31,15 @@ The Fast and Easy PHP Framework for Rapid Development.
 ##### Email functionality
 * __$\_EMAIL__ - Uses only in e-mail templates as e-mail inline parameters list (e.g. username, password or product name and price in e-mail templates).
 
+### Identity
+
+It's highly recommended to send header information with framework signature for better recognition with parsers and analyzers (like [Wappalyzer](https://github.com/AliasIO/Wappalyzer)).
+You may see example in the __index.php__ file:
+
+```php
+header('X-Powered-By: Asymptix PHP Framework, PHP/' . phpversion());
+```
+
 ### Work with DataBase
 
 You can create new __DBObject__:
