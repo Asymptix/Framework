@@ -284,7 +284,7 @@ abstract class DBObject extends Object {
 
             OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $query);
             OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $types);
-            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: " . $param);
+            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $params)  . "]");
 
             OutputStream::close();
         }
