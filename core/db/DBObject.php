@@ -1,7 +1,11 @@
 <?php
 
-require_once("core/Tools.php");
-require_once("core/Object.php");
+require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
+
+require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
+require_once(realpath(dirname(__FILE__)) . "/../Object.php");
+
+require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
 
 /**
  * DBObject class. Object oriented representation of DB record.
@@ -9,6 +13,8 @@ require_once("core/Object.php");
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
 abstract class DBObject extends Object {
@@ -197,6 +203,102 @@ abstract class DBObject extends Object {
 
             return $this->getId();
         }
+    }
+
+    /**
+     * Selects DB record(s) for current DBObject table according to params.
+     *
+     * @param array $conditions List of the conditions fields
+     *           (fieldName => fieldValue or strCondition => params).
+     * @param array $limit List of order conditions (fieldName => order),
+     *           order may be 'ASC' OR 'DESC'.
+     * @param mixed $order Integer rows count or pair array [offset, count].
+     * @param boolean $debug Debug mode flag.
+     *
+     * @return mixed DBObject, array of DBObject or null.
+     * @throws DBCoreException If some DB or query syntax errors occurred.
+     */
+    public function select($conditions = array(), $limit = 1, $order = "", $debug = false) {
+        $query = "SELECT * FROM " . static::TABLE_NAME;
+        $types = "";
+        $params = array();
+
+        /**
+         * Conditions
+         */
+        if (!empty($conditions)) {
+            $conditionsList = array();
+            foreach ($conditions as $fieldName => $fieldValue) {
+                if (!Tools::isInteger($fieldName)) {
+                    $conditionsList[]= $fieldName . " = ?";
+                    $types.= DBCore::getFieldType($fieldValue);
+                    $params[] = $fieldValue;
+                } else {
+                    $condition = $fieldName;
+                    $localParams = $fieldValue;
+
+                    $conditionsList[] = "(" . $condition . ")";
+                    foreach ($localParams as $param) {
+                        $types.= DBCore::getFieldType($param);
+                        $params[] = $param;
+                    }
+                }
+            }
+
+            $query.= " WHERE " . implode(" AND ", $conditionsList);
+        }
+
+        /**
+         * Order
+         */
+        if (!empty($order)) {
+            $query.= " ORDER BY";
+            foreach ($order as $fieldName => $ord) {
+                $query.= " " . $fieldName . " " . $ord . ",";
+            }
+        }
+        $query = substr($query, 0, strlen($query) - 1);
+
+        /**
+         * Limit
+         */
+        if (!is_null($limit)) {
+            if (Tools::isInteger($limit)) {
+                $count = $limit;
+                $query.= " LIMIT " . $limit;
+            } elseif (is_array($limit) && count($limit) == 2) {
+                $offset = $limit[0];
+                $count = $limit[1];
+                if (Tools::isInteger($offset) && Tools::isInteger($count)) {
+                    $query.= " LIMIT " . $offset . ", " . $count;
+                } else {
+                    throw new DBCoreException("Invalid LIMIT param in select() method.");
+                }
+            } else {
+                throw new DBCoreException("Invalid LIMIT param in select() method.");
+            }
+        }
+
+        if ($debug) {
+            OutputStream::start();
+
+            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $query);
+            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $types);
+            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: " . $param);
+
+            OutputStream::close();
+        }
+
+        $stmt = DBCore::doSelectQuery($query, $types, $params);
+        if ($stmt !== false) {
+            if (is_null($limit) || $count > 1) {
+                return DBCore::selectDBObjectsFromStatement($stmt, $this);
+            } elseif ($count == 1) {
+                return DBCore::selectDBObjectFromStatement($stmt, $this);
+            }
+        }
+
+        return null;
     }
 
     /**
