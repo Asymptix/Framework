@@ -1,9 +1,9 @@
 <?php
 
-require_once("core/db/DBObject.php");
-require_once("core/db/DBSelector.php");
+require_once(realpath(dirname(__FILE__)) . "/DBObject.php");
+require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
 
-require_once("core/Tools.php");
+require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
 
 class DBCoreException extends Exception {}
 
@@ -367,7 +367,7 @@ class DBCore {
      *
      * @throws Exception
      */
-    private static function getFieldType($fieldValue) {
+    public static function getFieldType($fieldValue) {
         if (Tools::isInteger($fieldValue)) {
             return "i";
         } elseif (Tools::isDouble($fieldValue)) {
@@ -611,6 +611,11 @@ class DBCore {
         return array();
     }
 
+    /**
+     * Outputs comfortable for Bean Class creation list of table fields.
+     *
+     * @param string $tableName Name of the Db table.
+     */
     public static function displayTableFieldsList($tableName) {
         print("<pre>");
         if (!empty($tableName)) {
@@ -619,12 +624,13 @@ class DBCore {
                 print("'" . $fieldName . "' => ");
                 if (strpos($data['type'], "varchar") === 0
                  || strpos($data['type'], "text") === 0
+                 || strpos($data['type'], "longtext") === 0
                  || strpos($data['type'], "enum") === 0
                  || strpos($data['type'], "char") === 0
                  || strpos($data['type'], "datetime") === 0
                  || strpos($data['type'], "timestamp") === 0
                  || strpos($data['type'], "date") === 0) {
-                    print("\"" . $data['default'] . "\"");
+                    print('"' . $data['default'] . '"');
                 } elseif (strpos($data['type'], "int") === 0
                  || strpos($data['type'], "tinyint") === 0
                  || strpos($data['type'], "smallint") === 0) {
@@ -632,6 +638,13 @@ class DBCore {
                         print($data['default']);
                     } else {
                         print(0);
+                    }
+                } elseif (strpos($data['type'], "float") === 0
+                 || strpos($data['type'], "double") === 0) {
+                    if (!empty($data['default'])) {
+                        print($data['default']);
+                    } else {
+                        print("0.0");
                     }
                 }
                 print(", // " . $data['type'] . ", default '" . $data['default'] . "'\n");
@@ -683,7 +696,8 @@ class DBCore {
 
         $query = "UPDATE " . $dbObject->getTableName() . "
                   SET " . self::createSQLQMValuesString($fieldsList, $idFieldName) . "
-                  WHERE " . $idFieldName . " = ?";
+                  WHERE " . $idFieldName . " = ?
+                  LIMIT 1";
         $typesString = self::createSQLTypesString($fieldsList, $idFieldName);
         if (Tools::isInteger($fieldsList[$idFieldName])) {
             $typesString.= "i";
