@@ -1,0 +1,1 @@
+<input type="<?= $this->type ?>" class="<?= $this->getClass() ?>" value="<?= $this->title ?>"<?= $this->isClose?' data-dismiss="modal" onclick="jResetAction()"':'' ?> />

@@ -1,0 +1,33 @@
+<?php
+
+require_once("core/ui/UIComponent.php");
+
+/**
+ * Basic UI Control class.
+ *
+ * @category Asymptix PHP Framework
+ * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
+ * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
+ * @license http://opensource.org/licenses/MIT
+ */
+abstract class UIControl extends UIComponent {
+    /**
+     * Tip text or message for the control.
+     *
+     * @var string
+     */
+    protected $tip = "";
+
+    /**
+     * Set if control is scrollable or not.
+     *
+     * @var boolean
+     */
+    protected $scrollable = false;
+
+    public function UIControl() {}
+}
+
+?>
