@@ -7,4 +7,4 @@ RewriteCond %{REQUEST_URI} !(\.js|\.ico|\.gif|\.jpg|\.PNG|\.png|\.css|\.xml|\.zi
 RewriteRule ^admin/(.*) admin/index.php [L]
 
 # Public part
-RewriteRule !(\.js|\.ico|\.gif|\.jpg|\.PNG|\.png|\.css|\.xml|\.zip|\.html|\.cur|api\.php|phpinfo\.php|ajax\.php|test\.php|fonts/.+)$ index.php
+RewriteRule !(\.js|\.ico|\.gif|\.jpg|\.PNG|\.png|\.css|\.xml|\.zip|\.html|\.cur|api\.php|phpinfo\.php|ajax\.php|test-.+\.php|fonts/.+)$ index.php
