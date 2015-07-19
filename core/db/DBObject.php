@@ -1,5 +1,6 @@
 <?php
 
+require_once(realpath(dirname(__FILE__)) . "/DBPreparedQuery.php");
 require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
 
 require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
@@ -24,6 +25,13 @@ abstract class DBObject extends Object {
 
     const STATUS_REMOVED = 1;
     const STATUS_RESTORED = 0;
+
+    /**
+     * DB Query object for Prepared Statement
+     *
+     * @var DBPreparedQuery
+     */
+    private $dbQuery = null;
 
     /**
      * Create new default object.
@@ -206,71 +214,111 @@ abstract class DBObject extends Object {
     }
 
     /**
-     * Selects DB record(s) for current DBObject table according to params.
+     * Prepare DBObject for the select query (for WHERE expression).
      *
      * @param array $conditions List of the conditions fields
      *           (fieldName => fieldValue or strCondition => params).
-     * @param array $limit List of order conditions (fieldName => order),
+     *
+     * @return DBObject Current object.
+     */
+    public function select($conditions = array()) {
+        $this->dbQuery = new DBPreparedQuery();
+        $this->dbQuery->conditions = $conditions;
+
+        return $this;
+    }
+
+    /**
+     * Prepare DBObject for the select query (for ORDER expression).
+     *
+     * @param array $order List of order conditions (fieldName => order),
      *           order may be 'ASC' OR 'DESC'.
-     * @param mixed $order Integer rows count or pair array [offset, count].
+     *
+     * @param array $order
+     * @return DBObject Current object.
+     */
+    public function order($order = null) {
+        $this->dbQuery->order = $order;
+        return $this;
+    }
+
+    /**
+     * Prepare DBObject for the select query (for LIMIT expression).
+     *
+     * @param integer $offset Limit offset value (or count if this is single
+     *           parameter).
+     * @param integer $count Number of records to select.
+     *
+     * @return DBObject Current object.
+     */
+    public function limit($offset = 1, $count = null) {
+        if (is_null($count)) {
+            $this->dbQuery->limit = $offset;
+        } else {
+            $this->dbQuery->limit = array($offset, $count);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Selects DB record(s) for current DBObject table according to params.
+     *
      * @param boolean $debug Debug mode flag.
      *
      * @return mixed DBObject, array of DBObject or null.
      * @throws DBCoreException If some DB or query syntax errors occurred.
      */
-    public function select($conditions = array(), $limit = 1, $order = "", $debug = false) {
-        $query = "SELECT * FROM " . static::TABLE_NAME;
-        $types = "";
-        $params = array();
+    public function go($debug = false) {
+        $this->dbQuery->query = "SELECT * FROM " . static::TABLE_NAME;
 
         /**
          * Conditions
          */
-        if (!empty($conditions)) {
+        if (!empty($this->dbQuery->conditions)) {
             $conditionsList = array();
-            foreach ($conditions as $fieldName => $fieldValue) {
+            foreach ($this->dbQuery->conditions as $fieldName => $fieldValue) {
                 if (!Tools::isInteger($fieldName)) {
                     $conditionsList[]= $fieldName . " = ?";
-                    $types.= DBCore::getFieldType($fieldValue);
-                    $params[] = $fieldValue;
+                    $this->dbQuery->types.= DBCore::getFieldType($fieldValue);
+                    $this->dbQuery->params[] = $fieldValue;
                 } else {
                     $condition = $fieldName;
                     $localParams = $fieldValue;
 
                     $conditionsList[] = "(" . $condition . ")";
                     foreach ($localParams as $param) {
-                        $types.= DBCore::getFieldType($param);
-                        $params[] = $param;
+                        $this->dbQuery->types.= DBCore::getFieldType($param);
+                        $this->dbQuery->params[] = $param;
                     }
                 }
             }
 
-            $query.= " WHERE " . implode(" AND ", $conditionsList);
+            $this->dbQuery->query.= " WHERE " . implode(" AND ", $conditionsList);
         }
 
         /**
          * Order
          */
-        if (!empty($order)) {
-            $query.= " ORDER BY";
-            foreach ($order as $fieldName => $ord) {
-                $query.= " " . $fieldName . " " . $ord . ",";
+        if (!empty($this->dbQuery->order)) {
+            $this->dbQuery->query.= " ORDER BY";
+            foreach ($this->dbQuery->order as $fieldName => $ord) {
+                $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
             }
         }
-        $query = substr($query, 0, strlen($query) - 1);
+        $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
 
         /**
          * Limit
          */
-        if (!is_null($limit)) {
-            if (Tools::isInteger($limit)) {
-                $count = $limit;
-                $query.= " LIMIT " . $limit;
-            } elseif (is_array($limit) && count($limit) == 2) {
-                $offset = $limit[0];
-                $count = $limit[1];
+        if (!is_null($this->dbQuery->limit)) {
+            if (Tools::isInteger($this->dbQuery->limit)) {
+                $this->dbQuery->query.= " LIMIT " . $this->dbQuery->limit;
+            } elseif (is_array($this->dbQuery->limit) && count($this->dbQuery->limit) == 2) {
+                $offset = $this->dbQuery->limit[0];
+                $count = $this->dbQuery->limit[1];
                 if (Tools::isInteger($offset) && Tools::isInteger($count)) {
-                    $query.= " LIMIT " . $offset . ", " . $count;
+                    $this->dbQuery->query.= " LIMIT " . $offset . ", " . $count;
                 } else {
                     throw new DBCoreException("Invalid LIMIT param in select() method.");
                 }
@@ -282,18 +330,18 @@ abstract class DBObject extends Object {
         if ($debug) {
             OutputStream::start();
 
-            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $query);
-            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $types);
-            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $params)  . "]");
+            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $this->dbQuery->query);
+            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $this->dbQuery->types);
+            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->dbQuery->params)  . "]");
 
             OutputStream::close();
         }
 
-        $stmt = DBCore::doSelectQuery($query, $types, $params);
+        $stmt = DBCore::doSelectQuery($this->dbQuery);
         if ($stmt !== false) {
-            if (is_null($limit) || $count > 1) {
+            if ($stmt->num_rows > 1) {
                 return DBCore::selectDBObjectsFromStatement($stmt, $this);
-            } elseif ($count == 1) {
+            } elseif ($stmt->num_rows == 1) {
                 return DBCore::selectDBObjectFromStatement($stmt, $this);
             }
         }
