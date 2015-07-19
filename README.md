@@ -70,6 +70,19 @@ If ID of the __DBObject__ is empty - then __INSERT__ SQL instruction will be exe
 $user->delete();
 ```
 
+You can also use this syntax for the fast selection queries:
+
+```php
+// Init object
+$site = new Site();
+$sitesList = $site->select(array('status' => "active"))
+                  ->order(array('title' => "ASC"))
+                  ->limit(10)
+                  ->go();
+```
+
+This query will be executed with using of Prepared Statement. Order of methods calls is free but go() - must be the last call in this order.
+
 ### OutputStream usage examples
 
 ```php
