@@ -1,6 +1,7 @@
 <?php
 
 require_once(realpath(dirname(__FILE__)) . "/DBObject.php");
+require_once(realpath(dirname(__FILE__)) . "/DBPreparedQuery.php");
 require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
 
 require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
@@ -513,25 +514,52 @@ class DBCore {
     }
 
     /**
-     * Execute update queries on database.
+     * Execute DB SQL queries using Prepared Statements.
      *
-     * @param string $query Query.
-     * @param string $types Types string.
-     * @param array $params Parameters.
-     * @return integer Returns the number of affected rows on success, and -1 if the last query failed.
+     * @param mixed $query SQL query template string or DBPreparedQuery object
+     *           if single parameter.
+     * @param string $types Types string (ex: "isdb").
+     * @param array $params Parameters in the same order like types string.
+     *
+     * @return mixed Statement object or FALSE if an error occurred.
      */
-    public static function doUpdateQuery($query, $types = "", $params = array()) {
-        $stmt = self::connection()->prepare($query);
+    private static function doQuery($query, $types = "", $params = array()) {
+        if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
+            $dbQuery = new DBPreparedQuery($query, $types, $params);
+        } else {
+            $dbQuery = $query;
+        }
+
+        $stmt = self::connection()->prepare($dbQuery->query);
         self::checkDbError(self::connection());
 
-        if ($params != null && count($params)!=0 && strlen($types)==count($params)) {
-            self::bindParameters($stmt, $types, $params);
-        } else {
-            //TODO: error
+        if ($dbQuery->isBindable()) {
+            if ($dbQuery->isValid()) {
+                self::bindParameters($stmt, $dbQuery->types, $dbQuery->params);
+            } else {
+                throw new DBCoreException("Number of types is not equal parameters number or types string is invalid");
+            }
         }
 
         $stmt->execute();
         self::checkDbError($stmt);
+
+        return $stmt;
+    }
+
+
+    /**
+     * Execute update DB SQL queries using Prepared Statements.
+     *
+     * @param string $query SQL query template string or DBPreparedQuery object
+     *           if single parameter.
+     * @param string $types Types string.
+     * @param array $params Parameters.
+     * 
+     * @return integer Returns the number of affected rows on success, and -1 if the last query failed.
+     */
+    public static function doUpdateQuery($query, $types = "", $params = array()) {
+        $stmt = self::doQuery($query, $types, $params);
 
         $affectedRows = self::connection()->affected_rows;
         $stmt->close();
@@ -540,31 +568,21 @@ class DBCore {
     }
 
     /**
-     * Execute select queries on database.
+     * Execute select DB SQL queries using Prepared Statements.
      *
-     * @param string $query SQL query.
+     * @param mixed $query SQL query template string or DBPreparedQuery object
+     *           if single parameter.
      * @param string $types Types string (ex: "isdb").
      * @param array $params Parameters in the same order like types string.
      *
      * @return mixed Statement object or FALSE if an error occurred.
      */
     public static function doSelectQuery($query, $types = "", $params = array()) {
-        $stmt = self::connection()->prepare($query);
-        self::checkDbError(self::connection());
-
-        if ($params != null && count($params) != 0) {
-            if (strlen($types) == count($params)) {
-                self::bindParameters($stmt, $types, $params);
-            } else {
-                throw new DBCoreException("Number of types is not equal parameters number");
-            }
-        }
-
-        $stmt->execute();
-        self::checkDbError($stmt);
+        $stmt = self::doQuery($query, $types, $params);
 
         $stmt->store_result();
         self::checkDbError($stmt);
+
         return $stmt;
     }
 
