@@ -280,7 +280,7 @@ abstract class DBObject extends Object {
             foreach ($this->dbQuery->conditions as $fieldName => $fieldValue) {
                 if (!Tools::isInteger($fieldName)) {
                     $conditionsList[]= $fieldName . " = ?";
-                    $this->dbQuery->types.= DBCore::getFieldType($fieldValue);
+                    $this->dbQuery->types.= DBPreparedQuery::getFieldType($fieldValue);
                     $this->dbQuery->params[] = $fieldValue;
                 } else {
                     $condition = $fieldName;
@@ -288,7 +288,7 @@ abstract class DBObject extends Object {
 
                     $conditionsList[] = "(" . $condition . ")";
                     foreach ($localParams as $param) {
-                        $this->dbQuery->types.= DBCore::getFieldType($param);
+                        $this->dbQuery->types.= DBPreparedQuery::getFieldType($param);
                         $this->dbQuery->params[] = $param;
                     }
                 }
