@@ -555,7 +555,7 @@ class DBCore {
      *           if single parameter.
      * @param string $types Types string.
      * @param array $params Parameters.
-     * 
+     *
      * @return integer Returns the number of affected rows on success, and -1 if the last query failed.
      */
     public static function doUpdateQuery($query, $types = "", $params = array()) {
@@ -658,7 +658,8 @@ class DBCore {
                         print(0);
                     }
                 } elseif (strpos($data['type'], "float") === 0
-                 || strpos($data['type'], "double") === 0) {
+                 || strpos($data['type'], "double") === 0
+                 || strpos($data['type'], "decimal") === 0) {
                     if (!empty($data['default'])) {
                         print($data['default']);
                     } else {
