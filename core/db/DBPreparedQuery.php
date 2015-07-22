@@ -1,6 +1,7 @@
 <?php
 
 require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
+require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
 
 /**
  * Complex DB query object for Prepared Statement.
@@ -93,6 +94,33 @@ class DBPreparedQuery {
     }
 
     /**
+     * Executes SQL query.
+     *
+     * @param boolean $debug Debug mode flag.
+     *
+     * @return mixed Statement object or FALSE if an error occurred if SELECT
+     *           query executed or number of affected rows on success if other
+     *           type of query executed.
+     */
+    public function go($debug = false) {
+        if ($debug) {
+            OutputStream::start();
+
+            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $this->dbQuery->query);
+            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $this->dbQuery->types);
+            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->dbQuery->params)  . "]");
+
+            OutputStream::close();
+        }
+
+        if ($this->getType() == 'SELECT') {
+            return DBCore::doSelectQuery($this);
+        } else {
+            return DBCore::doUpdateQuery($this);
+        }
+    }
+
+    /**
      * Checks query parameters types correspondence.
      *
      * @param array $params Parameters of the query.
@@ -163,6 +191,39 @@ class DBPreparedQuery {
         } else {
             throw new Exception("Invalid field value type");
         }
+    }
+
+    /**
+     * Detects type of the SQL query.
+     *
+     * @param string $query SQL query or query template.
+     *
+     * @return string Type of the SQL query.
+     * @throws DBCoreException If SQL query is invalid.
+     */
+    public static function getQueryType($query) {
+        $chunks = explode(" ", trim($query));
+        if (!isset($chunks[0])) {
+            throw new DBCoreException("Invalid SQL query format (can't detect query type)");
+        } else {
+            $type = strtoupper($chunks[0]);
+
+            if (!in_array($type, array('SELECT', 'INSERT', 'UPDATE', 'DELETE'))) {
+                throw new DBCoreException("Invalid SQL query type '" . $type . "'");
+            }
+
+            return $type;
+        }
+    }
+
+    /**
+     * Detects type of the SQL query.
+     *
+     * @return string Type of the SQL query.
+     * @throws DBCoreException If SQL query is invalid.
+     */
+    public function getType() {
+        return self::getQueryType($this->query);
     }
 
 }
