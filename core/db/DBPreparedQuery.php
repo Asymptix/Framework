@@ -1,5 +1,7 @@
 <?php
 
+require_once(realpath(dirname(__FILE__)) . "/DBQuery.php");
+
 require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
 require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
 
@@ -13,7 +15,7 @@ require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
  * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
-class DBPreparedQuery {
+class DBPreparedQuery extends DBQuery {
 
     /**
      * DB query template.
@@ -40,27 +42,6 @@ class DBPreparedQuery {
     /* Service variables */
 
     /**
-     * SQL conditions list.
-     *
-     * @var array
-     */
-    public $conditions = array();
-
-    /**
-     * SQL order list.
-     *
-     * @var array
-     */
-    public $order = null;
-
-    /**
-     * SQL limit value (may be pair array or integer value).
-     *
-     * @var mixed
-     */
-    public $limit = 1;
-
-    /**
      * Creates and initialize DBPreparedQuery object.
      *
      * @param string $query DB SQL query template.
@@ -71,6 +52,11 @@ class DBPreparedQuery {
         $this->query = $query;
         $this->types = $types;
         $this->params = $params;
+
+        if (!empty($this->query)) {
+            $this->type = $this->detectType();
+        }
+        parent::__construct($this->type);
     }
 
     /**
@@ -113,7 +99,7 @@ class DBPreparedQuery {
             OutputStream::close();
         }
 
-        if ($this->getType() == 'SELECT') {
+        if ($this->getType() == DBQuery::TYPE_SELECT) {
             return DBCore::doSelectQuery($this);
         } else {
             return DBCore::doUpdateQuery($this);
@@ -191,39 +177,6 @@ class DBPreparedQuery {
         } else {
             throw new Exception("Invalid field value type");
         }
-    }
-
-    /**
-     * Detects type of the SQL query.
-     *
-     * @param string $query SQL query or query template.
-     *
-     * @return string Type of the SQL query.
-     * @throws DBCoreException If SQL query is invalid.
-     */
-    public static function getQueryType($query) {
-        $chunks = explode(" ", trim($query));
-        if (!isset($chunks[0])) {
-            throw new DBCoreException("Invalid SQL query format (can't detect query type)");
-        } else {
-            $type = strtoupper($chunks[0]);
-
-            if (!in_array($type, array('SELECT', 'INSERT', 'UPDATE', 'DELETE'))) {
-                throw new DBCoreException("Invalid SQL query type '" . $type . "'");
-            }
-
-            return $type;
-        }
-    }
-
-    /**
-     * Detects type of the SQL query.
-     *
-     * @return string Type of the SQL query.
-     * @throws DBCoreException If SQL query is invalid.
-     */
-    public function getType() {
-        return self::getQueryType($this->query);
     }
 
 }
