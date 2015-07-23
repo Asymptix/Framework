@@ -305,8 +305,8 @@ abstract class DBObject extends Object {
             foreach ($this->dbQuery->order as $fieldName => $ord) {
                 $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
             }
+            $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
         }
-        $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
 
         /**
          * Limit
