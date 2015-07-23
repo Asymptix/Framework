@@ -179,6 +179,114 @@ class DBPreparedQuery extends DBQuery {
         }
     }
 
+    /**
+     * Return qwestion marks string for IN(...) SQL construction.
+     *
+     * @param integer $length Length of the result string.
+     *
+     * @return string
+     */
+    public static function sqlQMString($length) {
+        return implode(",", array_fill(0, $length, "?"));
+    }
+
+    /**
+     * Return fields and qwestion marks string for SET field1=?, ... SQL construction.
+     *
+     * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
+     * @param string $idFieldName Name of the primary key field.
+     *
+     * @return string
+     */
+    public static function sqlQMValuesString($fieldsList, $idFieldName = "") {
+        $chunks = array();
+        foreach ($fieldsList as $fieldName => $fieldValue) {
+            if ($fieldName != $idFieldName) {
+                $chunks[]= "`" . $fieldName . "` = ?";
+            }
+        }
+        return implode(", ", $chunks);
+    }
+
+    /**
+     * Return fields and values string for SET field1=value1, ... SQL construction.
+     *
+     * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
+     * @param string $idFieldName Name of the primary key field.
+     *
+     * @return string
+     */
+    public static function sqlValuesString($fieldsList, $idFieldName) {
+        $chunks = array();
+        foreach ($fieldsList as $fieldName => $fieldValue) {
+            if ($fieldName != $idFieldName) {
+                $chunks[]= "`" . $fieldName . "` = '" . $fieldValue . "'";
+            }
+        }
+        return implode(", ", $chunks);
+    }
+
+    /**
+     * Returns SQL types string.
+     * Type specification chars:
+     *    i - corresponding variable has type integer
+     *    d - corresponding variable has type double
+     *    s - corresponding variable has type string
+     *    b - corresponding variable is a blob and will be sent in packets
+     *
+     * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
+     * @param string $idFieldName Name of the primary key field.
+     * @return string
+     */
+    public static function sqlTypesString($fieldsList, $idFieldName = "") {
+        $typesString = "";
+        foreach ($fieldsList as $fieldName => $fieldValue) {
+            if ($fieldName != $idFieldName) {
+                if (Tools::isDouble($fieldValue)) {
+                    $typesString.= "d";
+                } elseif (Tools::isInteger($fieldValue)) {
+                    $typesString.= "i";
+                } else {
+                    $typesString.= "s";
+                }
+            }
+        }
+        return $typesString;
+    }
+
+    /**
+     * Returns SQL types string of single type.
+     *
+     * @param string $type Type name.
+     * @param integer $length Length of the SQL types string.
+     * @return string
+     */
+    public static function sqlSingleTypeString($type, $length) {
+        $typesList = array(
+            'integer' => "i",
+            'int'     => "i",
+            'i'       => "i",
+            'real'    => "d",
+            'float'   => "d",
+            'double'  => "d",
+            'd'       => "d",
+            'string'  => "s",
+            'str'     => "s",
+            's'       => "s",
+            'boolean' => "b",
+            'bool'    => "b",
+            'b'       => "b"
+        );
+        $type = $typesList[$type];
+        $typesString = "";
+        while ($length > 0) {
+            $typesString .= $type;
+            $length --;
+        }
+
+        return $typesString;
+    }
+
 }
 
 ?>

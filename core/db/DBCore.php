@@ -249,144 +249,6 @@ class DBCore {
     }
 
     /**
-     * Return qwestion marks string for IN(...) SQL construction.
-     *
-     * @param integer $length Length of the result string.
-     *
-     * @return string
-     */
-    public static function sqlQMString($length) {
-        if ($length == 1) {
-            return "?";
-        }
-        return implode(",", array_fill(0, $length, "?"));
-    }
-
-    /**
-     * Return fields and qwestion marks string for SET field1=?, ... SQL construction.
-     *
-     * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
-     * @param string $idFieldName Name of the primary key field.
-     *
-     * @return string
-     */
-    public static function createSQLQMValuesString($fieldsList, $idFieldName = "") {
-        $sqlString = "";
-        foreach ($fieldsList as $fieldName => $fieldValue) {
-            if ($fieldName != $idFieldName) {
-                $sqlString.= ", `" . $fieldName . "` = ?";
-            }
-        }
-        return substr($sqlString, 2);
-    }
-
-    /**
-     * Return fields and values string for SET field1=value1, ... SQL construction.
-     *
-     * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
-     * @param string $idFieldName Name of the primary key field.
-     *
-     * @return string
-     */
-    public static function createSQLValuesString($fieldsList, $idFieldName) {
-        $sqlString = "";
-        foreach ($fieldsList as $fieldName => $fieldValue) {
-            if ($fieldName != $idFieldName) {
-                $sqlString.= ", `" . $fieldName . "` = '" . $fieldValue . "'";
-            }
-        }
-        return substr($sqlString, 2);
-    }
-
-    /**
-     * Returns SQL types string.
-     * Type specification chars:
-     *    i - corresponding variable has type integer
-     *    d - corresponding variable has type double
-     *    s - corresponding variable has type string
-     *    b - corresponding variable is a blob and will be sent in packets
-     *
-     * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
-     * @param string $idFieldName Name of the primary key field.
-     * @return string
-     */
-    public static function createSQLTypesString($fieldsList, $idFieldName = "") {
-        $typesString = "";
-        foreach ($fieldsList as $fieldName => $fieldValue) {
-            if ($fieldName != $idFieldName) {
-                if (Tools::isDouble($fieldValue)) {
-                    $typesString.= "d";
-                } elseif (Tools::isInteger($fieldValue)) {
-                    $typesString.= "i";
-                } else {
-                    $typesString.= "s";
-                }
-            }
-        }
-        return $typesString;
-    }
-
-    /**
-     * Returns SQL types string of single type.
-     *
-     * @param string $type Type name.
-     * @param integer $length Length of the SQL types string.
-     * @return string
-     */
-    public static function sqlSingleTypeString($type, $length) {
-        $typesList = array(
-            'integer' => "i",
-            'int'     => "i",
-            'i'       => "i",
-            'real'    => "d",
-            'float'   => "d",
-            'double'  => "d",
-            'd'       => "d",
-            'string'  => "s",
-            'str'     => "s",
-            's'       => "s",
-            'boolean' => "b",
-            'bool'    => "b",
-            'b'       => "b"
-        );
-        $type = $typesList[$type];
-        $typesString = "";
-        while ($length > 0) {
-            $typesString .= $type;
-            $length --;
-        }
-
-        return $typesString;
-    }
-
-    /**
-     * Returns list of ids by mixed values.
-     *
-     * @param mixed $ids Single variable, array<mixed> or string, separated by comma of ids.
-     *
-     * @return array<integer>
-     */
-    private static function getIdsList($ids) {
-        if (is_string($ids)) {
-            $ids = trim($ids);
-            if (empty($ids)) {
-                $idsList = array();
-            } else {
-                $idsList = explode(",", $ids);
-            }
-        } elseif (is_numeric($ids)) {
-            $idsList = array($ids);
-        } elseif (is_array($ids)) {
-            $idsList = $ids;
-        }
-        foreach ($idsList as &$id) {
-            settype($id, "integer");
-        }
-
-        return $idsList;
-    }
-
-    /**
      * Check database errors.
      *
      * @param object $dbObj
@@ -628,13 +490,13 @@ class DBCore {
 
         if (Tools::isInteger($fieldsList[$idFieldName])) {
             $query = "INSERT INTO " . $dbObject->getTableName() . "
-                          SET " . self::createSQLQMValuesString($fieldsList, $idFieldName);
-            $typesString = self::createSQLTypesString($fieldsList, $idFieldName);
+                          SET " . DBPreparedQuery::sqlQMValuesString($fieldsList, $idFieldName);
+            $typesString = DBPreparedQuery::sqlTypesString($fieldsList, $idFieldName);
             $valuesList = self::createValuesList($fieldsList, $idFieldName);
         } else {
             $query = "INSERT INTO " . $dbObject->getTableName() . "
-                          SET " . self::createSQLQMValuesString($fieldsList);
-            $typesString = self::createSQLTypesString($fieldsList);
+                          SET " . DBPreparedQuery::sqlQMValuesString($fieldsList);
+            $typesString = DBPreparedQuery::sqlTypesString($fieldsList);
             $valuesList = self::createValuesList($fieldsList);
         }
         self::doUpdateQuery($query, $typesString, $valuesList);
@@ -647,10 +509,10 @@ class DBCore {
         $idFieldName = $dbObject->getIdFieldName();
 
         $query = "UPDATE " . $dbObject->getTableName() . "
-                  SET " . self::createSQLQMValuesString($fieldsList, $idFieldName) . "
+                  SET " . DBPreparedQuery::sqlQMValuesString($fieldsList, $idFieldName) . "
                   WHERE " . $idFieldName . " = ?
                   LIMIT 1";
-        $typesString = self::createSQLTypesString($fieldsList, $idFieldName);
+        $typesString = DBPreparedQuery::sqlTypesString($fieldsList, $idFieldName);
         if (Tools::isInteger($fieldsList[$idFieldName])) {
             $typesString.= "i";
         } else {
@@ -840,7 +702,7 @@ class DBCore {
             $idsList = array_filter($idsList, "isInteger");
             if (!empty($idsList)) {
                 $itemsNumber = count($idsList);
-                $types = self::sqlSingleTypeString("i", $itemsNumber);
+                $types = DBPreparedQuery::sqlSingleTypeString("i", $itemsNumber);
                 $dbObject = new $className();
 
                 if (!isInstanceOf($dbObject, $className)) {
@@ -849,7 +711,7 @@ class DBCore {
 
                 $query = "DELETE FROM " . $dbObject->getTableName() . "
                           WHERE " . $dbObject->getIdFieldName() . "
-                             IN (" . self::sqlQMString($itemsNumber) . ")";
+                             IN (" . DBPreparedQuery::sqlQMString($itemsNumber) . ")";
 
                 return self::doUpdateQuery($query, $types, $idsList);
             }
@@ -885,7 +747,7 @@ class DBCore {
             $idsList = array_filter($idsList, "isInteger");
             if (!empty($idsList)) {
                 $itemsNumber = count($idsList);
-                $types = self::sqlSingleTypeString("i", $itemsNumber);
+                $types = DBPreparedQuery::sqlSingleTypeString("i", $itemsNumber);
                 $dbObject = new $className();
 
                 if (!isInstanceOf($dbObject, $className)) {
@@ -893,7 +755,7 @@ class DBCore {
                 }
 
                 $query = "UPDATE " . $dbObject->getTableName() . " SET `" . $activationFieldName . "` = '" . $activationValue ."'
-                          WHERE " . $dbObject->getIdFieldName() . " IN (" . self::sqlQMString($itemsNumber) . ")";
+                          WHERE " . $dbObject->getIdFieldName() . " IN (" . DBPreparedQuery::sqlQMString($itemsNumber) . ")";
 
                 return self::doUpdateQuery($query, $types, $idsList);
             }
