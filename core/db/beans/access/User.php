@@ -1,6 +1,6 @@
 <?php
 
-require_once("core/db/TimedDBObject.php");
+require_once(realpath(dirname(__FILE__)) . "/../../TimedDBObject.php");
 
 /**
  * Simple User bean class.
