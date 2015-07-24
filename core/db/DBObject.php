@@ -214,6 +214,25 @@ abstract class DBObject extends Object {
     }
 
     /**
+     * Inits SQL query.
+     *
+     * @param string $queryType Type of the SQL query from types list from DBQuery.
+     * @param array $conditions List of conditions for WHERE instruction.
+     * @param array $fields List of fields for INSERT or UPDATE types of SQL queries.
+     *
+     * @return DBObject Itself.
+     */
+    public function initQuery($queryType, $conditions = array(), $fields = array()) {
+        $this->dbQuery = new DBPreparedQuery();
+
+        $this->dbQuery->setType($queryType);
+        $this->dbQuery->conditions = $conditions;
+        $this->dbQuery->fields = $fields;
+
+        return $this;
+    }
+
+    /**
      * Prepare DBObject for the select query (for WHERE expression).
      *
      * @param array $conditions List of the conditions fields
@@ -222,10 +241,11 @@ abstract class DBObject extends Object {
      * @return DBObject Current object.
      */
     public function select($conditions = array()) {
-        $this->dbQuery = new DBPreparedQuery();
-        $this->dbQuery->conditions = $conditions;
+        return $this->initQuery(DBQuery::TYPE_SELECT, $conditions);
+    }
 
-        return $this;
+    public function update($fields = array(), $conditions = array()) {
+        return $this->initQuery(DBQuery::TYPE_UPDATE, $conditions, $fields);
     }
 
     /**
@@ -270,31 +290,22 @@ abstract class DBObject extends Object {
      * @throws DBCoreException If some DB or query syntax errors occurred.
      */
     public function go($debug = false) {
-        $this->dbQuery->query = "SELECT * FROM " . static::TABLE_NAME;
+        switch ($this->dbQuery->getType()) {
+            case (DBQuery::TYPE_SELECT):
+                $this->dbQuery->query = "SELECT * FROM " . static::TABLE_NAME;
+                break;
+            case (DBQuery::TYPE_UPDATE):
+                $this->dbQuery->query = "UPDATE " . static::TABLE_NAME . " SET ";
+                $this->dbQuery->sqlPushValues($this->dbQuery->fields);
+                break;
+        }
 
         /**
          * Conditions
          */
         if (!empty($this->dbQuery->conditions)) {
-            $conditionsList = array();
-            foreach ($this->dbQuery->conditions as $fieldName => $fieldValue) {
-                if (!Tools::isInteger($fieldName)) {
-                    $conditionsList[]= $fieldName . " = ?";
-                    $this->dbQuery->types.= DBPreparedQuery::getFieldType($fieldValue);
-                    $this->dbQuery->params[] = $fieldValue;
-                } else {
-                    $condition = $fieldName;
-                    $localParams = $fieldValue;
-
-                    $conditionsList[] = "(" . $condition . ")";
-                    foreach ($localParams as $param) {
-                        $this->dbQuery->types.= DBPreparedQuery::getFieldType($param);
-                        $this->dbQuery->params[] = $param;
-                    }
-                }
-            }
-
-            $this->dbQuery->query.= " WHERE " . implode(" AND ", $conditionsList);
+            $this->dbQuery->query.= " WHERE ";
+            $this->dbQuery->sqlPushValues($this->dbQuery->conditions, " AND ");
         }
 
         /**
@@ -335,14 +346,14 @@ abstract class DBObject extends Object {
             OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->dbQuery->params)  . "]");
 
             OutputStream::close();
-        }
-
-        $stmt = DBCore::doSelectQuery($this->dbQuery);
-        if ($stmt !== false) {
-            if ($stmt->num_rows > 1) {
-                return DBCore::selectDBObjectsFromStatement($stmt, $this);
-            } elseif ($stmt->num_rows == 1) {
-                return DBCore::selectDBObjectFromStatement($stmt, $this);
+        } else {
+            $stmt = DBCore::doSelectQuery($this->dbQuery);
+            if ($stmt !== false) {
+                if ($stmt->num_rows > 1) {
+                    return DBCore::selectDBObjectsFromStatement($stmt, $this);
+                } elseif ($stmt->num_rows == 1) {
+                    return DBCore::selectDBObjectFromStatement($stmt, $this);
+                }
             }
         }
 

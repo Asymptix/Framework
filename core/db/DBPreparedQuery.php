@@ -287,6 +287,34 @@ class DBPreparedQuery extends DBQuery {
         return $typesString;
     }
 
+    /**
+     * Push values to the DBPreparedQuery SQL query field end.
+     *
+     * @param array $values List of pairs key => value or SQL query parts with
+     *           parameters.
+     * @param string $separator Join separator.
+     */
+    public function sqlPushValues($values, $separator = ", ") {
+        $chunks = array();
+        foreach ($values as $fieldName => $fieldValue) {
+            if (!is_array($fieldValue)) {
+                $chunks[]= $fieldName . " = ?";
+                $this->types.= DBPreparedQuery::getFieldType($fieldValue);
+                $this->params[] = $fieldValue;
+            } else {
+                $condition = $fieldName;
+                $localParams = $fieldValue;
+
+                $chunks[] = $condition;
+                foreach ($localParams as $param) {
+                    $this->types.= DBPreparedQuery::getFieldType($param);
+                    $this->params[] = $param;
+                }
+            }
+        }
+        $this->query.= implode($separator, $chunks);
+    }
+
 }
 
 ?>
