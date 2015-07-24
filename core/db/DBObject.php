@@ -20,6 +20,9 @@ require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
  */
 abstract class DBObject extends Object {
 
+    /**
+     * Status constants
+     */
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
 
@@ -34,22 +37,45 @@ abstract class DBObject extends Object {
     private $dbQuery = null;
 
     /**
-     * Create new default object.
+     * Creates new default object.
      */
-    public function DBObject() {}
+    public function __construct() {}
 
+    /**
+     * Returns primary key value.
+     *
+     * @return mixed.
+     */
     public function getId() {
         return $this->getFieldValue(static::ID_FIELD_NAME);
     }
 
+    /**
+     * Sets primary key value.
+     *
+     * @param mixed $id Key vaue
+     *
+     * @return boolean Success flag.
+     * @throws Exception If object has no field with such name.
+     */
     public function setId($id) {
         return $this->setFieldValue(static::ID_FIELD_NAME, $id);
     }
 
+    /**
+     * Returns name of the primary key field.
+     *
+     * @return mixed
+     */
     public static function getIdFieldName() {
         return static::ID_FIELD_NAME;
     }
 
+    /**
+     * Returns DBObject table name.
+     *
+     * @return string
+     */
     public static function getTableName() {
         return static::TABLE_NAME;
     }
@@ -192,24 +218,36 @@ abstract class DBObject extends Object {
         }
     }
 
+    /**
+     * Detects if current DBObject represents not existed DB record.
+     *
+     * @return boolean
+     */
     public function isNewRecord() {
         return ($this->id == 0);
     }
 
+    /**
+     * Saves DBObject to the database. If this is a new object - INSERT SQL
+     *           instruction executes, if existed one - UPDATE.
+     *
+     * @return mixed Primary key value.
+     * @throws DBCoreException If some database error occurred.
+     */
     public function save() {
-        if ($this->getId() == 0) {
+        if ($this->isNewRecord()) {
             $insertionId = DBCore::insertDBObject($this);
             if (Tools::isInteger($insertionId) && $insertionId > 0) {
                 $this->setId($insertionId);
             } else {
-                throw new Exception("Save database object error");
+                throw new DBCoreException("Save database object error");
             }
 
             return $insertionId;
         } else {
             DBCore::updateDBObject($this);
 
-            return $this->getId();
+            return $this->id;
         }
     }
 
