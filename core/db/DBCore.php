@@ -382,24 +382,6 @@ class DBCore {
     }
 
     /**
-     * Gets sinle row result of SQL query.
-     *
-     * @param object $stmt Statment of the query.
-     * @param mixed $value1 Value from database.
-     * @return true if all right, else false.
-     */
-    private static function getSingleRowResult($stmt, &$value1) {
-        if ($stmt->num_rows == 1) {
-            $stmt->bind_result($value1);
-            $stmt->fetch();
-            $stmt->close();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Returns list of database table fields.
      *
      * @param string $tableName Name of the table.
