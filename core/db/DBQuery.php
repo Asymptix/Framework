@@ -57,14 +57,31 @@ class DBQuery {
      */
     public $limit = 1;
 
+    /**
+     * Creates new DBQuery object with SQL type initialized.
+     *
+     * @param string $type SQL query type.
+     */
     public function __construct($type = self::TYPE_SELECT) {
         $this->setType($type);
     }
 
+    /**
+     * Validates SQL query type value.
+     *
+     * @param string $type SQL query type to validate.
+     * @return boolean
+     */
     public static function isValidQueryType($type) {
         return in_array($type, self::getQueryTypes());
     }
 
+    /**
+     * Sets SQL query type with additional query type validation.
+     *
+     * @param string $type SQL query type.
+     * @throws DBCoreException If invalid query type provided.
+     */
     public function setType($type = self::TYPE_SELECT) {
         if (self::isValidQueryType($type)) {
             $this->type = $type;
@@ -73,6 +90,11 @@ class DBQuery {
         }
     }
 
+    /**
+     * Returns SQL query type.
+     *
+     * @return string
+     */
     public function getType() {
         return $this->type;
     }
@@ -110,18 +132,42 @@ class DBQuery {
         return self::detectQueryType($this->query);
     }
 
-    private static function getQueryTypes() {
+    /**
+     * Returns DBQuery types array from DBQuery types constants list.
+     *
+     * @return array DBQuery types array.
+     */
+    public static function getQueryTypes() {
         $oClass = new ReflectionClass('DBQuery');
         $constantsList = $oClass->getConstants();
 
         return array_map(
-            array('self', 'filterQueryTypes'),
-            array_keys($constantsList)
+            array('self', 'getQueryTypeTitle'),
+            array_filter(
+                array_keys($constantsList),
+                array('self', 'filterQueryTypes')
+            )
         );
     }
 
+    /**
+     * DBQuery type constants filter.
+     *
+     * @param string $type Name of the constant.
+     * @return boolean
+     */
     private static function filterQueryTypes($type) {
         return (substr($type, 0, 5) == "TYPE_");
+    }
+
+    /**
+     * Gets query type title from DBQuery type constant name.
+     *
+     * @param string $constName Name of the constant.
+     * @return string
+     */
+    private static function getQueryTypeTitle($constName) {
+        return substr($constName, 5);
     }
 
 }
