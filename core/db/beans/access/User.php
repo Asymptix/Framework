@@ -1,6 +1,6 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/../../TimedDBObject.php");
+require_once(realpath(dirname(__FILE__)) . "/../../DBTimedObject.php");
 
 /**
  * Simple User bean class.
@@ -11,7 +11,7 @@ require_once(realpath(dirname(__FILE__)) . "/../../TimedDBObject.php");
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class User extends TimedDBObject {
+class User extends DBTimedObject {
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
 

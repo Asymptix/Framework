@@ -1,6 +1,6 @@
 <?php
 
-require_once("core/db/DBObject.php");
+require_once(realpath(dirname(__FILE__)) . "/DBObject.php");
 
 /**
  * Wraper for DBObject with fields for storing creation and updating time and
@@ -11,7 +11,7 @@ require_once("core/db/DBObject.php");
  * @copyright (c) 2013 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class TimedDBObject extends DBObject {
+class DBTimedObject extends DBObject {
 
     /**
      * Changes record creation time and user Id.
