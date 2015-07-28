@@ -92,9 +92,9 @@ class DBPreparedQuery extends DBQuery {
         if ($debug) {
             OutputStream::start();
 
-            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $this->dbQuery->query);
-            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $this->dbQuery->types);
-            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->dbQuery->params)  . "]");
+            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $this->query);
+            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $this->types);
+            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->params)  . "]");
 
             OutputStream::close();
         } else {
