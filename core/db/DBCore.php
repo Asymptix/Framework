@@ -544,8 +544,6 @@ class DBCore {
             $dbObject = new $className();
             self::selectDBObjectFromResultSet($dbObject, $resultSet);
 
-            //self::echoObject($dbObject);
-
             if (!is_null($dbObject) && is_object($dbObject) && $dbObject->getId()) {
                 return $dbObject;
             } else {
