@@ -17,6 +17,8 @@ class DBQueryType {
     const UPDATE = 'UPDATE';
     const DELETE = 'DELETE';
 
+    const DESCRIBE = 'DESCRIBE';
+
     /**
      * Validates SQL query type value.
      *
