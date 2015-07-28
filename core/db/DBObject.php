@@ -271,10 +271,10 @@ abstract class DBObject extends Object {
     }
 
     /**
-     * Prepare DBObject for the select query (for WHERE expression).
+     * Prepare DBObject for the SELECT SQL query.
      *
      * @param array $conditions List of the conditions fields
-     *           (fieldName => fieldValue or strCondition => params).
+     *           (fieldName => fieldValue or sqlCondition => params).
      *
      * @return DBObject Current object.
      */
@@ -282,8 +282,56 @@ abstract class DBObject extends Object {
         return $this->initQuery(DBQueryType::SELECT, $conditions);
     }
 
-    public function update($fields = array(), $conditions = array()) {
+    /**
+     * Static way to prepare DBObject for the SELECT SQL query.
+     *
+     * @param array $conditions List of the conditions fields
+     *           (fieldName => fieldValue or sqlCondition => params).
+     *
+     * @return DBObject Current object.
+     */
+    public static function _select($conditions = array()) {
+        $ref = new ReflectionClass(get_called_class());
+        $dbObject = $ref->newInstance();
+
+        return $dbObject->initQuery(DBQueryType::SELECT, $conditions);
+    }
+
+    /**
+     * Prepare DBObject for the UPDATE SQL query.
+     *
+     * @param type $fields List of fields to be updated
+     *           (fieldName => fieldValue or sqlAssignment => params).
+     * @param array $conditions List of the conditions fields
+     *           (fieldName => fieldValue or sqlCondition => params).
+     *
+     * @return DBObject Current object.
+     */
+    public function update($fields = array(), $conditions = array(), $debug = false) {
+        /*if (!$this->isNewRecord()) { // Process only current record on fire.
+            $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
+
+            return $this->go($debug);
+        }*/
+
         return $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
+    }
+
+    /**
+     * Static way to prepare DBObject for the UPDATE SQL query.
+     *
+     * @param type $fields List of fields to be updated
+     *           (fieldName => fieldValue or sqlAssignment => params).
+     * @param array $conditions List of the conditions fields
+     *           (fieldName => fieldValue or sqlCondition => params).
+     *
+     * @return DBObject Current object.
+     */
+    public static function _update($fields = array(), $conditions = array()) {
+        $ref = new ReflectionClass(get_called_class());
+        $dbObject = $ref->newInstance();
+
+        return $dbObject->initQuery(DBQueryType::UPDATE, $conditions, $fields);
     }
 
     /**
@@ -341,39 +389,50 @@ abstract class DBObject extends Object {
         /**
          * Conditions
          */
-        if (!empty($this->dbQuery->conditions)) {
+        if ($this->isNewRecord()) {
+            if (!empty($this->dbQuery->conditions)) {
+                $this->dbQuery->query.= " WHERE ";
+                $this->dbQuery->sqlPushValues($this->dbQuery->conditions, " AND ");
+            }
+        } else {
             $this->dbQuery->query.= " WHERE ";
-            $this->dbQuery->sqlPushValues($this->dbQuery->conditions, " AND ");
+            $this->dbQuery->sqlPushValues(array(static::ID_FIELD_NAME => $this->id));
         }
 
         /**
          * Order
          */
-        if (!empty($this->dbQuery->order)) {
-            $this->dbQuery->query.= " ORDER BY";
-            foreach ($this->dbQuery->order as $fieldName => $ord) {
-                $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
+        if ($this->isNewRecord()) {
+            if (!empty($this->dbQuery->order)) {
+                $this->dbQuery->query.= " ORDER BY";
+                foreach ($this->dbQuery->order as $fieldName => $ord) {
+                    $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
+                }
+                $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
             }
-            $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
         }
 
         /**
          * Limit
          */
-        if (!is_null($this->dbQuery->limit)) {
-            if (Tools::isInteger($this->dbQuery->limit)) {
-                $this->dbQuery->query.= " LIMIT " . $this->dbQuery->limit;
-            } elseif (is_array($this->dbQuery->limit) && count($this->dbQuery->limit) == 2) {
-                $offset = $this->dbQuery->limit[0];
-                $count = $this->dbQuery->limit[1];
-                if (Tools::isInteger($offset) && Tools::isInteger($count)) {
-                    $this->dbQuery->query.= " LIMIT " . $offset . ", " . $count;
+        if ($this->isNewRecord()) {
+            if (!is_null($this->dbQuery->limit)) {
+                if (Tools::isInteger($this->dbQuery->limit)) {
+                    $this->dbQuery->query.= " LIMIT " . $this->dbQuery->limit;
+                } elseif (is_array($this->dbQuery->limit) && count($this->dbQuery->limit) == 2) {
+                    $offset = $this->dbQuery->limit[0];
+                    $count = $this->dbQuery->limit[1];
+                    if (Tools::isInteger($offset) && Tools::isInteger($count)) {
+                        $this->dbQuery->query.= " LIMIT " . $offset . ", " . $count;
+                    } else {
+                        throw new DBCoreException("Invalid LIMIT param in select() method.");
+                    }
                 } else {
                     throw new DBCoreException("Invalid LIMIT param in select() method.");
                 }
-            } else {
-                throw new DBCoreException("Invalid LIMIT param in select() method.");
             }
+        } else {
+            $this->dbQuery->query.= " LIMIT 1";
         }
 
         if ($debug) {
