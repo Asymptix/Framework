@@ -97,12 +97,12 @@ class DBPreparedQuery extends DBQuery {
             OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->dbQuery->params)  . "]");
 
             OutputStream::close();
-        }
-
-        if ($this->getType() == DBQuery::TYPE_SELECT) {
-            return DBCore::doSelectQuery($this);
         } else {
-            return DBCore::doUpdateQuery($this);
+            if ($this->getType() == DBQueryType::SELECT) {
+                return DBCore::doSelectQuery($this);
+            } else {
+                return DBCore::doUpdateQuery($this);
+            }
         }
     }
 

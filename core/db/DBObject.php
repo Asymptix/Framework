@@ -279,11 +279,11 @@ abstract class DBObject extends Object {
      * @return DBObject Current object.
      */
     public function select($conditions = array()) {
-        return $this->initQuery(DBQuery::TYPE_SELECT, $conditions);
+        return $this->initQuery(DBQueryType::SELECT, $conditions);
     }
 
     public function update($fields = array(), $conditions = array()) {
-        return $this->initQuery(DBQuery::TYPE_UPDATE, $conditions, $fields);
+        return $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
     }
 
     /**
@@ -329,10 +329,10 @@ abstract class DBObject extends Object {
      */
     public function go($debug = false) {
         switch ($this->dbQuery->getType()) {
-            case (DBQuery::TYPE_SELECT):
+            case (DBQueryType::SELECT):
                 $this->dbQuery->query = "SELECT * FROM " . static::TABLE_NAME;
                 break;
-            case (DBQuery::TYPE_UPDATE):
+            case (DBQueryType::UPDATE):
                 $this->dbQuery->query = "UPDATE " . static::TABLE_NAME . " SET ";
                 $this->dbQuery->sqlPushValues($this->dbQuery->fields);
                 break;
