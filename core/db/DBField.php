@@ -35,7 +35,7 @@ class DBField {
     /**
      * Constructor of the class with parameters validation.
      *
-     * @param string $type Type of the field data.
+     * @param string $type Type of the field.
      * @param string $name Name of the field.
      * @param mixed $value Value of the field.
      */
@@ -43,7 +43,6 @@ class DBField {
         if (!(boolean)preg_match("#^[a-zA-Z][a-zA-Z0-9_]*$#", $name)) {
             throw new DBFieldException("Can't create DBField object: invalid field name '" . $name . "'");
         }
-
         $this->name = $name;
 
         if (empty($type)) {
