@@ -1,7 +1,7 @@
 <?php
 
 require_once(realpath(dirname(__FILE__)) . "/../Object.php");
-require_once(realpath(dirname(__FILE__)) . "/DBPreparedQuery.php");
+require_once(realpath(dirname(__FILE__)) . "/DBField.php");
 
 /**
  * Database selecting functionality.
@@ -106,7 +106,7 @@ class DBSelector extends Object {
 
         $query.= " LIMIT 1";
 
-        $fieldType = DBPreparedQuery::getFieldType($fieldValue);
+        $fieldType = DBField::getType($fieldValue);
         $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
         if ($stmt != false) {
             $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
@@ -174,7 +174,7 @@ class DBSelector extends Object {
             $query .= " LIMIT " . $this->from . "," . $this->count;
         }
 
-        $fieldType = DBPreparedQuery::getFieldType($fieldValue);
+        $fieldType = DBField::getType($fieldValue);
         $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
         if ($stmt != false) {
             $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, get_class($this->dbObject));

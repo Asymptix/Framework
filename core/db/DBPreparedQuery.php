@@ -1,5 +1,6 @@
 <?php
 
+require_once(realpath(dirname(__FILE__)) . "/DBField.php");
 require_once(realpath(dirname(__FILE__)) . "/DBQuery.php");
 
 require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
@@ -126,7 +127,7 @@ class DBPreparedQuery extends DBQuery {
                     );
                 }
 
-                $typeByValue = self::getFieldType($value);
+                $typeByValue = DBField::getType($value);
                 if ($typeByValue != 's') {
                     if ($type != $typeByValue && !($type == 'd' && $typeByValue == 'i')) {
                         throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . "' type but '" . $typeByValue . "' detected)");
@@ -153,29 +154,6 @@ class DBPreparedQuery extends DBQuery {
             }
         } else {
             throw new DBCoreException("Number of types is not equal parameters number");
-        }
-    }
-
-    /**
-     * Returns type of the parameter by it's value.
-     *
-     * @param mixed $fieldValue
-     *
-     * @return string Types of the parameter ("idsb").
-     *
-     * @throws Exception
-     */
-    public static function getFieldType($fieldValue) {
-        if (Tools::isInteger($fieldValue)) {
-            return "i";
-        } elseif (Tools::isDouble($fieldValue)) {
-            return "d";
-        } elseif (Tools::isBoolean($fieldValue)) {
-            return "b";
-        } elseif (Tools::isString($fieldValue)) {
-            return "s";
-        } else {
-            throw new Exception("Invalid field value type");
         }
     }
 
@@ -257,31 +235,18 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Returns SQL types string of single type.
      *
-     * @param string $type Type name.
+     * @param string $type SQL type.
      * @param integer $length Length of the SQL types string.
+     *
      * @return string
+     * @throws DBFieldTypeException If invalid type passed.
      */
     public static function sqlSingleTypeString($type, $length) {
-        $typesList = array(
-            'integer' => "i",
-            'int'     => "i",
-            'i'       => "i",
-            'real'    => "d",
-            'float'   => "d",
-            'double'  => "d",
-            'd'       => "d",
-            'string'  => "s",
-            'str'     => "s",
-            's'       => "s",
-            'boolean' => "b",
-            'bool'    => "b",
-            'b'       => "b"
-        );
-        $type = $typesList[$type];
+        $type = DBField::castType($type);
         $typesString = "";
         while ($length > 0) {
-            $typesString .= $type;
-            $length --;
+            $typesString.= $type;
+            $length--;
         }
 
         return $typesString;
@@ -299,7 +264,7 @@ class DBPreparedQuery extends DBQuery {
         foreach ($values as $fieldName => $fieldValue) {
             if (!is_array($fieldValue)) {
                 $chunks[]= $fieldName . " = ?";
-                $this->types.= DBPreparedQuery::getFieldType($fieldValue);
+                $this->types.= DBField::getType($fieldValue);
                 $this->params[] = $fieldValue;
             } else {
                 $condition = $fieldName;
@@ -307,7 +272,7 @@ class DBPreparedQuery extends DBQuery {
 
                 $chunks[] = $condition;
                 foreach ($localParams as $param) {
-                    $this->types.= DBPreparedQuery::getFieldType($param);
+                    $this->types.= DBField::getType($param);
                     $this->params[] = $param;
                 }
             }
