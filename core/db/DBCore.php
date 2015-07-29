@@ -6,8 +6,6 @@ require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
 
 require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
 
-class DBCoreException extends Exception {}
-
 /**
  * Core database functionality.
  *
@@ -236,7 +234,7 @@ class DBCore {
     public function getCurrentConnection() {
         $key = $this->currIndex;
         if (!isset($this->connections[$key])) {
-            throw new Exception('There is no open connection');
+            throw new DBCoreException('There is no open connection');
         }
         return $this->connections[$key];
     }
@@ -745,5 +743,10 @@ class DBCore {
     }
 
 }
+
+/**
+ * Service exception class.
+ */
+class DBCoreException extends Exception {}
 
 ?>
