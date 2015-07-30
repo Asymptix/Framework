@@ -96,6 +96,31 @@ class DBQuery {
         return DBQueryType::detectQueryType($this->query);
     }
 
+    /**
+     * Outputs DB query debug information to the stream.
+     *
+     * @param string $query SQL query.
+     * @param string $types SQL types string.
+     * @param array $params List of SQL query parameters.
+     */
+    public static function showQueryDebugInfo($query = "", $types = "", array $params = array()) {
+        if (!empty($query)) {
+            OutputStream::start();
+
+            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $query);
+
+            if (!empty($types)) {
+                OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $types);
+            }
+
+            if (!empty($params)) {
+                OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $params)  . "]");
+            }
+
+            OutputStream::close();
+        }
+    }
+
 }
 
 ?>

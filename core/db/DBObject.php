@@ -436,13 +436,11 @@ abstract class DBObject extends Object {
         }
 
         if ($debug) {
-            OutputStream::start();
-
-            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $this->dbQuery->query);
-            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $this->dbQuery->types);
-            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->dbQuery->params)  . "]");
-
-            OutputStream::close();
+            DBQuery::showQueryDebugInfo(
+                $this->dbQuery->query,
+                $this->dbQuery->types,
+                $this->dbQuery->params
+            );
         } else {
             $stmt = DBCore::doSelectQuery($this->dbQuery);
             if ($stmt !== false) {

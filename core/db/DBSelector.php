@@ -6,6 +6,7 @@ require_once(realpath(dirname(__FILE__)) . "/../Object.php");
 require_once(realpath(dirname(__FILE__)) . "/DBCore.php");
 require_once(realpath(dirname(__FILE__)) . "/DBField.php");
 require_once(realpath(dirname(__FILE__)) . "/DBQueryCondition.php");
+require_once(realpath(dirname(__FILE__)) . "/DBQuery.php");
 
 /**
  * Database selecting functionality.
@@ -113,7 +114,7 @@ class DBSelector extends Object {
                 return $dbObject;
             }
         } else {
-            //TODO: add debug code
+            DBQuery::showQueryDebugInfo($query);
         }
 
         return null;
@@ -148,12 +149,12 @@ class DBSelector extends Object {
             $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
             if ($stmt != false) {
                 $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
-                $stmt->close();
 
+                $stmt->close();
                 return $dbObject;
             }
         } else {
-            //TODO: add debug code
+            DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
         }
 
         return null;
@@ -204,12 +205,12 @@ class DBSelector extends Object {
             $stmt = DBCore::doSelectQuery($query);
             if ($stmt !== false) {
                 $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, $this->dbObject);
-                $stmt->close();
 
+                $stmt->close();
                 return $dbObjects;
             }
         } else {
-            //TODO: add debug code
+            DBQuery::showQueryDebugInfo($query);
         }
 
         return array();
@@ -246,17 +247,17 @@ class DBSelector extends Object {
             }
         }
 
+        $fieldType = DBField::getType($fieldValue);
         if (!$debug) {
-            $fieldType = DBField::getType($fieldValue);
             $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
             if ($stmt != false) {
                 $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, get_class($this->dbObject));
-                $stmt->close();
 
+                $stmt->close();
                 return $dbObjects;
             }
         } else {
-            //TODO: debug code
+            DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
         }
 
         return array();

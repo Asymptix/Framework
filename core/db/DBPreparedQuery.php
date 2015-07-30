@@ -91,13 +91,7 @@ class DBPreparedQuery extends DBQuery {
      */
     public function go($debug = false) {
         if ($debug) {
-            OutputStream::start();
-
-            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $this->query);
-            OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $this->types);
-            OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $this->params)  . "]");
-
-            OutputStream::close();
+            DBQuery::showQueryDebugInfo($this->query, $this->types, $this->params);
         } else {
             if ($this->getType() == DBQueryType::SELECT) {
                 return DBCore::doSelectQuery($this);
