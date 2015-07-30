@@ -130,6 +130,63 @@ class DBField {
         }
     }
 
+    /**
+     * Casts field value to it's type.
+     *
+     * @param string $type Field type.
+     * @param mixed $value Field value.
+     *
+     * @return mixed Casted field value.
+     * @throws DBFieldTypeException If invalid field type provided.
+     */
+    public static function castValue($type, $value) {
+        $type = self::castType($type);
+        switch ($type) {
+            case ("i"):
+                return (integer)$value;
+            case ("d"):
+                return (double)$value;
+            case ("s"):
+                return (string)$value;
+            case ("b"):
+                return (boolean)$value;
+        }
+
+        throw new DBFieldTypeException("Invalid SQL type");
+    }
+
+    /**
+     * Returns field value in the SQL query format.
+     *
+     * @param string $type Field type.
+     * @param mixed $value Field value.
+     *
+     * @return mixed SQL formatted value of the field.
+     * @throws DBFieldTypeException If invalid field type provided.
+     */
+    public static function sqlValue($type, $value) {
+        $type = self::castType($type);
+        $value = self::castValue($type, $value);
+        switch ($type) {
+            case ("i"):
+            case ("d"):
+                return $value;
+            case ("s"):
+                if (!in_array($value, array('NOW()'))) {
+                    return "'" . $value . "'";
+                } else {
+                    return $value;
+                }
+            case ("b"):
+                if ($value) {
+                    return "TRUE";
+                }
+                return "FALSE";
+        }
+
+        throw new DBFieldTypeException("Invalid SQL type");
+    }
+
 }
 
 /**
