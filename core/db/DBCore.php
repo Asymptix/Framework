@@ -86,7 +86,7 @@ class DBCore {
      * @param mysqli Object $connResource An object which represents the connection to a MySQL Server.
      * @param string $connName Name of the connection, if empty numeric key is used.
      *
-     * @throws Exception If trying to save a connection with an existing name.
+     * @throws DBCoreException If trying to save a connection with an existing name.
      */
     public static function connection($connResource = null, $connName = null) {
         if ($connResource == null) {
@@ -102,13 +102,13 @@ class DBCore {
      * @param mysqli Object $connResource An object which represents the connection to a MySQL Server.
      * @param string $connName Name of the connection, if empty numeric key is used.
      *
-     * @throws Exception If trying to save a connection with an existing name.
+     * @throws DBCoreException If trying to save a connection with an existing name.
      */
     public function openConnection($connResource, $connName = null) {
         if ($connName !== null) {
             $connName = (string)$connName;
             if (isset($this->connections[$connName])) {
-                throw new Exception("You trying to save a connection with an existing name");
+                throw new DBCoreException("You trying to save a connection with an existing name");
             }
         } else {
             $connName = $this->index;
@@ -125,11 +125,11 @@ class DBCore {
      *
      * @return mysqli Object
      *
-     * @throws Exception If trying to get a non-existent connection.
+     * @throws DBCoreException If trying to get a non-existent connection.
      */
     public function getConnection($connName) {
         if (!isset($this->connections[$connName])) {
-            throw new Exception('Unknown connection: ' . $connName);
+            throw new DBCoreException('Unknown connection: ' . $connName);
         }
 
         return $this->connections[$connName];
@@ -153,7 +153,7 @@ class DBCore {
      */
     public function closeConnection($connection) {
         $key = false;
-        if (is_object($connection)) { // TODO: change to isObject method
+        if (Tools::isObject($connection)) {
             $connection->close();
             $key = $this->getConnectionName($connection);
         } elseif (is_string($connection)) {
@@ -186,11 +186,11 @@ class DBCore {
      *
      * @param mixed $key The connection key
      *
-     * @throws Exception
+     * @throws DBCoreException
      */
     public function setCurrentConnection($key) {
         if (!$this->contains($key)) {
-            throw new Exception("Connection key '$key' does not exist.");
+            throw new DBCoreException("Connection key '$key' does not exist.");
         }
         $this->currIndex = $key;
     }
@@ -227,7 +227,7 @@ class DBCore {
     /**
      * Get the current connection instance.
      *
-     * @throws Exception If there are no open connections
+     * @throws DBCoreException If there are no open connections
      *
      * @return mysqli Object
      */
@@ -239,6 +239,13 @@ class DBCore {
         return $this->connections[$key];
     }
 
+    /**
+     * Inits DBCore internal selector.
+     *
+     * @param mixed $className Class name of DBObject instance.
+     *
+     * @return DBSelector
+     */
     public static function Selector($className = null) {
         if (!empty($className)) {
             self::getInstance()->selector = new DBSelector($className);
@@ -464,6 +471,13 @@ class DBCore {
         return $valuesList;
     }
 
+    /**
+     * Executes SQL INSERT query to the database.
+     *
+     * @param DBObject $dbObject DBObject to insert.
+     *
+     * @return integer Insertion ID (primary key value).
+     */
     public static function insertDBObject($dbObject) {
         $fieldsList = $dbObject->getFieldsList();
         $idFieldName = $dbObject->getIdFieldName();
@@ -484,6 +498,14 @@ class DBCore {
         return (self::connection()->insert_id);
     }
 
+    /**
+     * Executes SQL UPDATE query to the database.
+     *
+     * @param DBObject $dbObject DBObject to update.
+     *
+     * @return integer Returns the number of affected rows on success, and -1 if
+     *           the last query failed.
+     */
     public static function updateDBObject($dbObject) {
         $fieldsList = $dbObject->getFieldsList();
         $idFieldName = $dbObject->getIdFieldName();
@@ -504,6 +526,14 @@ class DBCore {
         return self::doUpdateQuery($query, $typesString, $valuesList);
     }
 
+    /**
+     * Executes SQL DELETE query to the database.
+     *
+     * @param DBObject $dbObject DBObject to delete.
+     *
+     * @return integer Returns the number of affected rows on success, and -1 if
+     *           the last query failed.
+     */
     public static function deleteDBObject($dbObject) {
         if (!empty($dbObject) && is_object($dbObject)) {
             $query = "DELETE FROM " . $dbObject->getTableName() . " WHERE " . $dbObject->getIdFieldName() . " = ?";
@@ -625,16 +655,41 @@ class DBCore {
         return $obj;
     }
 
+    /**
+     * Executes SQL query with single row and value result and return this value.
+     *
+     * @param string $query SQL query to execute.
+     *
+     * @return mixed
+     */
     public static function selectSingleValue($query) {
         $stmt = self::doSelectQuery($query);
 
-        $stmt->bind_result($value);
-        $stmt->fetch();
-        $stmt->close();
+        if ($stmt !== false) {
+            $stmt->bind_result($value);
+            $stmt->fetch();
+            $stmt->close();
 
-        return $value;
+            return $value;
+        }
+        return null;
     }
 
+    /**
+     * Calls DBCore magic methods like:
+     *    get[User]By[Id]($userId)
+     *    get[User]By[Email]($email)
+     *    get[Users]()
+     *    delete[Users]($ids)
+     *    delete[User]($userId)
+     *    set[User]Activation($activationFieldName, $flagValue)
+     *
+     * @param string $methodName Name of the magic method.
+     * @param array $methodParams List of dynamic parameters.
+     *
+     * @return mixed
+     * @throws DBCoreException
+     */
     public function __call($methodName, $methodParams) {
         if (strrpos($methodName, "ies") == strlen($methodName) - 3) {
             $methodName = substr($methodName, 0, strlen($methodName) - 3) . "ys";
@@ -684,7 +739,7 @@ class DBCore {
                 $dbObject = new $className();
 
                 if (!isInstanceOf($dbObject, $className)) {
-                    throw new Exception("Class with name '" . $className . "' is not exists");
+                    throw new DBCoreException("Class with name '" . $className . "' is not exists");
                 }
 
                 $query = "DELETE FROM " . $dbObject->getTableName() . "
@@ -719,7 +774,7 @@ class DBCore {
             $activationValue = $methodParams[2];
 
             if (empty($activationFieldName)) {
-                throw new Exception("Invalid activation field name");
+                throw new DBCoreException("Invalid activation field name");
             }
 
             $idsList = array_filter($idsList, "isInteger");
@@ -729,7 +784,7 @@ class DBCore {
                 $dbObject = new $className();
 
                 if (!isInstanceOf($dbObject, $className)) {
-                    throw new Exception("Class with name '" . $className . "' is not exists");
+                    throw new DBCoreException("Class with name '" . $className . "' is not exists");
                 }
 
                 $query = "UPDATE " . $dbObject->getTableName() . " SET `" . $activationFieldName . "` = '" . $activationValue ."'
