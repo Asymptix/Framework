@@ -328,10 +328,7 @@ class Tools {
      */
     public static function isObject(&$object) {
         if (isset($object) && is_object($object)) {
-            if (!empty($object)) {
-                return true;
-            }
-            return false;
+            return !empty($object);
         }
         return false;
     }
