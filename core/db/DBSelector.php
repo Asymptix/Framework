@@ -1,7 +1,11 @@
 <?php
 
+require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
 require_once(realpath(dirname(__FILE__)) . "/../Object.php");
+
+require_once(realpath(dirname(__FILE__)) . "/DBCore.php");
 require_once(realpath(dirname(__FILE__)) . "/DBField.php");
+require_once(realpath(dirname(__FILE__)) . "/DBQueryCondition.php");
 
 /**
  * Database selecting functionality.
@@ -17,11 +21,16 @@ class DBSelector extends Object {
     protected $fieldsList = array(
         'conditions' => "",
         'order' => "",
-        'from' => 0,
+        'offset' => 0,
         'count' => "all",
         'field' => ""
     );
 
+    /**
+     * TODO: add docs
+     *
+     * @var type
+     */
     public $unique = false;
 
     /**
@@ -38,7 +47,7 @@ class DBSelector extends Object {
      */
     private $dbObject = null;
 
-    public function DBSelector($className) {
+    public function __construct($className) {
         if (is_object($className)) {
             $className = get_class($className);
         }
@@ -54,45 +63,73 @@ class DBSelector extends Object {
      */
     private function validateClassName($className) {
         if ($className != $this->className) {
-            throw new Exception("Invalid DB object classname in method name");
+            throw new DBSelectorException("Invalid DB object classname in method name");
         }
     }
 
+    /**
+     * Reset fields to the initial values.
+     */
     public function reset() {
         $this->setFieldsValues(
             array(
                 'conditions' => "",
                 'order' => "",
-                'from' => 0,
+                'offset' => 0,
                 'count' => "all",
                 'field' => ""
             )
         );
     }
 
+    /**
+     * Wrapper setter method for set SQL query conditions.
+     *
+     * @param mixed $conditions
+     */
     public function setConditions($conditions) {
-        $this->setFieldValue('conditions', $conditions);
+        if (is_array($conditions)) {
+            $conditions = DBQueryCondition::getSQLCondition($conditions);
+        }
+        $this->setFieldValue('conditions', trim($conditions));
     }
 
-    public function selectDBObject() {
-        $tempConditions = $this->conditions;
+    /**
+     * Selects DBObject from the database.
+     *
+     * @param boolean $debug Debug flag.
+     * @return DBObject
+     */
+    public function selectDBObject($debug = false) {
+        $query = "SELECT * FROM " . $this->dbObject->getTableName() .
+                  ($this->conditions != ""?" WHERE " . $this->conditions:"") . " LIMIT 1";
 
-        $query = "SELECT *
-                  FROM " . $this->dbObject->getTableName() . "
-                  WHERE " . (!empty($tempConditions)?$tempConditions:"1") . "
-                  LIMIT 1";
+        if (!$debug) {
+            $stmt = DBCore::doSelectQuery($query);
+            if ($stmt !== false) {
+                $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
 
-        $stmt = DBCore::doSelectQuery($query);
-        $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
-        $stmt->close();
+                $stmt->close();
+                return $dbObject;
+            }
+        } else {
+            //TODO: add debug code
+        }
 
-        return $dbObject;
+        return null;
     }
 
-    public function selectDBObjectByField($fieldName, $fieldValue) {
-        $query = "SELECT *
-                  FROM " . $this->dbObject->getTableName() . "
-                  WHERE " . $fieldName . " = ?";
+    /**
+     * TODO: add docs
+     *
+     * @param type $fieldName
+     * @param type $fieldValue
+     * @param type $debug
+     *
+     * @return type
+     */
+    public function selectDBObjectByField($fieldName, $fieldValue, $debug = false) {
+        $query = "SELECT * FROM " . $this->dbObject->getTableName() . " WHERE " . $fieldName . " = ?";
 
         if ($this->conditions != "") {
             $query .= " AND " . $this->conditions;
@@ -107,21 +144,42 @@ class DBSelector extends Object {
         $query.= " LIMIT 1";
 
         $fieldType = DBField::getType($fieldValue);
-        $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
-        if ($stmt != false) {
-            $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
-            $stmt->close();
+        if (!$debug) {
+            $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
+            if ($stmt != false) {
+                $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
+                $stmt->close();
 
-            return $dbObject;
+                return $dbObject;
+            }
+        } else {
+            //TODO: add debug code
         }
+
         return null;
     }
 
-    public function selectDBObjectById($objectId) {
-        return $this->selectDBObjectByField($this->dbObject->getIdFieldName(), $objectId);
+    /**
+     * TODO: add docs
+     *
+     * @param type $objectId
+     * @param type $debug
+     * @return type
+     */
+    public function selectDBObjectById($objectId = null, $debug = false) {
+        if (is_null($objectId)) {
+            $objectId = $this->dbObject->id;
+        }
+        return $this->selectDBObjectByField($this->dbObject->getIdFieldName(), $objectId, $debug);
     }
 
-    public function selectDBObjects() {
+    /**
+     * TODO: add docs
+     *
+     * @param type $debug
+     * @return type
+     */
+    public function selectDBObjects($debug = false) {
         $query = "SELECT" . ($this->unique?" DISTINCT":"") . " * FROM " . $this->dbObject->getTableName();
 
         if ($this->conditions != "") {
@@ -135,28 +193,38 @@ class DBSelector extends Object {
         }
 
         if ($this->count !== "all") {
-            $query .= " LIMIT " . $this->from . "," . $this->count;
-        }
-
-        $stmt = DBCore::doSelectQuery($query);
-        $dbObjects = array();
-        if ($stmt) {
-            $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, get_class($this->dbObject));
-            $stmt->close();
-        }
-
-        /*if (is_array($dbObjects) && count($dbObjects) == 1) {
-            $dbObject = reset($dbObjects);
-            if (isInstanceOf($dbObject, get_class($this->dbObject))) {
-                return $dbObject;
+            if ($this->offset > 0) {
+                $query .= " LIMIT " . $this->offset . "," . $this->count;
+            } else {
+                $query .= " LIMIT " . $this->count;
             }
-            return null;
-        }*/
+        }
 
-        return $dbObjects;
+        if (!$debug) {
+            $stmt = DBCore::doSelectQuery($query);
+            if ($stmt !== false) {
+                $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, $this->dbObject);
+                $stmt->close();
+
+                return $dbObjects;
+            }
+        } else {
+            //TODO: add debug code
+        }
+
+        return array();
     }
 
-    public function selectDBObjectsByField($fieldName, $fieldValue) {
+    /**
+     * TODO: add docs
+     *
+     * @param type $fieldName
+     * @param type $fieldValue
+     * @param type $debug
+     *
+     * @return type
+     */
+    public function selectDBObjectsByField($fieldName, $fieldValue, $debug = false) {
         $query = "SELECT * FROM " . $this->dbObject->getTableName();
         $query .= " WHERE " . $fieldName . " = ?";
 
@@ -171,28 +239,34 @@ class DBSelector extends Object {
         }
 
         if ($this->count !== "all") {
-            $query .= " LIMIT " . $this->from . "," . $this->count;
+            if ($this->offset > 0) {
+                $query .= " LIMIT " . $this->offset . "," . $this->count;
+            } else {
+                $query .= " LIMIT " . $this->count;
+            }
         }
 
-        $fieldType = DBField::getType($fieldValue);
-        $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
-        if ($stmt != false) {
-            $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, get_class($this->dbObject));
-            $stmt->close();
+        if (!$debug) {
+            $fieldType = DBField::getType($fieldValue);
+            $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
+            if ($stmt != false) {
+                $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, get_class($this->dbObject));
+                $stmt->close();
 
-            /*if (is_array($dbObjects) && count($dbObjects) == 1) {
-                $dbObject = reset($dbObjects);
-                if (isInstanceOf($dbObject, get_class($this->dbObject))) {
-                    return $dbObject;
-                }
-                return null;
-            }*/
-
-            return $dbObjects;
+                return $dbObjects;
+            }
+        } else {
+            //TODO: debug code
         }
+
         return array();
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @return type
+     */
     public function count() {
         $query = "SELECT count(*) FROM " . $this->dbObject->getTableName();
 
@@ -203,6 +277,11 @@ class DBSelector extends Object {
         return DBCore::selectSingleValue($query);
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @return type
+     */
     public function max() {
         $query = "SELECT max(`" . $this->field . "`) FROM " . $this->dbObject->getTableName();
 
@@ -213,6 +292,11 @@ class DBSelector extends Object {
         return DBCore::selectSingleValue($query);
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @return type
+     */
     public function min() {
         $query = "SELECT min(`" . $this->field . "`) FROM " . $this->dbObject->getTableName();
 
@@ -230,7 +314,7 @@ class DBSelector extends Object {
      * @param array $methodParams Method parameters.
      *
      * @return mixed
-     * @throws Exception
+     * @throws DBSelectorException
      */
     public function __call($methodName, $methodParams) {
         /**
@@ -309,9 +393,14 @@ class DBSelector extends Object {
             case ("get"):
                 return $this->getFieldValue($fieldName);
             default:
-                throw new Exception("No such method"); // TODO: Some personal exception
+                throw new DBSelectorException("No method with name '" . $methodName . "'");
         }
     }
 }
+
+/**
+ * Service exception class.
+ */
+class DBSelectorException extends Exception {};
 
 ?>
