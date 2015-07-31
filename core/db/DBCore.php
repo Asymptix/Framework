@@ -659,11 +659,13 @@ class DBCore {
      * Executes SQL query with single row and value result and return this value.
      *
      * @param string $query SQL query to execute.
+     * @param string $types Types string (ex: "isdb").
+     * @param array $params Parameters in the same order like types string.
      *
      * @return mixed
      */
-    public static function selectSingleValue($query) {
-        $stmt = self::doSelectQuery($query);
+    public static function selectSingleValue($query, $types = "", $params = array()) {
+        $stmt = self::doSelectQuery($query, $types, $params);
 
         if ($stmt !== false) {
             $stmt->bind_result($value);
