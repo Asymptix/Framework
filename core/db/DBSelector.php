@@ -28,9 +28,9 @@ class DBSelector extends Object {
     );
 
     /**
-     * TODO: add docs
+     * Inform DBSelector to select only unique records with DISTINCT.
      *
-     * @var type
+     * @var boolean
      */
     public $unique = false;
 
@@ -121,13 +121,13 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Selects DBObject by some field value.
      *
-     * @param type $fieldName
-     * @param type $fieldValue
-     * @param type $debug
+     * @param string $fieldName Name of the field.
+     * @param mixed $fieldValue Field value.
+     * @param boolean $debug Debug mode flag.
      *
-     * @return type
+     * @return DBObject
      */
     public function selectDBObjectByField($fieldName, $fieldValue, $debug = false) {
         $query = "SELECT * FROM " . $this->dbObject->getTableName() . " WHERE " . $fieldName . " = ?";
@@ -161,11 +161,12 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Selects DBObject by ID.
      *
-     * @param type $objectId
-     * @param type $debug
-     * @return type
+     * @param mixed $objectId Id of the DB record (primary index).
+     * @param boolean $debug Debug mode flag.
+     *
+     * @return DBObject
      */
     public function selectDBObjectById($objectId = null, $debug = false) {
         if (is_null($objectId)) {
@@ -175,10 +176,11 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Selects DBObjects by some predefined condition.
      *
-     * @param type $debug
-     * @return type
+     * @param boolean $debug Debug mode flag.
+     *
+     * @return array<DBObject>
      */
     public function selectDBObjects($debug = false) {
         $query = "SELECT" . ($this->unique?" DISTINCT":"") . " * FROM " . $this->dbObject->getTableName();
@@ -217,13 +219,13 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Selects DBObjects by some field value.
      *
-     * @param type $fieldName
-     * @param type $fieldValue
-     * @param type $debug
+     * @param string $fieldName Name of the field.
+     * @param mixed $fieldValue Field value.
+     * @param boolean $debug Debug mode flag.
      *
-     * @return type
+     * @return array<DBObject>
      */
     public function selectDBObjectsByField($fieldName, $fieldValue, $debug = false) {
         $query = "SELECT * FROM " . $this->dbObject->getTableName();
@@ -264,9 +266,9 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Count number of records by some predefined condition.
      *
-     * @return type
+     * @return integer Number of records.
      */
     public function count() {
         $query = "SELECT count(*) FROM " . $this->dbObject->getTableName();
@@ -279,9 +281,9 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Selects max value of some field by some predefined condition.
      *
-     * @return type
+     * @return integer Number of records.
      */
     public function max() {
         $query = "SELECT max(`" . $this->field . "`) FROM " . $this->dbObject->getTableName();
@@ -294,9 +296,9 @@ class DBSelector extends Object {
     }
 
     /**
-     * TODO: add docs
+     * Selects min value of some field by some predefined condition.
      *
-     * @return type
+     * @return integer Number of records.
      */
     public function min() {
         $query = "SELECT min(`" . $this->field . "`) FROM " . $this->dbObject->getTableName();
