@@ -134,7 +134,7 @@ abstract class Object {
             case ("get"):
                 return $this->getFieldValue($fieldName);
             default:
-                throw new Exception("No such method"); // TODO: Some personal exception
+                throw new Exception("No such method in the Object class.");
         }
     }
 
