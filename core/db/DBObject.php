@@ -267,6 +267,22 @@ abstract class DBObject extends Object {
         $this->dbQuery->conditions = $conditions;
         $this->dbQuery->fields = $fields;
 
+        /**
+         * Inits LIMIT if called dynamic select() or update() method.
+         */
+        if (is_null($this->dbQuery->limit)) {
+            $backTrace = debug_backtrace(false, 2);
+            if (!is_array($backTrace) && isset($backTrace[1])) {
+                $prevCall = $backTrace[1];
+                if (is_array($prevCall) && isset($prevCall['type'])) {
+                    if ($prevCall['type'] == '->') { // called dynamic method
+                        $this->dbQuery->limit = 1;
+                    }
+                }
+            }
+            unset($backTrace);
+        }
+
         return $this;
     }
 
@@ -308,6 +324,7 @@ abstract class DBObject extends Object {
      * @return DBObject Current object.
      */
     public function update($fields = array(), $conditions = array(), $debug = false) {
+        //TODO: decide if is needed below functionality
         /*if (!$this->isNewRecord()) { // Process only current record on fire.
             $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
 

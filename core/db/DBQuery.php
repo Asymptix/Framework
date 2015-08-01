@@ -52,7 +52,7 @@ class DBQuery {
      *
      * @var mixed
      */
-    public $limit = 1;
+    public $limit = null;
 
     /**
      * Creates new DBQuery object with SQL type initialized.
