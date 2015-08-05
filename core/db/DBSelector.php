@@ -1,12 +1,6 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
-require_once(realpath(dirname(__FILE__)) . "/../Object.php");
-
-require_once(realpath(dirname(__FILE__)) . "/DBCore.php");
-require_once(realpath(dirname(__FILE__)) . "/DBField.php");
-require_once(realpath(dirname(__FILE__)) . "/DBQueryCondition.php");
-require_once(realpath(dirname(__FILE__)) . "/DBQuery.php");
+namespace Asymptix\Core\DB;
 
 /**
  * Database selecting functionality.
@@ -18,7 +12,7 @@ require_once(realpath(dirname(__FILE__)) . "/DBQuery.php");
  * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
-class DBSelector extends Object {
+class DBSelector extends \Asymptix\Core\Object {
     protected $fieldsList = array(
         'conditions' => "",
         'order' => "",
@@ -64,7 +58,13 @@ class DBSelector extends Object {
      */
     private function validateClassName($className) {
         if ($className != $this->className) {
-            throw new DBSelectorException("Invalid DB object classname in method name");
+            $classNamespaceParts = explode("\\", $this->className);
+            if ($className != $classNamespaceParts[count($classNamespaceParts) - 1]) {
+                throw new DBSelectorException(
+                    "Invalid DB object classname '" . $className . "' in method name. " .
+                    "Valid classname is '" . $this->className . "'"
+                );
+            }
         }
     }
 
@@ -352,9 +352,9 @@ class DBSelector extends Object {
         elseif (preg_match("#^selectAll([A-Z]{1}[[:alpha:]]+)s#", $methodName, $matches)) {
             $this->validateClassName(preg_replace("#ie$#", "y", $matches[1]));
 
-            $this->order = "ORDER BY `" . $dbObject->getIdFieldName() . "` DESC";
+            $this->order = "`" . $this->dbObject->getIdFieldName() . "` DESC";
             if (isset($methodParams[0])) {
-                $this->order = "ORDER BY " . (string)$methodParams[0];
+                $this->order = (string)$methodParams[0];
             }
 
             $dbObjects = $this->selectDBObjects();
@@ -404,6 +404,6 @@ class DBSelector extends Object {
 /**
  * Service exception class.
  */
-class DBSelectorException extends Exception {};
+class DBSelectorException extends \Exception {};
 
 ?>
