@@ -1,7 +1,6 @@
 <?php
 
-require_once("core/Tools.php");
-require_once("core/Errors.php");
+namespace Asymptix\Core;
 
 /**
  * Form fields validation functionality.
@@ -369,6 +368,13 @@ class Validator {
         return false;
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @param type $fieldName
+     * @param type $range
+     * @return boolean
+     */
     public static function validateRange($fieldName, $range) {
         $fieldValue = Tools::getFieldValue($fieldName);
         if (!in_array($fieldValue, $range)) {

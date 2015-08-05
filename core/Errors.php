@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Core;
+
 /**
  * Global fields values array.
  */
@@ -49,14 +51,12 @@ class Errors {
     }
 
     /**
-     * Returns error message by field name if exists. Throws Exception if error
-     * for this field doesn't exist.
+     * Returns error message by field name if exists.
      *
      * @global array $_ERRORS Global list of fields errors.
      * @param string $fieldName Name of the field.
      *
      * @return string Error message.
-     * @throws Exception If error for this field doesn't exist.
      */
     public static function getError($fieldName) {
         global $_ERRORS;
@@ -64,7 +64,6 @@ class Errors {
         if (self::isSetErrorFor($fieldName)) {
             return $_ERRORS[$fieldName];
         }
-        //throw new Exception("No error exists for field '" . $fieldName . "'");
         return "";
     }
 
@@ -81,12 +80,24 @@ class Errors {
         return isset($_ERRORS[$fieldName]);
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @global array $_ERRORS
+     * @return type
+     */
     public static function isErrorsExist() {
         global $_ERRORS;
 
         return (isset($_ERRORS['_common']) && !empty($_ERRORS['_common']));
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @global array $_ERRORS
+     * @return type
+     */
     public static function getErrors() {
         global $_ERRORS;
 

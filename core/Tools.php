@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Core;
+
 /**
  * Common tools methods.
  *
@@ -38,12 +40,12 @@ class Tools {
 
         try {
             $value = self::getArrayElement($_REQUEST, $fieldName);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             try {
                 if (isset($_SESSION['_post'])) {
                     $value = self::getArrayElement($_SESSION['_post'], $fieldName);
                 }
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 return null;
             }
         }
@@ -67,6 +69,8 @@ class Tools {
      * @param mixed $fieldName Name of the field as a string or complex name as
      *            an array.
      * @param mixed $fieldValue Value of the field.
+     *
+     * @throws \Exception
      */
     public static function setFieldValue($fieldName, $fieldValue) {
         global $_FIELDS;
@@ -85,7 +89,7 @@ class Tools {
                         $array[$key] = array();
                     } else {
                         if (!is_array($array[$key])) { // detect if current value is array because not last element
-                            throw new Exception("Try to assign value as array element to the not an array");
+                            throw new \Exception("Try to assign value as array element to the not an array");
                         }
                     }
                     $array = &$array[$key];
@@ -131,12 +135,20 @@ class Tools {
         $_SESSION['_post'][$fieldName] = serialize($fieldValue);
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @param type $fieldName
+     */
     public static function forgotField($fieldName) {
         if (isset($_SESSION['_post']) && isset($_SESSION['_post'][$fieldName])) {
             unset($_SESSION['_post'][$fieldName]);
         }
     }
 
+    /**
+     * TODO: add docs
+     */
     public static function forgotFields() {
         if (isset($_SESSION['_post'])) {
             unset($_SESSION['_post']);
@@ -156,7 +168,7 @@ class Tools {
         if (isset($_FIELDS[$fieldName])) {
             $_FIELDS[$fieldName] = $fieldValue;
         } else {
-            throw new Exception("No field '" . $fieldName . "' in global fields list.");
+            throw new \Exception("No field '" . $fieldName . "' in global fields list.");
         }
     }
 
@@ -194,7 +206,7 @@ class Tools {
                     $_FIELDS[$fieldName] = (boolean) $_FIELDS[$fieldName];
             }
         } else {
-            throw new Exception("No field '" . $fieldName . "' in global fields list.");
+            throw new \Exception("No field '" . $fieldName . "' in global fields list.");
         }
     }
 
@@ -453,7 +465,7 @@ class Tools {
      *            simple (one level) key.
      *
      * @return mixed Value of the array element if found.
-     * @throws Exception If can't find element by complex key.
+     * @throws \Exception If can't find element by complex key.
      */
     private static function getArrayElement($array, $complexKey) {
         if (!empty($complexKey)) {
@@ -464,7 +476,7 @@ class Tools {
                     if (isset($temp[$key])) {
                         $temp = $temp[$key];
                     } else {
-                        throw new Exception("Invalid complex key");
+                        throw new \Exception("Invalid complex key");
                     }
                 }
 
@@ -473,11 +485,11 @@ class Tools {
                 if (isset($array[$complexKey])) {
                     return $array[$complexKey];
                 } else {
-                    throw new Exception("Invalid simple key");
+                    throw new \Exception("Invalid simple key");
                 }
             }
         }
-        throw new Exception("No array element key provided");
+        throw new \Exception("No array element key provided");
     }
 
     /**
@@ -501,7 +513,6 @@ class Tools {
             return $complexName[0];
         }
 
-        //var_dump($complexName);
         return $complexName;
     }
 

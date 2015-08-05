@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Core;
+
 $_MESSAGES = array();
 
 /**
@@ -29,7 +31,7 @@ class Messages {
      * @param string $text Text of the message.
      * @param string $code Code of the message in the message list (optional).
      *
-     * @throws Exception If wrong priority message type provided.
+     * @throws \Exception If wrong priority message type provided.
      */
     public static function pushMessage($type, $text, $code = null) {
         global $_MESSAGES;
@@ -44,7 +46,7 @@ class Messages {
                 $_MESSAGES[$code] = new __MSG($type, $text);
             }
         } else {
-            throw new Exception("Invalid message type code");
+            throw new \Exception("Invalid message type code");
         }
     }
 
@@ -57,7 +59,7 @@ class Messages {
      * @param string $text Text of the message.
      * @param string $code Code of the message in the message list (optional).
      *
-     * @throws Exception If wrong priority message type provided.
+     * @throws \Exception If wrong priority message type provided.
      */
     public static function addMessage($type, $text, $code = null) {
         return self::pushMessage($type, $text, $code);
@@ -72,7 +74,7 @@ class Messages {
      *
      * @return __MSG Message object.
      *
-     * @throws Exception If message with such code is not exists.
+     * @throws \Exception If message with such code is not exists.
      */
     public static function getMessage($code) {
         global $_MESSAGES;
@@ -80,7 +82,7 @@ class Messages {
         if (isset($_MESSAGES[$code])) {
             return $_MESSAGES[$code];
         } else {
-            throw new Exception("Invalid message code");
+            throw new \Exception("Invalid message code");
         }
     }
 

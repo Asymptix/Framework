@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Core;
+
 /**
  * Basic Object class.
  *
@@ -64,15 +66,14 @@ abstract class Object {
      * @param mixed $fieldValue Value of the field.
      *
      * @return boolean TRUE on success.
-     * @throws Exception If object has no field with such name.
+     * @throws \Exception If object has no field with such name.
      */
     public function setFieldValue($fieldName, $fieldValue) {
         if (isset($this->fieldsList[$fieldName])) {
             $this->fieldsList[$fieldName] = $fieldValue;
             return true;
         } else {
-            throw new Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
-            //return false;
+            throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
         }
     }
 
@@ -85,12 +86,18 @@ abstract class Object {
         return $this->fieldsList;
     }
 
+    /**
+     * TODO: add docs
+     *
+     * @param type $fieldName
+     * @return type
+     * @throws \Exception
+     */
     public function getFieldValue($fieldName) {
         if (isset($this->fieldsList[$fieldName])) {
             return $this->fieldsList[$fieldName];
         } else {
-            throw new Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
-            //return null;
+            throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
         }
     }
 
@@ -121,7 +128,7 @@ abstract class Object {
      * @param array $methodParams Array of method parameters.
      *
      * @return mixed
-     * @throws Exception If some method is invalid or not exists.
+     * @throws \Exception If some method is invalid or not exists.
      */
     public function __call($methodName, $methodParams) {
         $method = substr($methodName, 0, 3);
@@ -134,7 +141,7 @@ abstract class Object {
             case ("get"):
                 return $this->getFieldValue($fieldName);
             default:
-                throw new Exception("No such method in the Object class.");
+                throw new \Exception("No such method in the Object class.");
         }
     }
 

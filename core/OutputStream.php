@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Core;
+
 /**
  * Class wrapper for PHP output stream.
  *
