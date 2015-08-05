@@ -1,6 +1,6 @@
 <?php
 
-require_once("core/Tools.php");
+namespace Asymptix\Core;
 
 /**
  * Main route functionality class.
@@ -101,6 +101,20 @@ class Route {
             }
         }
         return $url;
+    }
+
+    /**
+     * Generates default template path for current route.
+     *
+     * @return string
+     */
+    public function tplPath() {
+        $path = $this->controller . "/" . $this->controller;
+        if (!empty($this->action)) {
+            $path.= "_" . $this->action;
+        }
+
+        return $path;
     }
 
 }
