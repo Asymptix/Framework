@@ -1,10 +1,8 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/DBField.php");
-require_once(realpath(dirname(__FILE__)) . "/DBQuery.php");
+namespace Asymptix\Core\DB;
 
-require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
-require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
+use Asymptix\Core\Tools;
 
 /**
  * Complex DB query object for Prepared Statement.

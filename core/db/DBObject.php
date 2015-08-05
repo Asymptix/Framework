@@ -1,12 +1,8 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/DBPreparedQuery.php");
-require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
+namespace Asymptix\Core\DB;
 
-require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
-require_once(realpath(dirname(__FILE__)) . "/../Object.php");
-
-require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
+use Asymptix\Core\Tools;
 
 /**
  * DBObject class. Object oriented representation of DB record.
@@ -18,7 +14,7 @@ require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
  * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
-abstract class DBObject extends Object {
+abstract class DBObject extends \Asymptix\Core\Object {
 
     /**
      * Status constants
@@ -56,7 +52,7 @@ abstract class DBObject extends Object {
      * @param mixed $id Key vaue
      *
      * @return boolean Success flag.
-     * @throws Exception If object has no field with such name.
+     * @throws DBCoreException If object has no field with such name.
      */
     public function setId($id) {
         return $this->setFieldValue(static::ID_FIELD_NAME, $id);
@@ -102,12 +98,12 @@ abstract class DBObject extends Object {
      *
      * @return boolean
      *
-     * @throws Exception If record hos no 'activation' field.
+     * @throws DBCoreException If record hos no 'activation' field.
      */
     public function isActivated() {
         $activation = $this->getFieldValue('activation');
         if (is_null($activation)) {
-            throw new Exception("This object has no parameter 'activation'");
+            throw new DBCoreException("This object has no parameter 'activation'");
         } else {
             if ($activation > 0) {
                 return true;
@@ -171,12 +167,12 @@ abstract class DBObject extends Object {
      *
      * @return boolean
      *
-     * @throws Exception If record hos no 'removed' field.
+     * @throws DBCoreException If record hos no 'removed' field.
      */
     public function isRemoved() {
         $isRemoved = $this->getFieldValue('removed');
         if (is_null($isRemoved)) {
-            throw new Exception("This object has no parameter 'removed'");
+            throw new DBCoreException("This object has no parameter 'removed'");
         } else {
             if ($isRemoved == self::STATUS_REMOVED) {
                 return true;
@@ -307,7 +303,7 @@ abstract class DBObject extends Object {
      * @return DBObject Current object.
      */
     public static function _select($conditions = array()) {
-        $ref = new ReflectionClass(get_called_class());
+        $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
         return $dbObject->initQuery(DBQueryType::SELECT, $conditions);

@@ -1,5 +1,9 @@
 <?php
 
+namespace Asymptix\Core\DB;
+
+use Asymptix\Core\Tools;
+
 /**
  * DB field representation class.
  *
@@ -192,7 +196,7 @@ class DBField {
 /**
  * Service exception classes.
  */
-class DBFieldException extends Exception {};
-class DBFieldTypeException extends Exception {};
+class DBFieldException extends \Exception {};
+class DBFieldTypeException extends \Exception {};
 
 ?>

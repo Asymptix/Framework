@@ -1,10 +1,8 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/DBObject.php");
-require_once(realpath(dirname(__FILE__)) . "/DBPreparedQuery.php");
-require_once(realpath(dirname(__FILE__)) . "/DBSelector.php");
+namespace Asymptix\Core\DB;
 
-require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
+use Asymptix\Core\Tools;
 
 /**
  * Core database functionality.
@@ -804,6 +802,6 @@ class DBCore {
 /**
  * Service exception class.
  */
-class DBCoreException extends Exception {}
+class DBCoreException extends \Exception {}
 
 ?>

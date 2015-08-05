@@ -1,7 +1,8 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
-require_once(realpath(dirname(__FILE__)) . "/DBField.php");
+namespace Asymptix\Core\DB;
+
+use Asymptix\Core\Tools;
 
 /**
  * DB SQL query condition class.
@@ -182,8 +183,8 @@ class DBQueryCondition {
      * @return string SQL query condition string.
      */
     public static function getSQLCondition($queryCondition, $op = "") {
-        $op = strtoupper(trim((string)$op));
-        if ($op == "OR" || $op == "AND") {
+        $op = strtoupper(trim($op));
+        if ($op === "OR" || $op === "AND") {
             if (is_array($queryCondition)) {
                 if ($op == "AND") {
                     $cond = " (1";
@@ -201,12 +202,13 @@ class DBQueryCondition {
         } else {
             if (is_array($queryCondition)) {
                 foreach ($queryCondition as $operation => $conditions) {
-                    $cond = self::getSQLCondition($conditions, $operation);
-                    $cond = str_replace(array("(1 AND ", "(0 OR "), "(", $cond);
-
-                    return trim($cond);
+                    return trim(
+                        str_replace(array("(1 AND ", "(0 OR "), "(",
+                            self::getSQLCondition($conditions, $operation)
+                        )
+                    );
                 }
-            } elseif (Tools::isInstanceOf($queryCondition, "DBQueryCondition")) {
+            } elseif (Tools::isInstanceOf($queryCondition, "\Asymptix\Core\DB\DBQueryCondition")) {
                 return (" " . $queryCondition->sqlCondition);
             }
             return "";
@@ -276,6 +278,6 @@ class DBQueryCondition {
 /**
  * Service exception class.
  */
-class DBQueryConditionException extends Exception {};
+class DBQueryConditionException extends \Exception {};
 
 ?>

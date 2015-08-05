@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Core\DB;
+
 /**
  * DB SQL query type class.
  *
@@ -35,7 +37,7 @@ class DBQueryType {
      * @return array DBQuery types array.
      */
     public static function getQueryTypes() {
-        $oClass = new ReflectionClass('DBQueryType');
+        $oClass = new \ReflectionClass(new \Asymptix\Core\DB\DBQueryType);
         $constantsList = $oClass->getConstants();
 
         return array_keys($constantsList);
@@ -69,6 +71,6 @@ class DBQueryType {
 /**
  * Service exception class.
  */
-class DBQueryTypeException extends Exception {};
+class DBQueryTypeException extends \Exception {};
 
 ?>

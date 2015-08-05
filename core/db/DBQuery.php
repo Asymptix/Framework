@@ -1,9 +1,8 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/../Tools.php");
-require_once(realpath(dirname(__FILE__)) . "/../OutputStream.php");
+namespace Asymptix\Core\DB;
 
-require_once(realpath(dirname(__FILE__)) . "/DBQueryType.php");
+use Asymptix\Core\OutputStream;
 
 /**
  * DB SQL query object.

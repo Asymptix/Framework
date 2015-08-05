@@ -1,7 +1,8 @@
 <?php
 
-require_once("core/db/DBObject.php");
-require_once("core/db/DBCore.php");
+namespace Asymptix\Core\DB\Beans;
+
+use Asymptix\Core\DB\DBCore;
 
 /**
  * Simple Settings bean class.
@@ -12,7 +13,7 @@ require_once("core/db/DBCore.php");
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Settings extends DBObject {
+class Settings extends \Asymptix\Core\DB\DBObject {
 
     const TABLE_NAME = "settings";
     const ID_FIELD_NAME = "setting_id";

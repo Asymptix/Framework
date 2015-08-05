@@ -1,6 +1,6 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/DBObject.php");
+namespace Asymptix\Core\DB;
 
 /**
  * Wraper for DBObject with fields for storing creation and updating time and
