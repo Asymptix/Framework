@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\Localization;
+
 /**
  * Stores Language code and titles in different languages.
  *
@@ -30,7 +32,7 @@ class Language {
      */
     public $titles = array();
 
-    public function Language($code, $titles, $flag = "") {
+    public function __construct($code, $titles, $flag = "") {
         $this->code = $code;
         $this->titles = $titles;
         $this->flag = $flag;

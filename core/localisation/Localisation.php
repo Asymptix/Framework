@@ -1,9 +1,9 @@
 <?php
 
-require_once("core/Tools.php");
-require_once("core/Errors.php");
+namespace Asymptix\Localization;
 
-require_once("core/localisation/Languages.php");
+use Asymptix\Core\Tools;
+use Asymptix\Core\Errors;
 
 /**
  * Localisation class for using multiple languages and store localized lexems
