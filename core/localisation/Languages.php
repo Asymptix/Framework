@@ -1,19 +1,6 @@
 <?php
 
-require_once("core/localisation/Language.php");
-
-/**
- * Works with language in session and POST requests (to set language).
- */
-if (isset($_POST['lang'])) {
-    $_SESSION['lang'] = $_POST['lang'];
-} elseif (!isset($_SESSION['lang'])) {
-    $_SESSION['lang'] = 'en';
-}
-$lang = new Languages();
-$_LANG = Languages::getLanguage($_SESSION['lang']);
-$_SESSION['lang'] = $_LANG->code;
-unset($lang);
+namespace Asymptix\Localization;
 
 /**
  * Languages functionality class.
@@ -30,35 +17,38 @@ class Languages {
      *
      * @var array
      */
-    public static $langs = array();
+    public static $langs = null;
 
-    public function Languages() {
-        self::$langs = array(
-            'en' => new Language('en', array(
-                'en' => "English",
-                'de' => "Englisch",
-                'ru' => "Английский",
-                'uk' => "Англійська"
-            ), 'gb'),
-            'de' => new Language('de', array(
-                'en' => "German",
-                'de' => "Deutsch",
-                'ru' => "Немецкий",
-                'uk' => "Німецька"
-            ), 'de'),
-            'ru' => new Language('ru', array(
-                'en' => "Russian",
-                'de' => "Rusisch",
-                'ru' => "Русский",
-                'uk' => "Російська"
-            ), 'ru'),
-            'uk' => new Language('uk', array(
-                'en' => "Ukrainian",
-                'de' => "Ukrainisch",
-                'ru' => "Украинский",
-                'uk' => "Українська"
-            ), 'ua'),
-        );
+    public static function getLanguages() {
+        if (is_null(self::$langs)) {
+            self::$langs = array(
+                'en' => new Language('en', array(
+                    'en' => "English",
+                    'de' => "Englisch",
+                    'ru' => "Английский",
+                    'uk' => "Англійська"
+                ), 'gb'),
+                'de' => new Language('de', array(
+                    'en' => "German",
+                    'de' => "Deutsch",
+                    'ru' => "Немецкий",
+                    'uk' => "Німецька"
+                ), 'de'),
+                'ru' => new Language('ru', array(
+                    'en' => "Russian",
+                    'de' => "Rusisch",
+                    'ru' => "Русский",
+                    'uk' => "Російська"
+                ), 'ru'),
+                'uk' => new Language('uk', array(
+                    'en' => "Ukrainian",
+                    'de' => "Ukrainisch",
+                    'ru' => "Украинский",
+                    'uk' => "Українська"
+                ), 'ua'),
+            );
+        }
+        return self::$langs;
     }
 
     /**
@@ -68,10 +58,11 @@ class Languages {
      * @return Language
      */
     public static function getLanguage($code) {
-        if (isset(self::$langs[$code])) {
-            return self::$langs[$code];
+        $langs = self::getLanguages();
+        if (isset($langs[$code])) {
+            return $langs[$code];
         } else {
-            return self::$langs['en'];
+            return $langs['en'];
         }
     }
 
