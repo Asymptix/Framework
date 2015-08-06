@@ -16,6 +16,9 @@
         "email": "dmytro.zarezenko@gmail.com"
     },
     "minimum-stability": "dev",
+    "replace": {
+        "asymptix/framework": "self.version"
+    },
     "require": {
         "php": ">=5.3.0"
     },
