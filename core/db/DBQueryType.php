@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\Core\DB;
+namespace Asymptix\DB;
 
 /**
  * DB SQL query type class.
@@ -37,7 +37,7 @@ class DBQueryType {
      * @return array DBQuery types array.
      */
     public static function getQueryTypes() {
-        $oClass = new \ReflectionClass(new \Asymptix\Core\DB\DBQueryType);
+        $oClass = new \ReflectionClass(new \Asymptix\DB\DBQueryType);
         $constantsList = $oClass->getConstants();
 
         return array_keys($constantsList);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\Core\DB;
+namespace Asymptix\DB;
 
 /**
  * Database selecting functionality.

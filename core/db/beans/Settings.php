@@ -1,8 +1,8 @@
 <?php
 
-namespace Asymptix\Core\DB\Beans;
+namespace Asymptix\DB\Beans;
 
-use Asymptix\Core\DB\DBCore;
+use Asymptix\DB\DBCore;
 
 /**
  * Simple Settings bean class.
@@ -13,7 +13,7 @@ use Asymptix\Core\DB\DBCore;
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Settings extends \Asymptix\Core\DB\DBObject {
+class Settings extends \Asymptix\DB\DBObject {
 
     const TABLE_NAME = "settings";
     const ID_FIELD_NAME = "setting_id";

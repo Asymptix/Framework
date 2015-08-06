@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\Core\DB\Beans\Access;
+namespace Asymptix\DB\Beans\Access;
 
 use Asymptix\Core\Tools;
 
@@ -13,7 +13,7 @@ use Asymptix\Core\Tools;
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class User extends \Asymptix\Core\DB\DBTimedObject {
+class User extends \Asymptix\DB\DBTimedObject {
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
 
