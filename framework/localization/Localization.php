@@ -6,7 +6,7 @@ use Asymptix\Core\Tools;
 use Asymptix\Core\Errors;
 
 /**
- * Localisation class for using multiple languages and store localized lexems
+ * Localization class for using multiple languages and store localized lexems
  * into the database.
  *
  * @category Asymptix PHP Framework
@@ -14,7 +14,7 @@ use Asymptix\Core\Errors;
  * @copyright (c) 2010 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Localisation {
+class Localization {
     /**
      * Return localized value for some value.
      *
