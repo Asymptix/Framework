@@ -1,27 +1,18 @@
 <?php
 
+use Asymptix\Core\Route;
+
+require_once("./vendor/autoload.php");
+require_once("./conf/Config.php");
+
 session_start();
 header('X-Powered-By: Asymptix PHP Framework, PHP/' . phpversion());
-
-require_once("conf/Config.php");
-
-/**
- * Multilanguage functionality
- */
-require_once("core/localisation/Languages.php");
-require_once("conf/langs/" . $_LANG->code . "/Language.php");
-
-require_once("core/Tools.php");
-require_once("core/Errors.php");
-require_once("core/Messages.php");
-require_once("core/db/DBCore.php");
-
-require_once("core/Route.php");
 
 include("modules/dbconnection.module.php");
 include("modules/settings.module.php");
 include("modules/session.module.php");
 include("modules/filter.module.php");
+include("modules/localization.module.php");
 
 /**
  * Fetching request parameters
@@ -53,7 +44,7 @@ if (isset($_ARGS['pn'])) {
 
 $_ROUTE = new Route(array_filter(explode("/", $request)));
 if (empty($_ROUTE->controller)) {
-    $_ROUTE->controller = "home";
+    $_ROUTE->controller = "index";
     if (User::checkLoggedIn()) {
         $_ROUTE->controller = "dashboard";
     }
@@ -61,22 +52,22 @@ if (empty($_ROUTE->controller)) {
 /**
  * Switches to the needed control
  */
-$isBackend = !in_array($_ROUTE->controller, array(
-    'home',
+$_ROUTE->isBackend = !in_array($_ROUTE->controller, array(
+    'index',
     'login', 'logout', 'forgot-password', 'sign-up',
     'pricing', 'contact-us'
 ));
 
-if ($isBackend && !User::checkLoggedIn()) {
-    $isBackend = false;
+if ($_ROUTE->isBackend && !User::checkLoggedIn()) {
+    $_ROUTE->isBackend = false;
     $_ROUTE->controller = "login";
 }
 if ($_ROUTE->controller == "login" && User::checkLoggedIn()) {
-    $isBackend = true;
+    $_ROUTE->isBackend = true;
     $_ROUTE->controller = "dashboard";
 }
 
-if ($isBackend) {
+if ($_ROUTE->isBackend) {
     require_once("controllers/backend/" . $_ROUTE->controller . ".php");
     require_once("templates/backend/master.tpl.php");
 } else {
