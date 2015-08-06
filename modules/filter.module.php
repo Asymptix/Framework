@@ -11,6 +11,8 @@
  * @license http://opensource.org/licenses/MIT
  */
 
+use Asymptix\Core\Tools;
+
 // Set and Reset filter submit fields names may be changed.
 $setFilter = (boolean)Tools::getFieldValue('setFilter');
 $resetFilter = (boolean)Tools::getFieldValue('resetFilter');
