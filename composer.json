@@ -1,0 +1,27 @@
+{
+    "name": "asymptix/php-framework",
+    "description": "The Fast and Easy PHP Framework for Rapid Development.",
+    "type": "library",
+    "keywords": ["framework", "php", "asymptix"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmytro Zarezenko",
+            "email": "dmytro.zarezenko@gmail.com",
+            "homepage": "https://github.com/dzarezenko",
+            "role": "Owner & Development"
+        }
+    ],
+    "support": {
+        "email": "dmytro.zarezenko@gmail.com"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Asymptix\\": "framework/"
+        }
+    }
+}
