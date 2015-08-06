@@ -59,7 +59,7 @@ class Localization {
             foreach ($fieldValue as $value) {
                 $value = trim($value);
                 if (empty($value)) {
-                    Errors::saveErrorFor($fieldName, __ERRORS::EMPTY_FIELD);
+                    Errors::saveErrorFor($fieldName, \__ERRORS::EMPTY_FIELD);
 
                     return false;
                 }
