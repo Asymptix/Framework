@@ -3,6 +3,7 @@
     "description": "The Fast and Easy PHP Framework for Rapid Development.",
     "type": "library",
     "keywords": ["framework", "php", "asymptix"],
+    "homepage": "http://www.asymptix.com/",
     "license": "MIT",
     "authors": [
         {
