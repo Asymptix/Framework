@@ -341,7 +341,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      * @return DBObject Current object.
      */
     public static function _update($fields = array(), $conditions = array()) {
-        $ref = new ReflectionClass(get_called_class());
+        $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
         return $dbObject->initQuery(DBQueryType::UPDATE, $conditions, $fields);
