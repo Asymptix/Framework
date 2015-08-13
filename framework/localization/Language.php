@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\Localization;
+namespace Asymptix\localization;
 
 /**
  * Stores Language code and titles in different languages.

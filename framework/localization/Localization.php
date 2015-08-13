@@ -1,9 +1,9 @@
 <?php
 
-namespace Asymptix\Localization;
+namespace Asymptix\localization;
 
-use Asymptix\Core\Tools;
-use Asymptix\Core\Errors;
+use Asymptix\core\Tools;
+use Asymptix\core\Errors;
 
 /**
  * Localization class for using multiple languages and store localized lexems

@@ -1,6 +1,6 @@
 <?php
 
-use Asymptix\Core\Route;
+use Asymptix\core\Route;
 
 require_once("./vendor/autoload.php");
 require_once("./conf/Config.php");

@@ -1,8 +1,8 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
-use Asymptix\Core\OutputStream;
+use Asymptix\core\OutputStream;
 
 /**
  * DB SQL query object.

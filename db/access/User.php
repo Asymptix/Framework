@@ -1,6 +1,6 @@
 <?php
 
-use Asymptix\Core\Tools;
+use Asymptix\core\Tools;
 
 /**
  * Simple User bean class.
@@ -11,7 +11,7 @@ use Asymptix\Core\Tools;
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class User extends \Asymptix\DB\DBTimedObject {
+class User extends \Asymptix\db\DBTimedObject {
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
 

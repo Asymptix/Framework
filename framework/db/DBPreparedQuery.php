@@ -1,8 +1,8 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
-use Asymptix\Core\Tools;
+use Asymptix\core\Tools;
 
 /**
  * Complex DB query object for Prepared Statement.

@@ -11,7 +11,7 @@
  * @license http://opensource.org/licenses/MIT
  */
 
-use Asymptix\DB\DBCore;
+use Asymptix\db\DBCore;
 
 $mysqli = new mysqli(
         Config::getDBConfigParam('HOST'),

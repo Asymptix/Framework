@@ -9,7 +9,7 @@
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Settings extends Asymptix\DB\DBObject {
+class Settings extends Asymptix\db\DBObject {
 
     const TABLE_NAME = "settings";
     const ID_FIELD_NAME = "setting_id";

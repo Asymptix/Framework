@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\Localization;
+namespace Asymptix\localization;
 
 /**
  * Languages functionality class.

@@ -22,8 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Asymptix\\": "",
-            "Asymptix\\DB\\": "db/"
+            "Asymptix\\": ""
         }
     }
 }

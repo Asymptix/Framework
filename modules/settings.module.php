@@ -13,7 +13,7 @@
 
 require_once("db/Settings.php");
 
-use Asymptix\DB\DBSelector;
+use Asymptix\db\DBSelector;
 
 $dbSelector = new DBSelector(new Settings());
 $settings = $dbSelector->selectDBObjects();

@@ -11,7 +11,7 @@
  * @license http://opensource.org/licenses/MIT
  */
 
-use Asymptix\Localization\Languages;
+use Asymptix\localization\Languages;
 
 if (isset($_POST['lang'])) {
     $_SESSION['lang'] = $_POST['lang'];

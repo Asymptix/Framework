@@ -1,8 +1,8 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
-use Asymptix\Core\Tools;
+use Asymptix\core\Tools;
 
 /**
  * DB SQL query condition class.
@@ -208,7 +208,7 @@ class DBQueryCondition {
                         )
                     );
                 }
-            } elseif (Tools::isInstanceOf($queryCondition, "\Asymptix\DB\DBQueryCondition")) {
+            } elseif (Tools::isInstanceOf($queryCondition, "\Asymptix\db\DBQueryCondition")) {
                 return (" " . $queryCondition->sqlCondition);
             }
             return "";

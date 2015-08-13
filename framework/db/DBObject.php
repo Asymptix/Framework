@@ -1,8 +1,8 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
-use Asymptix\Core\Tools;
+use Asymptix\core\Tools;
 
 /**
  * DBObject class. Object oriented representation of DB record.
@@ -14,7 +14,7 @@ use Asymptix\Core\Tools;
  * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
-abstract class DBObject extends \Asymptix\Core\Object {
+abstract class DBObject extends \Asymptix\core\Object {
 
     /**
      * Status constants

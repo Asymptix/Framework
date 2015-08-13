@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
 /**
  * Wraper for DBObject with fields for storing creation and updating time and

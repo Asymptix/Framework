@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
 /**
  * Database selecting functionality.
@@ -12,7 +12,7 @@ namespace Asymptix\DB;
  * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
  * @license http://opensource.org/licenses/MIT
  */
-class DBSelector extends \Asymptix\Core\Object {
+class DBSelector extends \Asymptix\core\Object {
     protected $fieldsList = array(
         'conditions' => "",
         'order' => "",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\DB;
+namespace Asymptix\db;
 
 use \User;
 
@@ -42,7 +42,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::reset
+     * @covers \Asymptix\core\DB\DBSelector::reset
      * @todo   Implement testReset().
      */
     public function testReset() {
@@ -53,7 +53,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::setConditions
+     * @covers \Asymptix\core\DB\DBSelector::setConditions
      * @todo   Implement testSetConditions().
      */
     public function testSetConditions() {
@@ -64,7 +64,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObject
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObject
      * @todo   Implement testSelectDBObject().
      */
     public function testSelectDBObject_Exists() {
@@ -77,7 +77,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObject
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObject
      * @todo   Implement testSelectDBObject().
      */
     public function testSelectDBObject_NotExists() {
@@ -89,7 +89,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObjectByField
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjectByField
      * @todo   Implement testSelectDBObjectByField().
      */
     public function testSelectDBObjectByField_Exists() {
@@ -102,7 +102,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObjectByField
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjectByField
      * @todo   Implement testSelectDBObjectByField().
      */
     public function testSelectDBObjectByField_NotExists() {
@@ -114,7 +114,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObjectById
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjectById
      * @todo   Implement testSelectDBObjectById().
      */
     public function testSelectDBObjectById() {
@@ -126,7 +126,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObjects
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
      * @todo   Implement testSelectDBObjects().
      */
     public function testSelectDBObjects() {
@@ -138,7 +138,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::selectDBObjectsByField
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjectsByField
      * @todo   Implement testSelectDBObjectsByField().
      */
     public function testSelectDBObjectsByField() {
@@ -151,7 +151,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::count
+     * @covers \Asymptix\core\DB\DBSelector::count
      * @todo   Implement testCount().
      */
     public function testCount() {
@@ -166,7 +166,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::max
+     * @covers \Asymptix\core\DB\DBSelector::max
      * @todo   Implement testMax().
      */
     public function testMax() {
@@ -177,7 +177,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::min
+     * @covers \Asymptix\core\DB\DBSelector::min
      * @todo   Implement testMin().
      */
     public function testMin() {
@@ -188,7 +188,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::__call
+     * @covers \Asymptix\core\DB\DBSelector::__call
      * @todo   Implement test__call().
      */
     public function testMagic_DBObjectById() {
@@ -199,7 +199,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::__call
+     * @covers \Asymptix\core\DB\DBSelector::__call
      * @todo   Implement test__call().
      */
     public function testMagic_DBObjectByField() {
@@ -210,7 +210,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::__call
+     * @covers \Asymptix\core\DB\DBSelector::__call
      * @todo   Implement test__call().
      */
     public function testMagic_DBObjects() {
@@ -225,7 +225,7 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Asymptix\Core\DB\DBSelector::__call
+     * @covers \Asymptix\core\DB\DBSelector::__call
      * @todo   Implement test__call().
      */
     public function testMagic_AllDBObjects() {
