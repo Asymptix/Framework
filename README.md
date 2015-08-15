@@ -25,7 +25,7 @@ The minimum requirement by Asymptix Framework is that your Web server supports P
 INSTALLATION
 ---
 
-To install basic framework libs use `composer install` command with `composer.json` configuration file (current version doesn't support [Packagist](https://packagist.org/) yet and uses SVN for load just subfolder of the repository directly from GitHub. This will be improved in future).
+To install basic framework libs use [Composer](https://getcomposer.org/) `composer install` command with `composer.json` configuration file (current version doesn't support [Packagist](https://packagist.org/) yet and uses SVN for load just subfolder of the repository directly from GitHub. This will be improved in future).
 
 ```js
 {
@@ -57,6 +57,12 @@ To install basic framework libs use `composer install` command with `composer.js
 		"asymptix/framework": ">=2.0.0"
     }
 }
+```
+
+After [Composer](https://getcomposer.org/) installation you just need require autoload file with the next command:
+
+```php
+require_once("./vendor/autoload.php");
 ```
 
 LIST OF GLOBAL VARIABLES
