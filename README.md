@@ -40,6 +40,7 @@ LIST OF GLOBAL VARIABLES
 * __$\_BREADCRUMBS__ - Array with page breadcrumbs data.
 * __$\_JS__ - Controller local array with paths to needed for the current page JavaScript files.
 * __$\_CSS__	- Controller local array with paths to needed for the current page CSS files.
+* __$\_LANG__ - `Language` object stored in session and represents current selected language in localization functionality.
 
 ### Form submission data
 * __$\_FIELDS__ - List with pairs key → value merged from __$\_REQUEST__ (__$\_POST__ and __$\_GET__) also used in form output if some data is invalid. Fields values may be changed on the way from data receiving before output in form fields.
