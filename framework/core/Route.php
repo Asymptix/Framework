@@ -8,6 +8,8 @@ namespace Asymptix\core;
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2011 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
 class Route {
@@ -24,7 +26,7 @@ class Route {
      *
      * @param string $request URL request string without GET params.
      */
-    public function Route($request) {
+    public function __construct($request) {
         $route = array_values(array_filter(explode("/", $request)));
 
         // result array must contain keys starts from 0

@@ -42,7 +42,7 @@ if (isset($_ARGS['pn'])) {
     $_REQUEST['pn'] = (integer)$_ARGS['pn'];
 }
 
-$_ROUTE = new Route(array_filter(explode("/", $request)));
+$_ROUTE = new Route($request);
 if (empty($_ROUTE->controller)) {
     $_ROUTE->controller = "index";
     if (User::checkLoggedIn()) {
