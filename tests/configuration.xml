@@ -14,4 +14,4 @@ and open the template in the editor.
          stopOnFailure="true">
 </phpunit-->
 
-<phpunit colors="false" bootstrap="../vendor/autoload.php" />
+<phpunit colors="false" bootstrap="autoload.php" />
