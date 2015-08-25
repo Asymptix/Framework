@@ -8,11 +8,11 @@ require_once("modules/autoload.php");
 use Asymptix\core\Route;
 use db\access\User;
 
-include("modules/dbconnection.module.php");
-include("modules/settings.module.php");
-include("modules/session.module.php");
-include("modules/filter.module.php");
-include("modules/localization.module.php");
+include("modules/dbconnection.php");
+include("modules/settings.php");
+include("modules/session.php");
+include("modules/filter.php");
+include("modules/localization.php");
 
 /**
  * Fetching request parameters
