@@ -1,5 +1,7 @@
 <?php
 
+namespace db\access;
+
 use Asymptix\core\Tools;
 
 /**

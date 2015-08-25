@@ -1,5 +1,7 @@
 <?php
 
+namespace db;
+
 /**
  * Simple Settings bean class.
  * (You can modify this class according to your database structure)
@@ -9,7 +11,7 @@
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Settings extends Asymptix\db\DBObject {
+class Settings extends \Asymptix\db\DBObject {
 
     const TABLE_NAME = "settings";
     const ID_FIELD_NAME = "setting_id";
