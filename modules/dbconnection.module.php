@@ -12,6 +12,7 @@
  */
 
 use Asymptix\db\DBCore;
+use conf\Config;
 
 $mysqli = new mysqli(
         Config::getDBConfigParam('HOST'),

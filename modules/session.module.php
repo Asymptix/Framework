@@ -11,7 +11,8 @@
  * @license http://opensource.org/licenses/MIT
  */
 
-require_once("db/access/User.php");
+use Asymptix\db\DBSelector;
+use db\access\User;
 
 $_USER = null;
 if (isset($_SESSION['user'])) {

@@ -1,5 +1,7 @@
 <?php
 
+namespace conf;
+
 /**
  * Main configuration.
  *

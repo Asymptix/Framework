@@ -11,9 +11,8 @@
  * @license http://opensource.org/licenses/MIT
  */
 
-require_once("db/Settings.php");
-
 use Asymptix\db\DBSelector;
+use db\Settings;
 
 $dbSelector = new DBSelector(new Settings());
 $settings = $dbSelector->selectDBObjects();

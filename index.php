@@ -1,12 +1,12 @@
 <?php
 
-use Asymptix\core\Route;
-
-require_once("./vendor/autoload.php");
-require_once("./conf/Config.php");
-
 session_start();
 header('X-Powered-By: Asymptix PHP Framework, PHP/' . phpversion());
+
+require_once("modules/autoload.php");
+
+use Asymptix\core\Route;
+use db\access\User;
 
 include("modules/dbconnection.module.php");
 include("modules/settings.module.php");
