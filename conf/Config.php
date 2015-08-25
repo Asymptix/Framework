@@ -13,7 +13,15 @@ class Config {
      * Basic params
      */
     const SITE_TITLE = "Site title";
-    const ADMIN_EMAIL = "admin@localhost";
+
+    /**
+     * E-mail configuration
+     */
+    const EMAIL_ADMIN = "admin@localhost.com";
+    const EMAIL_FROM = "support@localhost.com";
+    const EMAIL_FROM_NAME = "From name";
+    const EMAIL_TPL_FOLDER = "templates/email/";
+    const EMAIL_SIGNATURE_TPL = "signature.tpl.php";
 
     /**
      * Detects if system runned on the local webserver.
