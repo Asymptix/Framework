@@ -8,9 +8,10 @@ DIRECTORY STRUCTURE
 ---
 
 ```
+classes/             example project classes
+classes/db/          example DB beans classes
 conf/                configuration files
 controllers/         example controllers
-db/                  example DB beans classes
 framework/           core framework code
 modules/             example modules
 templates/           example templates
