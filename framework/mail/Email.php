@@ -81,24 +81,18 @@ class Email {
      * @param string $subject Subject of the email to be sent.
      * @param string $message Text of the mail.
      * @param string $format E-mail format ("text" or "html").
+     * @param string $replyTo Reply to e-mail address.
      *
      * @return boolean Returns TRUE if the mail was successfully accepted for
      *           delivery, FALSE otherwise.
      */
-    protected function sendMail($email, $subject, $message, $format = self::FORMAT_TEXT) {
-        /**
-         * Generate additional headers
-         */
-        $senderHeader = 'From: ' . $this->fromName . ' <' . $this->fromEmail . '>';
-        //$recipientHeader = "To: " . $email;
-
-        $headers =
-            $senderHeader . "\r\n";/* .
-            $recipientHeader . "\r\n";*/
+    protected function sendMail($email, $subject, $message, $format = self::FORMAT_TEXT, $replyTo = "") {
+        $headers = "From: " . $this->fromName . " <" . $this->fromEmail . ">\r\n";
+        $headers.= "Reply-To: " . $replyTo . "\r\n";
 
         if ($format == self::FORMAT_HTML) {
-            $headers.= 'MIME-Version: 1.0' . "\r\n";
-            $headers.= 'Content-type: text/html; charset=utf-8' . "\r\n";
+            $headers.= "MIME-Version: 1.0\r\n";
+            $headers.= "Content-type: text/html; charset=utf-8\r\n";
         }
 
         /**
@@ -115,13 +109,15 @@ class Email {
      * @param string $template Name of the email message template file.
      * @param array $params List of the template parameters.
      * @param string $format E-mail format ("text" or "html").
+     * @param string $replyTo Reply to e-mail address.
      *
      * @return boolean Returns TRUE if the mail was successfully accepted for
      *           delivery, FALSE otherwise.
      */
     protected function sendNotification(
             $email, $subject, $languageCode, $template,
-            array $params = null, $format = self::FORMAT_TEXT
+            array $params = null, $format = self::FORMAT_TEXT,
+            $replyTo = ""
         ) {
         $_EMAIL = $params;
 
@@ -133,7 +129,7 @@ class Email {
         $message = ob_get_contents();
         ob_end_clean();
 
-        return self::sendMail($email, $subject, $message, $format);
+        return self::sendMail($email, $subject, $message, $format, $replyTo);
     }
 
 }
