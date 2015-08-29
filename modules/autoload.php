@@ -1,7 +1,6 @@
 <?php
 
-$request = $_SERVER['SCRIPT_NAME'];
-$deepness = substr_count($request, "/") - 1;
+$deepness = substr_count($_SERVER['SCRIPT_NAME'], "/") - 1;
 
 $_PATH = $deepness>0 ? implode("", array_fill(0, $deepness, "../")) : "./";
 
