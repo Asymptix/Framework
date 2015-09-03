@@ -23,5 +23,3 @@ class UICheckBoxPanel extends UIControl {
         parent::UI_Component($attributesList, $template, $dataSet, $currentValue);
     }
 }
-
-?>

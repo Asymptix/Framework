@@ -64,5 +64,3 @@ class UICheckBox extends UIComponent {
         parent::UIComponent($attributesList, $template);
     }
 }
-
-?>

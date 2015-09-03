@@ -40,5 +40,3 @@ function onExit() {
     }
 }
 register_shutdown_function("onExit");
-
-?>

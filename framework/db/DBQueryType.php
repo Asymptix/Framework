@@ -72,5 +72,3 @@ class DBQueryType {
  * Service exception class.
  */
 class DBQueryTypeException extends \Exception {};
-
-?>

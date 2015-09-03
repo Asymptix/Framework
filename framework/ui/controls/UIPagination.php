@@ -83,5 +83,3 @@ class UIPagination extends UIControl {
     }
 
 }
-
-?>

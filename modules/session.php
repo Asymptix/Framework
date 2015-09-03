@@ -29,5 +29,3 @@ if (isset($_SESSION['user'])) {
 
     unset($user);
 }
-
-?>

@@ -8,6 +8,8 @@ namespace Asymptix\localization;
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
 class Languages {
@@ -67,5 +69,3 @@ class Languages {
     }
 
 }
-
-?>

@@ -82,5 +82,3 @@ class UIListOption extends UIComponent {
         }
     }
 }
-
-?>

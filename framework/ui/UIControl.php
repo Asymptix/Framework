@@ -29,5 +29,3 @@ abstract class UIControl extends UIComponent {
 
     public function UIControl() {}
 }
-
-?>

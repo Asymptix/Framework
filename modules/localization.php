@@ -23,5 +23,3 @@ $_LANG = Languages::getLanguage($_SESSION['lang']);
 $_SESSION['lang'] = $_LANG->code;
 
 require_once(realpath(dirname(__FILE__)) . "/../conf/langs/" . $_LANG->code . ".php");
-
-?>

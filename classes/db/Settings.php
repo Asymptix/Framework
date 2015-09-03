@@ -33,5 +33,3 @@ class Settings extends \Asymptix\db\DBObject {
     }
 
 }
-
-?>

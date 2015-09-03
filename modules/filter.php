@@ -32,5 +32,3 @@ if ($resetFilter) {
 }
 
 $_SESSION['_filter'] = serialize($_FILTER);
-
-?>

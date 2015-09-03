@@ -505,5 +505,3 @@ abstract class DBObject extends \Asymptix\core\Object {
         return substr(strtolower(preg_replace("#([A-Z]{1})#", "_$1", $methodNameFragment)), 1);
     }
 }
-
-?>

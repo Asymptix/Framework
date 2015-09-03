@@ -57,5 +57,3 @@ class UIDropDown extends UIComponent {
         parent::UIComponent($attributesList, $template, $dataSet, $currentValue);
     }
 }
-
-?>

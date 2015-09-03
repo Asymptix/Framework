@@ -217,5 +217,3 @@ class User extends \Asymptix\db\DBTimedObject {
     }
 
 }
-
-?>

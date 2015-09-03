@@ -405,5 +405,3 @@ class DBSelector extends \Asymptix\core\Object {
  * Service exception class.
  */
 class DBSelectorException extends \Exception {};
-
-?>

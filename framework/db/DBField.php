@@ -198,5 +198,3 @@ class DBField {
  */
 class DBFieldException extends \Exception {};
 class DBFieldTypeException extends \Exception {};
-
-?>

@@ -47,5 +47,3 @@ class UIDialog extends UIControl {
     }
 
 }
-
-?>

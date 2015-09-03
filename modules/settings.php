@@ -21,5 +21,3 @@ $_SETTINGS = array();
 foreach ($settings as $setting) {
     $_SETTINGS[$setting->id] = $setting->value;
 }
-
-?>

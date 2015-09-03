@@ -281,5 +281,3 @@ class DBPreparedQuery extends DBQuery {
     }
 
 }
-
-?>

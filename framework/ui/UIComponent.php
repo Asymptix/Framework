@@ -219,5 +219,3 @@ abstract class UIComponent {
     }
 
 }
-
-?>

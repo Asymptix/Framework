@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Autoload module.
+ *
+ * @category Asymptix PHP Framework
+ * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
+ * @copyright (c) 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/Asymptix/Framework
+ * @license http://opensource.org/licenses/MIT
+ */
+
 $deepness = substr_count($_SERVER['SCRIPT_NAME'], "/") - 1;
 
 $_PATH = $deepness>0 ? implode("", array_fill(0, $deepness, "../")) : "./";
@@ -16,5 +27,3 @@ spl_autoload_register(function ($className) {
     }
     require_once($includePath);
 });
-
-?>

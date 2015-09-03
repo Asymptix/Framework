@@ -12,6 +12,8 @@ use Asymptix\core\Errors;
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2010 - 2015, Dmytro Zarezenko
+ *
+ * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
 class Localization {
@@ -70,5 +72,3 @@ class Localization {
         return true;
     }
 }
-
-?>

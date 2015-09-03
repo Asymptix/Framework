@@ -19,5 +19,3 @@ class __ERRORS {
 class __DIALOGS {
 
 }
-
-?>
