@@ -418,10 +418,14 @@ abstract class DBObject extends \Asymptix\core\Object {
         if ($this->isNewRecord()) {
             if (!empty($this->dbQuery->order)) {
                 $this->dbQuery->query.= " ORDER BY";
-                foreach ($this->dbQuery->order as $fieldName => $ord) {
-                    $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
+                if (is_array($this->dbQuery->order)) {
+                    foreach ($this->dbQuery->order as $fieldName => $ord) {
+                        $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
+                    }
+                    $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
+                } elseif (is_string($this->dbQuery->order)) {
+                    $this->dbQuery->query.= " " . $this->dbQuery->order;
                 }
-                $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
             }
         }
 
