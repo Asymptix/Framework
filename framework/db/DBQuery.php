@@ -103,21 +103,36 @@ class DBQuery {
      * @param array $params List of SQL query parameters.
      */
     public static function showQueryDebugInfo($query = "", $types = "", array $params = array()) {
+        OutputStream::start();
         if (!empty($query)) {
-            OutputStream::start();
+            if (empty($types) && empty($params)) {
+                OutputStream::message(OutputStream::MSG_INFO, "Q: " . $query);
+            } else {
+                if (strlen($types) === count($params)) {
+                    $query = preg_replace('!\s+!', ' ', $query);
+                    $preparedQuery = $query;
 
-            OutputStream::message(OutputStream::MSG_INFO, "QUERY: " . $query);
+                    $paramsStr = array();
+                    for ($i = 0; $i < strlen($types); $i++) {
+                        $query = preg_replace("/\?/", DBField::sqlValue($types[$i], $params[$i]), $query, 1);
 
-            if (!empty($types)) {
-                OutputStream::message(OutputStream::MSG_INFO, "TYPES: " . $types);
+                        $paramsStr[] = $types[$i] . ": " . DBField::sqlValue($types[$i], $params[$i]);
+                    }
+
+                    OutputStream::message(OutputStream::MSG_INFO, "Q: " . $query);
+                    OutputStream::message(OutputStream::MSG_INFO, "P: " . $preparedQuery);
+
+                    OutputStream::message(OutputStream::MSG_INFO, "A: [" . implode(", ", $paramsStr) . "]");
+                } else {
+                    OutputStream::message(OutputStream::MSG_ERROR, "Number of types is not equal parameters number.");
+                    OutputStream::message(OutputStream::MSG_INFO, "T: " . $types);
+                    OutputStream::message(OutputStream::MSG_INFO, "A: [" . implode(", ", $params)  . "]");
+                }
             }
-
-            if (!empty($params)) {
-                OutputStream::message(OutputStream::MSG_INFO, "PARAMS: [" . implode(", ", $params)  . "]");
-            }
-
-            OutputStream::close();
+        } else {
+            OutputStream::message(OutputStream::MSG_WARNING, "DB query is empty.");
         }
+        OutputStream::close();
     }
 
 }
