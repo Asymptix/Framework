@@ -11,7 +11,7 @@ use Asymptix\core\Tools;
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  *
- * @git https://github.com/dzarezenko/Asymptix-PHP-Framework.git
+ * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
 class DBCore {
@@ -803,5 +803,3 @@ class DBCore {
  * Service exception class.
  */
 class DBCoreException extends \Exception {}
-
-?>
