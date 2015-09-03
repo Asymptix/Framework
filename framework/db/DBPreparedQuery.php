@@ -121,7 +121,11 @@ class DBPreparedQuery extends DBQuery {
 
                 $typeByValue = DBField::getType($value);
                 if ($typeByValue != 's') {
-                    if ($type != $typeByValue && !($type == 'd' && $typeByValue == 'i')) {
+                    if ($type != $typeByValue && !(
+                           ($type == 'd' && $typeByValue == 'i') || // We can put integer as double
+                           ($type == 's' && $typeByValue == 'i') // We can put integer as string
+                       )
+                    ) {
                         throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . "' type but '" . $typeByValue . "' detected)");
                     }
                 } else { // in case if we try send non-string parameters as a string value
@@ -255,9 +259,13 @@ class DBPreparedQuery extends DBQuery {
         $chunks = array();
         foreach ($values as $fieldName => $fieldValue) {
             if (!is_array($fieldValue)) {
-                $chunks[]= $fieldName . " = ?";
-                $this->types.= DBField::getType($fieldValue);
-                $this->params[] = $fieldValue;
+                if (!is_null($fieldValue)) {
+                    $chunks[]= $fieldName . " = ?";
+                    $this->types.= DBField::getType($fieldValue);
+                    $this->params[] = $fieldValue;
+                } else {
+                    $chunks[]= $fieldName;
+                }
             } else {
                 $condition = $fieldName;
                 $localParams = $fieldValue;
