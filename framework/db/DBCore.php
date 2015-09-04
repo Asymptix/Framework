@@ -654,21 +654,59 @@ class DBCore {
     }
 
     /**
-     * Executes SQL query with single row and value result and return this value.
+     * Executes SQL query with single record and return this record.
+     *
+     * @param string $query SQL query to execute.
+     * @param string $types Types string (ex: "isdb").
+     * @param array $params Parameters in the same order like types string.
+     *
+     * @return array Selected record with table names as keys or NULL if no
+     *           data selected.
+     * @throws DBCoreException If no one or more than one records selected.
+     */
+    public static function selectSingleRecord($query, $types = "", $params = array()) {
+        $stmt = self::doSelectQuery($query, $types, $params);
+
+        if ($stmt !== false) {
+            $record = null;
+            if ($stmt->num_rows === 1) {
+                $record = DBCore::bindResults($stmt);
+            }
+            $stmt->close();
+
+            if (is_null($record)) {
+                throw new DBCoreException("No one or more than one records selected.");
+            }
+
+            return $record;
+        }
+        return null;
+    }
+
+    /**
+     * Executes SQL query with single record and value result and return this value.
      *
      * @param string $query SQL query to execute.
      * @param string $types Types string (ex: "isdb").
      * @param array $params Parameters in the same order like types string.
      *
      * @return mixed
+     * @throws DBCoreException If no one or more than one records selected.
      */
     public static function selectSingleValue($query, $types = "", $params = array()) {
         $stmt = self::doSelectQuery($query, $types, $params);
 
         if ($stmt !== false) {
-            $stmt->bind_result($value);
-            $stmt->fetch();
+            $value = null;
+            if ($stmt->num_rows === 1) {
+                $stmt->bind_result($value);
+                $stmt->fetch();
+            }
             $stmt->close();
+
+            if (is_null($value)) {
+                throw new DBCoreException("No one or more than one records selected.");
+            }
 
             return $value;
         }
