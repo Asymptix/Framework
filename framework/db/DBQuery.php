@@ -109,7 +109,7 @@ class DBQuery {
                 OutputStream::message(OutputStream::MSG_INFO, "Q: " . $query);
             } else {
                 if (strlen($types) === count($params)) {
-                    $query = preg_replace('!\s+!', ' ', $query);
+                    $query = preg_replace('/\s+/', ' ', $query);
                     $preparedQuery = $query;
 
                     $paramsStr = array();
