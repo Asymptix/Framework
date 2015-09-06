@@ -144,8 +144,7 @@ class DBField {
      * @throws DBFieldTypeException If invalid field type provided.
      */
     public static function castValue($type, $value) {
-        $type = self::castType($type);
-        switch ($type) {
+        switch (self::castType($type)) {
             case ("i"):
                 return (integer)$value;
             case ("d"):

@@ -278,4 +278,4 @@ class DBQueryCondition {
 /**
  * Service exception class.
  */
-class DBQueryConditionException extends \Exception {};
+class DBQueryConditionException extends \Exception {}
