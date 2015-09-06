@@ -32,11 +32,11 @@ if ($mysqli->connect_error) {
 }
 
 // Register a shutdown function which will close DB connection
-function onExit() {
+register_shutdown_function(function() {
     global $manager;
+
     $conns = $manager->getConnections();
-    foreach ($conns as $connName => $connResource) { // TODO: without name
+    foreach ($conns as $connResource) {
         $manager->closeConnection($connResource);
     }
-}
-register_shutdown_function("onExit");
+});
