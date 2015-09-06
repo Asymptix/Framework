@@ -461,11 +461,15 @@ abstract class DBObject extends \Asymptix\core\Object {
         } else {
             $stmt = DBCore::doSelectQuery($this->dbQuery);
             if ($stmt !== false) {
+                $data = null;
                 if ($stmt->num_rows > 1) {
-                    return DBCore::selectDBObjectsFromStatement($stmt, $this);
+                    $data = DBCore::selectDBObjectsFromStatement($stmt, $this);
                 } elseif ($stmt->num_rows == 1) {
-                    return DBCore::selectDBObjectFromStatement($stmt, $this);
+                    $data = DBCore::selectDBObjectFromStatement($stmt, $this);
                 }
+                $stmt->close();
+
+                return $data;
             }
         }
 
