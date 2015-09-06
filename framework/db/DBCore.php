@@ -301,7 +301,7 @@ class DBCore {
         call_user_func_array(array($stmt, 'bind_result'), $parameters);
         if ($stmt->fetch()) {
             foreach ($resultSet as &$tableResult) {
-                foreach ($tableResult as $fieldName => &$fieldValue) {
+                foreach ($tableResult as &$fieldValue) {
                     $fieldValue = $parameters[$fieldValue];
                 }
             }
@@ -418,35 +418,39 @@ class DBCore {
         print("<pre>");
         if (!empty($tableName)) {
             $fieldsList = self::getTableFieldsList($tableName);
-            if (!empty($fieldsList)) foreach ($fieldsList as $fieldName => $data) {
-                print("'" . $fieldName . "' => ");
-                if (strpos($data['type'], "varchar") === 0
-                 || strpos($data['type'], "text") === 0
-                 || strpos($data['type'], "longtext") === 0
-                 || strpos($data['type'], "enum") === 0
-                 || strpos($data['type'], "char") === 0
-                 || strpos($data['type'], "datetime") === 0
-                 || strpos($data['type'], "timestamp") === 0
-                 || strpos($data['type'], "date") === 0) {
-                    print('"' . $data['default'] . '"');
-                } elseif (strpos($data['type'], "int") === 0
-                 || strpos($data['type'], "tinyint") === 0
-                 || strpos($data['type'], "smallint") === 0) {
-                    if (!empty($data['default'])) {
-                        print($data['default']);
-                    } else {
-                        print(0);
+            if (!empty($fieldsList)) {
+                foreach ($fieldsList as $fieldName => $data) {
+                    print("'" . $fieldName . "' => ");
+                    if (strpos($data['type'], "varchar") === 0
+                     || strpos($data['type'], "text") === 0
+                     || strpos($data['type'], "longtext") === 0
+                     || strpos($data['type'], "enum") === 0
+                     || strpos($data['type'], "char") === 0
+                     || strpos($data['type'], "datetime") === 0
+                     || strpos($data['type'], "timestamp") === 0
+                     || strpos($data['type'], "date") === 0) {
+                        print('"' . $data['default'] . '"');
+                    } elseif (strpos($data['type'], "int") === 0
+                     || strpos($data['type'], "tinyint") === 0
+                     || strpos($data['type'], "smallint") === 0
+                     || strpos($data['type'], "mediumint") === 0
+                     || strpos($data['type'], "bigint") === 0) {
+                        if (!empty($data['default'])) {
+                            print($data['default']);
+                        } else {
+                            print(0);
+                        }
+                    } elseif (strpos($data['type'], "float") === 0
+                     || strpos($data['type'], "double") === 0
+                     || strpos($data['type'], "decimal") === 0) {
+                        if (!empty($data['default'])) {
+                            print($data['default']);
+                        } else {
+                            print("0.0");
+                        }
                     }
-                } elseif (strpos($data['type'], "float") === 0
-                 || strpos($data['type'], "double") === 0
-                 || strpos($data['type'], "decimal") === 0) {
-                    if (!empty($data['default'])) {
-                        print($data['default']);
-                    } else {
-                        print("0.0");
-                    }
+                    print(", // " . $data['type'] . ", default '" . $data['default'] . "'\n");
                 }
-                print(", // " . $data['type'] . ", default '" . $data['default'] . "'\n");
             }
         }
         print("</pre>");
