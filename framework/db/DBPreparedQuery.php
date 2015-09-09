@@ -91,7 +91,9 @@ class DBPreparedQuery extends DBQuery {
         if ($debug) {
             DBQuery::showQueryDebugInfo($this->query, $this->types, $this->params);
         } else {
-            if ($this->getType() == DBQueryType::SELECT) {
+            if (in_array($this->getType(), array(
+                DBQueryType::SELECT, DBQueryType::DESCRIBE, DBQueryType::SHOW
+            ))) {
                 return DBCore::doSelectQuery($this);
             } else {
                 return DBCore::doUpdateQuery($this);
