@@ -394,17 +394,19 @@ class DBCore {
         if (!empty($tableName)) {
             $query = "DESCRIBE " . $tableName;
             $stmt = self::doSelectQuery($query);
-            $stmt->bind_result($field, $type, $null, $key, $default, $extra);
-            $fieldsList = array();
-            while ($stmt->fetch()) {
-                $fieldsList[$field] = array(
-                    'type' => $type,
-                    'default' => $default
-                );
-            }
-            $stmt->close();
+            if ($stmt !== false) {
+                $stmt->bind_result($field, $type, $null, $key, $default, $extra);
+                $fieldsList = array();
+                while ($stmt->fetch()) {
+                    $fieldsList[$field] = array(
+                        'type' => $type,
+                        'default' => $default
+                    );
+                }
+                $stmt->close();
 
-            return $fieldsList;
+                return $fieldsList;
+            }
         }
         return array();
     }
