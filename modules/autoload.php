@@ -27,3 +27,5 @@ spl_autoload_register(function ($className) {
     }
     require_once($includePath);
 });
+
+require_once($_PATH . "modules/error_log.php");
