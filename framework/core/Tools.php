@@ -2,6 +2,8 @@
 
 namespace Asymptix\core;
 
+use Asymptix\web\Http;
+
 /**
  * Common tools methods.
  *
@@ -28,18 +30,29 @@ class Tools {
 
     /**
      * Gets value of the field from $_REQUEST or $_SESSION (is some REQUEST values
-     * needs to be stored by scenario).
+     * needs to be stored by scenario). Also it takes values from $_GET or $_POST
+     * separately if second parameter is passed.
      *
      * @param mixed $fieldName String name of the field or complex name as array.
+     * @param string $source Http::GET or Http::POST constant.
      *
      * @return mixed Value of the field, NULL otherwise.
      */
-    public static function getFieldValue($fieldName) {
+    public static function getFieldValue($fieldName, $source = null) {
         $fieldName = self::parseComplexFieldName($fieldName);
         $value = null;
 
         try {
-            $value = self::getArrayElement($_REQUEST, $fieldName);
+            switch ($source) {
+                case (Http::GET):
+                    $value = self::getArrayElement($_GET, $fieldName);
+                    break;
+                case (Http::POST):
+                    $value = self::getArrayElement($_POST, $fieldName);
+                    break;
+                default:
+                    $value = self::getArrayElement($_REQUEST, $fieldName);
+            }
         } catch (\Exception $ex) {
             try {
                 if (isset($_SESSION['_post'])) {
