@@ -281,7 +281,11 @@ class Tools {
      * @return boolean Returns TRUE if $input is a integer, FALSE otherwise.
      */
     public static function isInteger($input) {
-        return (ctype_digit(strval($input)));
+        $strVal = trim(strval($input));
+        if (strlen($strVal) && $strVal[0] == '-') {
+            return ctype_digit(substr($strVal, 1));
+        }
+        return ctype_digit($strVal);
     }
 
     /**
@@ -291,7 +295,7 @@ class Tools {
      * @return boolean Returns TRUE if $input is a double, FALSE otherwise.
      */
     public static function isDouble($input) {
-        return (is_double($input));
+        return is_double($input);
     }
 
     /**
@@ -333,7 +337,7 @@ class Tools {
      * @return boolean Returns TRUE if $input is a number or a numeric string, FALSE otherwise.
      */
     public static function isNumeric($input) {
-        return (is_numeric(strval($input)));
+        return is_numeric(strval($input));
     }
 
     public static function isBoolean($input) {
