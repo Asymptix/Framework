@@ -74,5 +74,3 @@ if ($_ROUTE->isBackend) {
     require_once("controllers/frontend/" . $_ROUTE->controller . ".php");
     require_once("templates/frontend/master.tpl.php");
 }
-
-?>
