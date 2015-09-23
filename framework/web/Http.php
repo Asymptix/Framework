@@ -66,7 +66,7 @@ class Http {
      * @return array
      */
     public static function getBrowser() {
-        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
         $browserFullName = $browserShortName = 'Unknown';
         $platform = 'Unknown';
         $version = 'Unknown';
