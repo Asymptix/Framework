@@ -79,6 +79,19 @@ class DBPreparedQuery extends DBQuery {
     }
 
     /**
+     * Verify is DB query is SELECT type or not.
+     *
+     * @return boolean
+     */
+    public function isSelect() {
+        return in_array($this->getType(), array(
+            DBQueryType::SELECT,
+            DBQueryType::DESCRIBE,
+            DBQueryType::SHOW
+        ));
+    }
+
+    /**
      * Executes SQL query.
      *
      * @param boolean $debug Debug mode flag.
@@ -91,9 +104,7 @@ class DBPreparedQuery extends DBQuery {
         if ($debug) {
             DBQuery::showQueryDebugInfo($this->query, $this->types, $this->params);
         } else {
-            if (in_array($this->getType(), array(
-                DBQueryType::SELECT, DBQueryType::DESCRIBE, DBQueryType::SHOW
-            ))) {
+            if ($this->isSelect()) {
                 return DBCore::doSelectQuery($this);
             } else {
                 return DBCore::doUpdateQuery($this);
