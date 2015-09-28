@@ -2,6 +2,8 @@
 
 namespace Asymptix\core;
 
+use Asymptix\web\Request;
+
 /**
  * Form fields validation functionality.
  *
@@ -30,7 +32,7 @@ class Validator {
      * @return boolean
      */
     public static function validateNotEmpty($fieldName) {
-        $fieldValue = Tools::getFieldValue($fieldName);
+        $fieldValue = Request::getFieldValue($fieldName);
         if (is_string($fieldValue)) {
             $fieldValue = trim($fieldValue);
         }
@@ -48,7 +50,7 @@ class Validator {
      * @return boolean
      */
     public static function validateChecked($fieldName) {
-        $fieldValue = trim(Tools::getFieldValue($fieldName));
+        $fieldValue = trim(Request::getFieldValue($fieldName));
         if (empty($fieldValue)) {
             Errors::saveErrorFor($fieldName, __ERRORS::CHECK_THIS_FIELD);
             return false;
@@ -63,7 +65,7 @@ class Validator {
      * @return boolean
      */
     public static function validateEmpty($fieldName) {
-        $fieldValue = trim(Tools::getFieldValue($fieldName));
+        $fieldValue = trim(Request::getFieldValue($fieldName));
         if (empty($fieldValue)) {
             return true;
         }
@@ -78,7 +80,7 @@ class Validator {
      * @return boolean
      */
     public static function validateNoSpaces($fieldName) {
-        $fieldValue = Tools::getFieldValue($fieldName);
+        $fieldValue = Request::getFieldValue($fieldName);
         if (strpos($fieldValue, " ") !== false) {
             Errors::saveErrorFor($fieldName, __ERRORS::SPACES_INACCEPTABLE);
             return false;
@@ -107,8 +109,8 @@ class Validator {
      * @return boolean
      */
     public static function validatePassword($passwordFieldName, $rePasswordFieldName) {
-        $password = trim(Tools::getFieldValue($passwordFieldName));
-        $rePassword = trim(Tools::getFieldValue($rePasswordFieldName));
+        $password = trim(Request::getFieldValue($passwordFieldName));
+        $rePassword = trim(Request::getFieldValue($rePasswordFieldName));
         if (empty($password)) {
             Errors::saveErrorFor($passwordFieldName, __ERRORS::EMPTY_PASSWORD);
             return false;
@@ -136,7 +138,7 @@ class Validator {
         if (!validateNoSpaces($fieldName)) {
             return false;
         }
-        if (Tools::getFieldValue($fieldName) != $_SESSION[$fieldName]) {
+        if (Request::getFieldValue($fieldName) != $_SESSION[$fieldName]) {
             Errors::saveErrorFor($fieldName, __ERRORS::INVALID_CAPTCHA_CODE);
             return false;
         }
@@ -151,7 +153,7 @@ class Validator {
      * @return boolean
      */
     public static function validateEmail($fieldName) {
-        $fieldValue = trim(Tools::getFieldValue($fieldName));
+        $fieldValue = trim(Request::getFieldValue($fieldName));
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, __ERRORS::INVALID_EMAIL);
             return false;
@@ -206,7 +208,7 @@ class Validator {
      * @return boolean
      */
     public static function validateUrl($fieldName) {
-        $fieldValue = Tools::getFieldValue($fieldName);
+        $fieldValue = Request::getFieldValue($fieldName);
 
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, __ERRORS::URL_EMPTY);
@@ -245,7 +247,7 @@ class Validator {
     public static function validateTextMaxLength($fieldName, $maxTextLength) {
         global $_ERRORS;
 
-        $text = trim(strip_tags(Tools::getFieldValue($fieldName)));
+        $text = trim(strip_tags(Request::getFieldValue($fieldName)));
         if (strlen($text) > $maxTextLength) {
             $_ERRORS[$fieldName] = str_replace("[[1]]", $maxTextLength, __ERRORS::MAX_TEXT_LENGTH);
             return false;
@@ -265,7 +267,7 @@ class Validator {
     public static function validateTextMinLength($fieldName, $minTextLength) {
         global $_ERRORS;
 
-        $text = trim(strip_tags(Tools::getFieldValue($fieldName)));
+        $text = trim(strip_tags(Request::getFieldValue($fieldName)));
         if (strlen($text) < $minTextLength) {
             $_ERRORS[$fieldName] = str_replace("[[1]]", $minTextLength, __ERRORS::MIN_TEXT_LENGTH);
             return false;
@@ -280,7 +282,7 @@ class Validator {
      * @return boolean
      */
     public static function validateInteger($fieldName) {
-        $fieldValue = trim(Tools::getFieldValue($fieldName));
+        $fieldValue = trim(Request::getFieldValue($fieldName));
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, __ERRORS::FIELD_CANT_BE_EMPTY);
             return false;
@@ -298,7 +300,7 @@ class Validator {
      * @return boolean
      */
     public static function validateDouble($fieldName) {
-        $fieldValue = trim(Tools::getFieldValue($fieldName));
+        $fieldValue = trim(Request::getFieldValue($fieldName));
         $doubleValue = (double) $fieldValue;
         if (!validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, __ERRORS::FIELD_CANT_BE_EMPTY);
@@ -318,7 +320,7 @@ class Validator {
      * @return boolean
      */
     public static function validatePositive($fieldName) {
-        $fieldValue = trim(Tools::getFieldValue($fieldName));
+        $fieldValue = trim(Request::getFieldValue($fieldName));
         if ($fieldValue <= 0) {
             Errors::saveErrorFor($fieldName, __ERRORS::INVALID_POSITIVE);
             return false;
@@ -334,8 +336,8 @@ class Validator {
      * @return boolean
      */
     public static function validateSignIn($loginFieldName, $passwordFieldName) {
-        $login = Tools::getFieldValue($loginFieldName);
-        $password = Tools::getFieldValue($passwordFieldName);
+        $login = Request::getFieldValue($loginFieldName);
+        $password = Request::getFieldValue($passwordFieldName);
 
         $validationResult = true;
         if ($login == null || trim($login) == "") {
@@ -376,7 +378,7 @@ class Validator {
      * @return boolean
      */
     public static function validateRange($fieldName, $range) {
-        $fieldValue = Tools::getFieldValue($fieldName);
+        $fieldValue = Request::getFieldValue($fieldName);
         if (!in_array($fieldValue, $range)) {
             Errors::saveErrorFor($fieldName, __ERRORS::INCORRECT_VALUE);
             return false;
