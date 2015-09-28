@@ -2,7 +2,7 @@
 
 namespace Asymptix\localization;
 
-use Asymptix\core\Tools;
+use Asymptix\web\Request;
 use Asymptix\core\Errors;
 
 /**
@@ -56,7 +56,7 @@ class Localization {
      * @return boolean
      */
     static public function validateNotEmpty($fieldName) {
-        $fieldValue = Tools::getFieldValue($fieldName);
+        $fieldValue = Request::getFieldValue($fieldName);
         if (is_array($fieldValue)) {
             foreach ($fieldValue as $value) {
                 $value = trim($value);
