@@ -26,7 +26,7 @@ register_shutdown_function(function() {
 });
 
 set_error_handler(function($errno, $msg, $file, $line) {
-    db\tools\ErrorLog::log(
+    \db\tools\ErrorLog::log(
         $errno,
         $_SERVER['SCRIPT_NAME'],
         $file,
