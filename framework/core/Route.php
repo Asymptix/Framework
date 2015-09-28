@@ -2,6 +2,8 @@
 
 namespace Asymptix\core;
 
+use Asymptix\web\Request;
+
 /**
  * Main route functionality class.
  *
@@ -68,7 +70,7 @@ class Route {
      * @return string Action name.
      */
     public function getAction($actionFieldName = 'action', $defaultAction = 'list') {
-        $action = Tools::getFieldValue('action');
+        $action = Request::getFieldValue($actionFieldName);
         if (empty($action)) {
             if (!empty($this->action)) {
                 return $this->action;
