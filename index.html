@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Asymptix Framework by Asymptix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Asymptix Framework</h1>
+      <h2 class="project-tagline">The Fast and Easy PHP Framework for Rapid Development</h2>
+      <a href="https://github.com/Asymptix/Framework" class="btn">View on GitHub</a>
+      <a href="https://github.com/Asymptix/Framework/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Asymptix/Framework/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="https://media.licdn.com/media/AAEAAQAAAAAAAAK-AAAAJDVhMDMzNDIxLWMzOTktNDhhNS04YWFjLWZmMjQ0Mzc1NDE4Ng.png" alt="Asymptix"></p>
+
+<h1>
+<a id="asymptix-php-framework" class="anchor" href="#asymptix-php-framework" aria-hidden="true"><span class="octicon octicon-link"></span></a>Asymptix PHP Framework</h1>
+
+<p>The Fast and Easy PHP Framework for Rapid Development.</p>
+
+<h2>
+<a id="directory-structure" class="anchor" href="#directory-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>DIRECTORY STRUCTURE</h2>
+
+<pre><code>classes/             example project classes
+classes/db/          example DB beans classes
+conf/                configuration files
+controllers/         example controllers
+framework/           core framework code
+modules/             example modules
+templates/           example templates
+tests/               tests of the core framework code
+</code></pre>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>REQUIREMENTS</h2>
+
+<p>The minimum requirement by Asymptix Framework is that your Web server supports PHP 5.3.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>INSTALLATION</h2>
+
+<p>To install basic framework libs use <a href="https://getcomposer.org/">Composer</a> <code>composer install</code> command with <code>composer.json</code> configuration file (current version doesn't support <a href="https://packagist.org/">Packagist</a> yet and uses SVN for load just subfolder of the repository directly from GitHub. This will be improved in future).</p>
+
+<div class="highlight highlight-source-js"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>repositories<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>package<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>package<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>asymptix/framework<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>version<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>dev-master<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>source<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                    <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>svn<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>https://github.com/Asymptix/Framework<span class="pl-pds">"</span></span>,
+                    <span class="pl-s"><span class="pl-pds">"</span>reference<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>trunk/framework<span class="pl-pds">"</span></span>
+                },
+                <span class="pl-s"><span class="pl-pds">"</span>require<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                    <span class="pl-s"><span class="pl-pds">"</span>php<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&gt;=5.3.0<span class="pl-pds">"</span></span>
+                },
+                <span class="pl-s"><span class="pl-pds">"</span>autoload<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                    <span class="pl-s"><span class="pl-pds">"</span>psr-4<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+                        <span class="pl-s"><span class="pl-pds">"</span>Asymptix<span class="pl-cce">\\</span><span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+                    }
+                }
+            }
+        }
+    ],
+    <span class="pl-s"><span class="pl-pds">"</span>minimum-stability<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>dev<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>require<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>php<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&gt;=5.3.0<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>asymptix/framework<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&gt;=2.0.0<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+
+<p>After <a href="https://getcomposer.org/">Composer</a> installation you just need require autoload file with the next command:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">require_once</span>(<span class="pl-s"><span class="pl-pds">"</span>./vendor/autoload.php<span class="pl-pds">"</span></span>);</span></pre></div>
+
+<h2>
+<a id="list-of-global-variables" class="anchor" href="#list-of-global-variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>LIST OF GLOBAL VARIABLES</h2>
+
+<h3>
+<a id="basic-static-settings" class="anchor" href="#basic-static-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic static settings</h3>
+
+<ul>
+<li>
+<strong><del>$_CONFIG</del></strong> - List of pairs key → value for global system configuration, like DB connections parameters, site URL, admin e-mail, etc. May be in old versions of the framework, now changed on <strong>Config</strong> object and partly replaced with <strong>$_SETTINGS</strong> variable <em>(deprecated)</em>.</li>
+<li>
+<strong>$_SETTINGS</strong> - List of pairs key → value for global system settings. Can be taken from the database or manually created.</li>
+<li>
+<strong>$_MENU</strong> - Multi-level array with main menu structure. Can be as global variable or as static property of the <strong>Menu</strong> class.</li>
+<li>
+<strong><del>$_PATH</del></strong> - Old version to set absolute path to the project's folder <em>(deprecated)</em>.</li>
+</ul>
+
+<h3>
+<a id="session-variables" class="anchor" href="#session-variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session variables</h3>
+
+<ul>
+<li>
+<strong>$_USER</strong> - Variable stores serialized object of the <strong>User</strong> class or simple array with user data.</li>
+</ul>
+
+<h3>
+<a id="pages-view-and-representation" class="anchor" href="#pages-view-and-representation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pages view and representation</h3>
+
+<ul>
+<li>
+<strong>$_ROUTE</strong> - Global instance of the <strong>Route</strong> class with public properties controller, action and id - represents current page URL or rules to display this page.</li>
+<li>
+<strong>$_TPL</strong>    - String variable with a path to the needed template of the page.</li>
+<li>
+<strong>$_BREADCRUMBS</strong> - Array with page breadcrumbs data.</li>
+<li>
+<strong>$_JS</strong> - Controller local array with paths to needed for the current page JavaScript files.</li>
+<li>
+<strong>$_CSS</strong>    - Controller local array with paths to needed for the current page CSS files.</li>
+<li>
+<strong>$_LANG</strong> - <code>Language</code> object stored in session and represents current selected language in localization functionality.</li>
+</ul>
+
+<h3>
+<a id="form-submission-data" class="anchor" href="#form-submission-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Form submission data</h3>
+
+<ul>
+<li>
+<strong>$_FIELDS</strong> - List with pairs key → value merged from <strong>$_REQUEST</strong> (<strong>$_POST</strong> and <strong>$_GET</strong>) also used in form output if some data is invalid. Fields values may be changed on the way from data receiving before output in form fields.</li>
+<li>
+<strong>$_ARGS</strong> - List with pairs key → value from <strong>$_GET</strong> string, so it's not a copy of <strong>$_GET</strong> but received from URL string data after ‘?’ sign.</li>
+<li>
+<strong>$_ERRORS</strong> List of the errors for invalid or notable fields after validation process or some notification process.</li>
+<li>
+<strong>$_MESSAGES</strong>   List of messages shown after form submission if some errors or notifications. Not connected to fields but common for all forms.</li>
+<li>
+<strong>$_FILTER</strong> List of filters (data selection rules) for some forms.</li>
+</ul>
+
+<h3>
+<a id="email-functionality" class="anchor" href="#email-functionality" aria-hidden="true"><span class="octicon octicon-link"></span></a>Email functionality</h3>
+
+<ul>
+<li>
+<strong>$_EMAIL</strong> - Uses only in e-mail templates as e-mail inline parameters list (e.g. username, password or product name and price in e-mail templates).</li>
+</ul>
+
+<h2>
+<a id="identity" class="anchor" href="#identity" aria-hidden="true"><span class="octicon octicon-link"></span></a>IDENTITY</h2>
+
+<p>It's highly recommended to send header information with framework signature for better recognition with parsers and analyzers (like <a href="https://github.com/AliasIO/Wappalyzer">Wappalyzer</a>).
+You may see example in the <strong>index.php</strong> file:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">header</span>(<span class="pl-s"><span class="pl-pds">'</span>X-Powered-By: Asymptix PHP Framework, PHP/<span class="pl-pds">'</span></span> <span class="pl-k">.</span> <span class="pl-c1">phpversion</span>());</span></pre></div>
+
+<h2>
+<a id="work-with-database-orm" class="anchor" href="#work-with-database-orm" aria-hidden="true"><span class="octicon octicon-link"></span></a>WORK WITH DATABASE (ORM)</h2>
+
+<p>You can create new <strong>DBObject</strong>:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$user</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">User</span>();</span></pre></div>
+
+<p>or you can get <strong>DBObject</strong> with <strong>DBSelector</strong>:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$userSelector</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">DBSelector</span>(<span class="pl-k">new</span> <span class="pl-c1">User</span>());</span>
+<span class="pl-s1"><span class="pl-smi">$user</span> <span class="pl-k">=</span> <span class="pl-smi">$userSelector</span><span class="pl-k">-&gt;</span>selectDBObjectById(<span class="pl-smi">$userId</span>);</span></pre></div>
+
+<p>You can manipulate with DataBase records this way:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">// Save (insert/update) record</span></span>
+<span class="pl-s1"><span class="pl-smi">$user</span><span class="pl-k">-&gt;</span><span class="pl-smi">email</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>dmytro@asymptix.com<span class="pl-pds">"</span></span>;</span>
+<span class="pl-s1"><span class="pl-smi">$user</span><span class="pl-k">-&gt;</span>save();</span></pre></div>
+
+<p>If ID of the <strong>DBObject</strong> is empty - then <strong>INSERT</strong> SQL instruction will be executed, if not empty - then <strong>UPDATE</strong>.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">// Delete record</span></span>
+<span class="pl-s1"><span class="pl-smi">$user</span><span class="pl-k">-&gt;</span>delete();</span></pre></div>
+
+<p>You can also use this syntax for the fast selection queries:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">// Init object</span></span>
+<span class="pl-s1"><span class="pl-smi">$site</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">Site</span>();</span>
+<span class="pl-s1"><span class="pl-smi">$sitesList</span> <span class="pl-k">=</span> <span class="pl-smi">$site</span><span class="pl-k">-&gt;</span>select(<span class="pl-c1">array</span>(<span class="pl-s"><span class="pl-pds">'</span>status<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">"</span>active<span class="pl-pds">"</span></span>))</span>
+<span class="pl-s1">                  <span class="pl-k">-&gt;</span>order(<span class="pl-c1">array</span>(<span class="pl-s"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">"</span>ASC<span class="pl-pds">"</span></span>))</span>
+<span class="pl-s1">                  <span class="pl-k">-&gt;</span>limit(<span class="pl-c1">10</span>)</span>
+<span class="pl-s1">                  <span class="pl-k">-&gt;</span>go();</span></pre></div>
+
+<p>This query will be executed with using of Prepared Statement. Order of methods calls is free but go() - must be the last call in this order.</p>
+
+<h2>
+<a id="log-with-outputstream" class="anchor" href="#log-with-outputstream" aria-hidden="true"><span class="octicon octicon-link"></span></a>LOG WITH OutputStream</h2>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">require_once</span>(<span class="pl-s"><span class="pl-pds">"</span>./core/OutputStream.php<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>start();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>output(<span class="pl-s"><span class="pl-pds">"</span>Simpel text <span class="pl-cce">\n</span><span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>line(<span class="pl-s"><span class="pl-pds">"</span>Simpel text line<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>line(<span class="pl-s"><span class="pl-pds">"</span>Simpel text line<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>line();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>log(<span class="pl-s"><span class="pl-pds">"</span>Simple default log<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>log(<span class="pl-s"><span class="pl-pds">"</span>Simple log with time format<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>\(H:i:s\)<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>log(<span class="pl-s"><span class="pl-pds">"</span>Simple log with time {{time}} label<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>log(<span class="pl-s"><span class="pl-pds">"</span>Simple log with time {{time}} label and format<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>\(H:i:s\)<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>log(<span class="pl-s"><span class="pl-pds">"</span>Log with few time {{time}} labels {{time}}<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>line();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>msg(<span class="pl-c1">OutputStream</span><span class="pl-k">::</span><span class="pl-c1">MSG_INFO</span>, <span class="pl-s"><span class="pl-pds">"</span>Info message<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>msg(<span class="pl-c1">OutputStream</span><span class="pl-k">::</span><span class="pl-c1">MSG_DEBUG</span>, <span class="pl-s"><span class="pl-pds">"</span>Debug message with time format<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>\(H:i:s\)<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>msg(<span class="pl-c1">OutputStream</span><span class="pl-k">::</span><span class="pl-c1">MSG_SUCCESS</span>, <span class="pl-s"><span class="pl-pds">"</span>Success message with time {{time}} label<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>msg(<span class="pl-c1">OutputStream</span><span class="pl-k">::</span><span class="pl-c1">MSG_WARNING</span>, <span class="pl-s"><span class="pl-pds">"</span>Warning message with time {{time}} label and format<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>\(H:i:s\)<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>msg(<span class="pl-c1">OutputStream</span><span class="pl-k">::</span><span class="pl-c1">MSG_ERROR</span>, <span class="pl-s"><span class="pl-pds">"</span>Default Error message<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">OutputStream</span><span class="pl-k">::</span>close();</span></pre></div>
+
+<p>Copyright (c) 2015 Asymptix.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Asymptix/Framework">Asymptix Framework</a> is maintained by <a href="https://github.com/Asymptix">Asymptix</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-68594857-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
