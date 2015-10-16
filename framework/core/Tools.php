@@ -46,6 +46,10 @@ class Tools {
      * @return boolean Returns TRUE if $input is a integer, FALSE otherwise.
      */
     public static function isInteger($input) {
+        if (is_array($input)) {
+            return false;
+        }
+
         $strVal = trim(strval($input));
         if (strlen($strVal) && $strVal[0] == '-') {
             return ctype_digit(substr($strVal, 1));
