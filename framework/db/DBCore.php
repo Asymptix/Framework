@@ -662,7 +662,8 @@ class DBCore {
     /**
      * Executes SQL query with single record and return this record.
      *
-     * @param string $query SQL query to execute.
+     * @param mixed $query SQL query template string or DBPreparedQuery object
+     *           if single parameter.
      * @param string $types Types string (ex: "isdb").
      * @param array $params Parameters in the same order like types string.
      *
@@ -671,7 +672,12 @@ class DBCore {
      * @throws DBCoreException If no one or more than one records selected.
      */
     public static function selectSingleRecord($query, $types = "", $params = array()) {
-        $stmt = self::doSelectQuery($query, $types, $params);
+        if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
+            $dbQuery = new DBPreparedQuery($query, $types, $params);
+        } else {
+            $dbQuery = $query;
+        }
+        $stmt = $dbQuery->go();
 
         if ($stmt !== false) {
             $record = null;
@@ -692,7 +698,8 @@ class DBCore {
     /**
      * Executes SQL query with single record and value result and return this value.
      *
-     * @param string $query SQL query to execute.
+     * @param mixed $query SQL query template string or DBPreparedQuery object
+     *           if single parameter.
      * @param string $types Types string (ex: "isdb").
      * @param array $params Parameters in the same order like types string.
      *
@@ -700,7 +707,12 @@ class DBCore {
      * @throws DBCoreException If no one or more than one records selected.
      */
     public static function selectSingleValue($query, $types = "", $params = array()) {
-        $stmt = self::doSelectQuery($query, $types, $params);
+        if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
+            $dbQuery = new DBPreparedQuery($query, $types, $params);
+        } else {
+            $dbQuery = $query;
+        }
+        $stmt = $dbQuery->go();
 
         if ($stmt !== false) {
             $value = null;
