@@ -55,6 +55,17 @@ class Session {
     }
 
     /**
+     * Save data to the session.
+     *
+     * @param array $data
+     */
+    public static function save(array $data = array()) {
+        foreach ($data as $key => $value) {
+            $_SESSION[$key] = $value;
+        }
+    }
+
+    /**
      * Verify if session variable exists.
      *
      * @param string $fieldName
