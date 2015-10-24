@@ -67,13 +67,14 @@ abstract class Object {
      * @param string $fieldName Name of the field.
      * @param mixed $fieldValue Value of the field.
      *
-     * @return boolean TRUE on success.
+     * @return Object Object itself on success (for the method chaining support).
      * @throws \Exception If object has no field with such name.
      */
     public function setFieldValue($fieldName, $fieldValue) {
         if (isset($this->fieldsList[$fieldName])) {
             $this->fieldsList[$fieldName] = $fieldValue;
-            return true;
+
+            return $this;
         } else {
             throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
         }
