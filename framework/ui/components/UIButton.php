@@ -1,6 +1,6 @@
 <?php
 
-require_once("/core/ui/UIComponent.php");
+namespace Asymptix\ui\components;
 
 /**
  * UI Button component class.
@@ -12,9 +12,9 @@ require_once("/core/ui/UIComponent.php");
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIButton extends UIComponent {
+class UIButton extends \Asymptix\ui\UIComponent {
 
-    const DEFAULT_TEMPLATE = "core/ui/templates/components/ui_button.tpl.php";
+    const DEFAULT_TEMPLATE = "/../templates/components/ui_button.tpl.php";
 
     const BTN_RESET = "reset";
     const BTN_BUTTON = "button";
@@ -24,17 +24,16 @@ class UIButton extends UIComponent {
 
     protected $isClose = false;
 
-    public function UIButton($attribs = array(), $template = null, $show = false) {
+    public function __construct($attribs = array(), $template = null, $show = false) {
         if (empty($template)) {
-            $template = self::DEFAULT_TEMPLATE;
+            $template = __DIR__ . self::DEFAULT_TEMPLATE;
         }
 
         if ($show) {
-            parent::UIComponent($attribs, $template);
+            parent::__construct($attribs, $template);
         } else {
             $this->template = $template;
             $this->setAttributes($attribs);
         }
     }
-
 }

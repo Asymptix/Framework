@@ -1,7 +1,6 @@
 <?php
 
-require_once("core/ui/UIControl.php");
-require_once("core/ui/components/UIButton.php");
+namespace Asymptix\ui\controls;
 
 /**
  * Dialog UI class controll.
@@ -13,11 +12,11 @@ require_once("core/ui/components/UIButton.php");
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIDialog extends UIControl {
+class UIDialog extends \Asymptix\ui\UIControl {
     /**
      * Default dialog panel HTML template.
      */
-    const DEFAULT_TEMPLATE = "core/ui/templates/controls/ui_dialog.tpl.php";
+    const DEFAULT_TEMPLATE = "/../templates/controls/ui_dialog.tpl.php";
 
     /**
      * Text of the dialog message.
@@ -31,13 +30,13 @@ class UIDialog extends UIControl {
      */
     protected $buttons = array();
 
-    public function UIDialog($attributesList = array(), $buttons = array(), $template = "") {
+    public function __construct($attributesList = array(), $buttons = array(), $template = "") {
         $this->buttons = $buttons;
 
         if (empty($template)) {
-            $template = self::DEFAULT_TEMPLATE;
+            $template = __DIR__ . self::DEFAULT_TEMPLATE;
         }
-        parent::UIComponent($attributesList, $template);
+        parent::__construct($attributesList, $template);
     }
 
     public function showButtons() {
@@ -45,5 +44,4 @@ class UIDialog extends UIControl {
             $btn->show();
         }
     }
-
 }
