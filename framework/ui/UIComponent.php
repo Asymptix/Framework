@@ -1,5 +1,7 @@
 <?php
 
+namespace Asymptix\ui;
+
 /**
  * Basic high level primitive class of all UI components and controls.
  *
@@ -89,7 +91,7 @@ abstract class UIComponent {
      * @param <type> $dataSet
      * @param <type> $currentValue
      */
-    protected function UIComponent($attributesList = array(), $template = "", $dataSet = array(), $currentValue = null) {
+    protected function __construct($attributesList = array(), $template = "", $dataSet = array(), $currentValue = null) {
         $this->setAttributes($attributesList);
         $this->dataSet = $dataSet;
         $this->currentValue = $currentValue;
@@ -110,7 +112,7 @@ abstract class UIComponent {
             if (isset($this->$attributeName)) {
                 $this->$attributeName = $attributeValue;
             } else {
-                throw new Exception("Wrong attribute '" . $attributeName . "' for " . get_class($this) . " component");
+                throw new \Exception("Wrong attribute '" . $attributeName . "' for " . get_class($this) . " component");
             }
         }
     }
@@ -173,7 +175,7 @@ abstract class UIComponent {
                 $propertyValue = trim($stylePair[1]);
                 $this->css($propertyName, $propertyValue);
             } else {
-                throw new Exception("Invalid CSS style string"); //todo: write own exception
+                throw new \Exception("Invalid CSS style string"); //todo: write own exception
             }
         }
     }
@@ -217,5 +219,4 @@ abstract class UIComponent {
             $this->addClass($className);
         }
     }
-
 }

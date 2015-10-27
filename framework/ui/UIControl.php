@@ -1,6 +1,6 @@
 <?php
 
-require_once("core/ui/UIComponent.php");
+namespace Asymptix\ui;
 
 /**
  * Basic UI Control class.
@@ -26,6 +26,4 @@ abstract class UIControl extends UIComponent {
      * @var boolean
      */
     protected $scrollable = false;
-
-    public function UIControl() {}
 }
