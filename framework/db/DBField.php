@@ -130,7 +130,9 @@ class DBField {
         } elseif (Tools::isString($fieldValue)) {
             return "s";
         } else {
-            throw new DBFieldTypeException("Invalid field value type");
+            throw new DBFieldTypeException(
+                "Can't detect field value type for value '" . (string)$fieldValue . "'"
+            );
         }
     }
 
