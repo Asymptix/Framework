@@ -361,12 +361,26 @@ class DBCore {
      * @return integer Returns the number of affected rows on success, and -1 if the last query failed.
      */
     public static function doUpdateQuery($query, $types = "", $params = array()) {
-        $stmt = self::doQuery($query, $types, $params);
+        if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
+            $dbQuery = new DBPreparedQuery($query, $types, $params);
+        } else {
+            $dbQuery = $query;
+        }
+        $stmt = self::doQuery($dbQuery);
 
-        $affectedRows = self::connection()->affected_rows;
+        switch ($dbQuery->getType()) {
+            case (DBQueryType::INSERT):
+                $result = self::connection()->insert_id;
+                break;
+            case (DBQueryType::UPDATE):
+                $result = self::connection()->affected_rows;
+                break;
+            default:
+                $result = self::connection()->affected_rows;
+        }
         $stmt->close();
 
-        return $affectedRows;
+        return $result;
     }
 
     /**
@@ -750,7 +764,7 @@ class DBCore {
      * @return mixed
      * @throws DBCoreException
      */
-    public function __call($methodName, $methodParams) {
+    public static function __callStatic($methodName, $methodParams) {
         if (strrpos($methodName, "ies") == strlen($methodName) - 3) {
             $methodName = substr($methodName, 0, strlen($methodName) - 3) . "ys";
         }
