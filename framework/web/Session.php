@@ -26,6 +26,17 @@ class Session {
     public static function start() {
         $status = session_status();
         if ($status == PHP_SESSION_NONE) {
+            if (ini_get('session.use_cookies') && isset($_COOKIE['PHPSESSID'])) {
+                $sessionId = $_COOKIE['PHPSESSID'];
+            } elseif (!ini_get('session.use_only_cookies') && isset($_GET['PHPSESSID'])) {
+                $sessionId = $_GET['PHPSESSID'];
+            } else {
+                return session_start();
+            }
+
+            if (!preg_match('/^[a-zA-Z0-9,-]{22,40}$/', $sessionId)) {
+                return false;
+            }
             return session_start();
         }
         return $status;
