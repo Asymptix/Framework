@@ -45,10 +45,10 @@ class ErrorLog extends \Asymptix\db\DBObject {
             }
         }
 
-        $query = "INSERT INTO " . self::TABLE_NAME . " (type, error_type, called, script, line, message, count) VALUES (?, ?, ?, ?, ?, ?, 1)
+        $query = "INSERT INTO " . self::TABLE_NAME . " (type, error_type, called, script, line, message, count, last_seen) VALUES (?, ?, ?, ?, ?, ?, 1, ?)
                   ON DUPLICATE KEY UPDATE count = count + 1, last_seen = ?";
-        return DBCore::doUpdateQuery($query, "isssiss", array(
-            $type, implode(", ", $errorTypes), $called, $script, $line, $message, date("Y-m-d H:i:s")
+        return DBCore::doUpdateQuery($query, "isssisss", array(
+            $type, implode(", ", $errorTypes), $called, $script, $line, $message, date("Y-m-d H:i:s"), date("Y-m-d H:i:s")
         ));
     }
 
