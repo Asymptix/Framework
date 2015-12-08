@@ -36,7 +36,7 @@ class Messages {
     public static function pushMessage($type, $text, $code = null) {
         global $_MESSAGES;
 
-        $oClass = new \ReflectionClass('Messages');
+        $oClass = new \ReflectionClass(new Messages);
         $constantsList = $oClass->getConstants();
 
         if (in_array($type, $constantsList)) {
@@ -157,7 +157,7 @@ class __MSG {
     public $type = null;
     public $text = "";
 
-    public function __MSG($type, $text) {
+    public function __construct($type, $text) {
         $this->type = $type;
         $this->text = trim($text);
     }
