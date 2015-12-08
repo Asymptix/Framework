@@ -45,6 +45,16 @@ class Http {
     }
 
     /**
+     * Perform HTTP redirect with saving POST params in session.
+     *
+     * @param string $url URL redirect to.
+     * @param array<mixed> $postData List of post params to save.
+     */
+    public static function redirect($url = "", $postData = array()) {
+        self::httpRedirect($url, $postData);
+    }
+
+    /**
      * Returns clients IP-address.
      *
      * @return string
