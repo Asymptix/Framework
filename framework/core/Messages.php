@@ -87,6 +87,23 @@ class Messages {
     }
 
     /**
+     * Returns message text (content).
+     *
+     * @param mixed $code Key of the message.
+     *
+     * @return string
+     */
+    public static function get($code) {
+        try {
+            $msg = self::getMessage($code);
+
+            return $msg->text;
+        } catch (\Exception $ex) {
+            return "";
+        }
+    }
+
+    /**
      * Removes message with some code from global messages list.
      *
      * @global array<_MSG> $_MESSAGES Global list with messages.
