@@ -28,7 +28,7 @@ class Route {
      *
      * @param string $request URL request string without GET params.
      */
-    public function __construct($request) {
+    public function __construct($request = "") {
         $route = array_values(array_filter(explode("/", $request)));
 
         // result array must contain keys starts from 0
@@ -63,9 +63,12 @@ class Route {
 
     /**
      * Detects current controller action.
+     * Priority is Request Field value, Route->action field value, $defaultAction.
      *
-     * @param string $actionFieldName $_REQUEST action field name if form submit.
-     * @param string $defaultAction Default action if no action detected.
+     * @param string $actionFieldName $_REQUEST action field name if form was
+     *           submitted (default: 'action').
+     * @param string $defaultAction Default action if no action detected
+     *           (default: 'list').
      *
      * @return string Action name.
      */
@@ -73,12 +76,14 @@ class Route {
         $action = Request::getFieldValue($actionFieldName);
         if (empty($action)) {
             if (!empty($this->action)) {
-                return $this->action;
+                $action = $this->action;
             } else {
-                return $defaultAction;
+                $action = $defaultAction;
             }
         }
-        return $action;
+        $this->action = $action;
+
+        return $this->action;
     }
 
     /**
