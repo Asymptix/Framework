@@ -14,20 +14,26 @@ namespace Asymptix\core;
  */
 abstract class Controller {
 
-    public $action;
-    protected $defaultAction;
-    public $tpl;
+    public $route = null;
+    protected $defaultAction = "";
+    public $view = null;
 
-    public function __construct($action = null) {
-        $this->action = $action ?: $this->defaultAction;
+    public function __construct($route = null) {
+        $this->route = $route;
+        $this->route->getAction('action', $this->defaultAction);
+
+        $this->view = new View($this->route);
+
+        $this->init();
     }
 
-    public function render($tpl = null) {
-        if (!empty($tpl)) {
-            $this->tpl = $tpl;
-        }
+    protected function init() {
+        $action = 'action' . ucfirst($this->route->action);
+        return $this->$action();
+    }
 
-        require_once($this->tpl);
+    public function getDefaultAction() {
+        return $this->defaultAction;
     }
 
 }
