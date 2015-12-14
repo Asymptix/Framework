@@ -432,10 +432,12 @@ abstract class DBObject extends \Asymptix\core\Object {
         /**
          * Limit
          */
+        $count = null;
         if ($this->isNewRecord()) {
             if (!is_null($this->dbQuery->limit)) {
                 if (Tools::isInteger($this->dbQuery->limit)) {
                     $this->dbQuery->query.= " LIMIT " . $this->dbQuery->limit;
+                    $count = $this->dbQuery->limit;
                 } elseif (is_array($this->dbQuery->limit) && count($this->dbQuery->limit) == 2) {
                     $offset = $this->dbQuery->limit[0];
                     $count = $this->dbQuery->limit[1];
@@ -450,6 +452,7 @@ abstract class DBObject extends \Asymptix\core\Object {
             }
         } else {
             $this->dbQuery->query.= " LIMIT 1";
+            $count = 1;
         }
 
         if ($debug) {
@@ -463,9 +466,9 @@ abstract class DBObject extends \Asymptix\core\Object {
                 $stmt = $this->dbQuery->go();
                 if ($stmt !== false) {
                     $data = null;
-                    if ($stmt->num_rows > 1) {
+                    if ($count !== 1) {
                         $data = DBCore::selectDBObjectsFromStatement($stmt, $this);
-                    } elseif ($stmt->num_rows == 1) {
+                    } else {
                         $data = DBCore::selectDBObjectFromStatement($stmt, $this);
                     }
                     $stmt->close();
