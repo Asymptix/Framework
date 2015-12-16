@@ -16,11 +16,9 @@ class Settings extends \Asymptix\db\DBObject {
     const TABLE_NAME = "settings";
     const ID_FIELD_NAME = "setting_id";
     protected $fieldsList = array(
-        'setting_id' => "", // varchar(100)
-        'value' => "", // text
+        'setting_id' => "", // varchar(100), not null, default ''
+        'value' => "", // text, not null, default ''
     );
-
-    public function Settings() {}
 
     public function save() {
         $query = "INSERT INTO " . self::TABLE_NAME . " (setting_id, value) VALUES (?, ?)
