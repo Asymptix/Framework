@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `log_errors` (
 
 CREATE TABLE IF NOT EXISTS `settings` (
   `setting_id` varchar(100) NOT NULL,
-  `value` text NOT NULL
+  `value` text NOT NULL,
+  PRIMARY KEY (`setting_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
