@@ -554,7 +554,8 @@ class DBCore {
      */
     public static function deleteDBObject($dbObject) {
         if (!empty($dbObject) && is_object($dbObject)) {
-            $query = "DELETE FROM " . $dbObject->getTableName() . " WHERE " . $dbObject->getIdFieldName() . " = ?";
+            $query = "DELETE FROM " . $dbObject->getTableName() .
+                     " WHERE " . $dbObject->getIdFieldName() . " = ? LIMIT 1";
             if (Tools::isInteger($dbObject->getId())) {
                 $typesString = "i";
             } else {
