@@ -237,10 +237,6 @@ class DBCore {
         return $this->connections[$key];
     }
 
-    public function __destruct() {
-        $this->reset();
-    }
-
     /**
      * Inits DBCore internal selector.
      *
