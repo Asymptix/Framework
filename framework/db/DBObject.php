@@ -397,6 +397,9 @@ abstract class DBObject extends \Asymptix\core\Object {
                 $this->dbQuery->query = "UPDATE " . static::TABLE_NAME . " SET ";
                 $this->dbQuery->sqlPushValues($this->dbQuery->fields);
                 break;
+            case (DBQueryType::DELETE):
+                $this->dbQuery->query = "DELETE FROM " . static::TABLE_NAME;
+                break;
         }
 
         /**
@@ -484,25 +487,6 @@ abstract class DBObject extends \Asymptix\core\Object {
     }
 
     /**
-     * Deletes DB record of some entity by it's ID.
-     *
-     * @param mixed $id In of the DB record.
-     *
-     * @return mixed Number of affected rows (1 if some record was deleted,
-     *            0 - if no) or FALSE if some error occurred.
-     */
-    public static function deleteObject($id) {
-        if (!empty($id)) {
-            $class = get_called_class();
-
-            $obj = new $class;
-            $obj->setId($id);
-
-            return $obj->delete();
-        }
-    }
-
-    /**
      * Deletes DB record for current DBObject.
      *
      * @return mixed Number of affected rows (1 if some record was deleted,
@@ -510,6 +494,32 @@ abstract class DBObject extends \Asymptix\core\Object {
      */
     public function delete() {
         return DBCore::deleteDBObject($this);
+    }
+
+    /**
+     * Deletes DB record by ID or condition.
+     *
+     * @param mixed $conditions List of the conditions fields
+     *           (fieldName => fieldValue or sqlCondition => params).
+     *           or ID value of the record
+     * @return DBObject Current object.
+     */
+    public static function _delete($conditions = array()) {
+        $ref = new \ReflectionClass(get_called_class());
+        $dbObject = $ref->newInstance();
+
+        if (!is_array($conditions)) { // Just record ID provided
+            $recordId = $conditions;
+            $conditions = array(
+                $dbObject->getIdFieldName() => $recordId
+            );
+            $dbObject->initQuery(DBQueryType::DELETE, $conditions);
+            $dbObject->dbQuery->limit = 1;
+
+            return $dbObject;
+        }
+
+        return $dbObject->initQuery(DBQueryType::DELETE, $conditions);
     }
 
     protected function getFieldName($methodNameFragment) {
