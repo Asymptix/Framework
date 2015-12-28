@@ -21,6 +21,7 @@ class DBQueryType {
 
     const DESCRIBE = 'DESCRIBE';
     const SHOW = 'SHOW';
+    const TRUNCATE = 'TRUNCATE';
 
     /**
      * Validates SQL query type value.
