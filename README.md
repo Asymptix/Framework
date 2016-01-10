@@ -181,4 +181,4 @@ OutputStream::msg(OutputStream::MSG_ERROR, "Default Error message");
 OutputStream::close();
 ```
 
-Copyright (c) 2015 Asymptix.
+Copyright (c) 2016 Asymptix.
