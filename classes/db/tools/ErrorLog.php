@@ -10,7 +10,7 @@ use Asymptix\db\DBCore;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
 class ErrorLog extends \Asymptix\db\DBObject {
@@ -47,9 +47,13 @@ class ErrorLog extends \Asymptix\db\DBObject {
 
         $query = "INSERT INTO " . self::TABLE_NAME . " (type, error_type, called, script, line, message, count, last_seen) VALUES (?, ?, ?, ?, ?, ?, 1, ?)
                   ON DUPLICATE KEY UPDATE count = count + 1, last_seen = ?";
-        return DBCore::doUpdateQuery($query, "isssisss", array(
-            $type, implode(", ", $errorTypes), $called, $script, $line, $message, date("Y-m-d H:i:s"), date("Y-m-d H:i:s")
-        ));
+        try {
+            return DBCore::doUpdateQuery($query, "isssisss", array(
+                $type, implode(", ", $errorTypes), $called, $script, $line, $message, date("Y-m-d H:i:s"), date("Y-m-d H:i:s")
+            ));
+        } catch (\Asymptix\db\DBCoreException $e) {
+            print($e->getMessage());
+        }
     }
 
     private static function friendlyErrorType($type) {
