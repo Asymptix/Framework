@@ -9,7 +9,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -227,12 +227,14 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Saves DBObject to the database. If this is a new object - INSERT SQL
      *           instruction executes, if existed one - UPDATE.
      *
+     * @param boolean $debug Debug mode flag.
+     *
      * @return mixed Primary key value.
      * @throws DBCoreException If some database error occurred.
      */
-    public function save() {
+    public function save($debug = false) {
         if ($this->isNewRecord()) {
-            $insertionId = DBCore::insertDBObject($this);
+            $insertionId = DBCore::insertDBObject($this, $debug);
             if (Tools::isInteger($insertionId) && $insertionId > 0) {
                 $this->setId($insertionId);
             } else {
@@ -241,7 +243,7 @@ abstract class DBObject extends \Asymptix\core\Object {
 
             return $insertionId;
         } else {
-            DBCore::updateDBObject($this);
+            DBCore::updateDBObject($this, $debug);
 
             return $this->id;
         }
