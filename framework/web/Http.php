@@ -7,7 +7,7 @@ namespace Asymptix\web;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -25,7 +25,7 @@ class Http {
      */
     public static function httpRedirect($url = "", $postData = array()) {
         if (preg_match("#^http[s]?://.+#", $url)) { // absolute url
-            http_redirect($url);
+            \http_redirect($url);
         } else { // same domain (relative url)
             if (!empty($postData)) {
                 if (is_array($postData)) {
@@ -40,7 +40,7 @@ class Http {
                     throw new \Exception("Wrong POST data.");
                 }
             }
-            http_redirect("http://" . $_SERVER['SERVER_NAME'] . "/" . $url);
+            \http_redirect("http://" . $_SERVER['SERVER_NAME'] . "/" . $url);
         }
     }
 
