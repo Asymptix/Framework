@@ -7,7 +7,7 @@ namespace Asymptix\core;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -20,6 +20,13 @@ abstract class Object {
      * @var array<mixed>
      */
     protected $fieldsList;
+
+    /**
+     * List of fields aliases.
+     *
+     * @var array
+     */
+    protected $fieldsAliases;
 
     /**
      * Create new default object.
@@ -71,6 +78,10 @@ abstract class Object {
      * @throws \Exception If object has no field with such name.
      */
     public function setFieldValue($fieldName, $fieldValue) {
+        if (isset($this->fieldsAliases[$fieldName])) {
+            $fieldName = $this->fieldsAliases[$fieldName];
+        }
+
         if (isset($this->fieldsList[$fieldName])) {
             $this->fieldsList[$fieldName] = $fieldValue;
 
@@ -97,6 +108,10 @@ abstract class Object {
      * @throws \Exception
      */
     public function getFieldValue($fieldName) {
+        if (isset($this->fieldsAliases[$fieldName])) {
+            $fieldName = $this->fieldsAliases[$fieldName];
+        }
+
         if (isset($this->fieldsList[$fieldName])) {
             return $this->fieldsList[$fieldName];
         } else {
