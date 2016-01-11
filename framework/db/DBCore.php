@@ -9,7 +9,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -493,10 +493,11 @@ class DBCore {
      * Executes SQL INSERT query to the database.
      *
      * @param DBObject $dbObject DBObject to insert.
+     * @param boolean $debug Debug mode flag.
      *
      * @return integer Insertion ID (primary key value).
      */
-    public static function insertDBObject($dbObject) {
+    public static function insertDBObject($dbObject, $debug = false) {
         $fieldsList = $dbObject->getFieldsList();
         $idFieldName = $dbObject->getIdFieldName();
 
@@ -511,20 +512,26 @@ class DBCore {
             $typesString = DBPreparedQuery::sqlTypesString($fieldsList);
             $valuesList = self::createValuesList($fieldsList);
         }
-        self::doUpdateQuery($query, $typesString, $valuesList);
 
-        return (self::connection()->insert_id);
+        if ($debug) {
+            DBQuery::showQueryDebugInfo($query, $typesString, $valuesList);
+        } else {
+            self::doUpdateQuery($query, $typesString, $valuesList);
+
+            return (self::connection()->insert_id);
+        }
     }
 
     /**
      * Executes SQL UPDATE query to the database.
      *
      * @param DBObject $dbObject DBObject to update.
+     * @param boolean $debug Debug mode flag.
      *
      * @return integer Returns the number of affected rows on success, and -1 if
      *           the last query failed.
      */
-    public static function updateDBObject($dbObject) {
+    public static function updateDBObject($dbObject, $debug = false) {
         $fieldsList = $dbObject->getFieldsList();
         $idFieldName = $dbObject->getIdFieldName();
 
@@ -541,7 +548,11 @@ class DBCore {
         $valuesList = self::createValuesList($fieldsList, $idFieldName);
         $valuesList[] = $dbObject->getId();
 
-        return self::doUpdateQuery($query, $typesString, $valuesList);
+        if ($debug) {
+            DBQuery::showQueryDebugInfo($query, $typesString, $valuesList);
+        } else {
+            return self::doUpdateQuery($query, $typesString, $valuesList);
+        }
     }
 
     /**
@@ -569,6 +580,15 @@ class DBCore {
         }
     }
 
+    /**
+     * Returns DBObject from ResultSet.
+     *
+     * @param DBObject $dbObject
+     * @param array $resultSet Associated by table names arrays of selected
+     *           fields.
+     *
+     * @return DBObject
+     */
     public static function selectDBObjectFromResultSet($dbObject, $resultSet) {
         $dbObject->setFieldsValues($resultSet[$dbObject->getTableName()]);
         return $dbObject;
