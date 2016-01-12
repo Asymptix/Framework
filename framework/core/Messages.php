@@ -138,7 +138,7 @@ class Messages {
     public static function reorderMessages() {
         global $_MESSAGES;
 
-        uasort($_MESSAGES, array('__MSG', "cmp"));
+        uasort($_MESSAGES, array(new __MSG, "cmp"));
     }
 
     /**
