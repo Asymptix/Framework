@@ -9,7 +9,7 @@ use Asymptix\web\Http;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -26,6 +26,18 @@ class Request {
      */
     public static function isFormSubmitted($submitFieldName = "submitBtn") {
         return (self::getFieldValue($submitFieldName) !== null);
+    }
+
+    /**
+     * Verify if field is exists in the request.
+     *
+     * @param mixed $fieldName String name of the field or complex name as array.
+     * @param string $source Http::GET or Http::POST constant.
+     *
+     * @return bool
+     */
+    public static function issetField($fieldName, $source = null) {
+        return !is_null(self::getFieldValue($fieldName, $source));
     }
 
     /**
