@@ -2,14 +2,12 @@
 
 namespace Asymptix\core;
 
-$_MESSAGES = array();
-
 /**
  * Messages functionlity.
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2013 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2013 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -23,9 +21,14 @@ class Messages {
     const MSG_ERROR = 4;
 
     /**
-     * Push new message to the global messages list.
+     * Messages list.
      *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
+     * @var array
+     */
+    private static $messages = array();
+
+    /**
+     * Push new message to the global messages list.
      *
      * @param int $type Priority type of the message.
      * @param string $text Text of the message.
@@ -34,16 +37,14 @@ class Messages {
      * @throws \Exception If wrong priority message type provided.
      */
     public static function pushMessage($type, $text, $code = null) {
-        global $_MESSAGES;
-
         $oClass = new \ReflectionClass(new Messages);
         $constantsList = $oClass->getConstants();
 
         if (in_array($type, $constantsList)) {
             if (empty($code)) {
-                $_MESSAGES[] = new __MSG($type, $text);
+                self::$messages[] = new __MSG($type, $text);
             } else {
-                $_MESSAGES[$code] = new __MSG($type, $text);
+                self::$messages[$code] = new __MSG($type, $text);
             }
         } else {
             throw new \Exception("Invalid message type code");
@@ -52,8 +53,6 @@ class Messages {
 
     /**
      * Push new message to the global messages list.
-     *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
      *
      * @param int $type Priority type of the message.
      * @param string $text Text of the message.
@@ -68,8 +67,6 @@ class Messages {
     /**
      * Returns message by it's code from global messages list.
      *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
-     *
      * @param string $code Code of the message in the message list.
      *
      * @return __MSG Message object.
@@ -77,10 +74,8 @@ class Messages {
      * @throws \Exception If message with such code is not exists.
      */
     public static function getMessage($code) {
-        global $_MESSAGES;
-
-        if (isset($_MESSAGES[$code])) {
-            return $_MESSAGES[$code];
+        if (isset(self::$messages[$code])) {
+            return self::$messages[$code];
         } else {
             throw new \Exception("Invalid message code");
         }
@@ -106,22 +101,16 @@ class Messages {
     /**
      * Removes message with some code from global messages list.
      *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
-     *
      * @param string $code Code of the message in the message list.
      */
     public static function popMessages($code) {
-        global $_MESSAGES;
-
-        if (isset($_MESSAGES[$code])) {
-            unset($_MESSAGES[$code]);
+        if (isset(self::$messages[$code])) {
+            unset(self::$messages[$code]);
         }
     }
 
     /**
      * Removes message with some code from global messages list.
-     *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
      *
      * @param string $code Code of the message in the message list.
      */
@@ -132,20 +121,16 @@ class Messages {
     /**
      * Sort messages list with most important messages priority but save order if
      * priority the same.
-     *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
      */
     public static function reorderMessages() {
-        global $_MESSAGES;
-
-        uasort($_MESSAGES, array(new __MSG, "cmp"));
+        uasort(self::$messages, function($a, $b) {
+            return ($a->type <= $b->type);
+        });
     }
 
     /**
      * Sort messages list with most important messages priority but save order if
      * priority the same.
-     *
-     * @global array $_MESSAGES
      */
     public static function sortMessages() {
         return self::reorderMessages();
@@ -154,14 +139,11 @@ class Messages {
     /**
      * Returns reordered by priority messages list.
      *
-     * @global array<_MSG> $_MESSAGES Global list with messages.
      * @return array<_MSG> List with reordered by prioroty messages.
      */
     public static function getMessages() {
-        global $_MESSAGES;
-
         self::reorderMessages();
-        return $_MESSAGES;
+        return self::$messages;
     }
 
 }
@@ -177,10 +159,6 @@ class __MSG {
     public function __construct($type, $text) {
         $this->type = $type;
         $this->text = trim($text);
-    }
-
-    public static function cmp($a, $b) {
-        return ($a->type <= $b->type);
     }
 
 }
