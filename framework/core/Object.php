@@ -26,7 +26,7 @@ abstract class Object {
      *
      * @var array
      */
-    protected $fieldsAliases;
+    protected $fieldsAliases = array();
 
     /**
      * Sets values of the object fields.
@@ -47,7 +47,7 @@ abstract class Object {
                         $fieldValue = $newValue;
                     }
                     $count ++;
-                } else { // look up for the field aliases
+                } elseif (!empty($this->fieldsAliases)) { // look up for the field aliases
                     $fieldAliases = array_keys($this->fieldsAliases, $fieldName);
                     if (!empty($fieldAliases)) {
                         foreach ($fieldAliases as $alias) {
