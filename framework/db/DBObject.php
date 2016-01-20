@@ -43,6 +43,9 @@ abstract class DBObject extends \Asymptix\core\Object {
      * @return mixed.
      */
     public function getId() {
+        if (is_null(static::ID_FIELD_NAME)) {
+            return null;
+        }
         return $this->getFieldValue(static::ID_FIELD_NAME);
     }
 
@@ -220,6 +223,9 @@ abstract class DBObject extends \Asymptix\core\Object {
      * @return boolean
      */
     public function isNewRecord() {
+        if (is_null(static::ID_FIELD_NAME)) {
+            return true;
+        }
         return ($this->id == 0);
     }
 

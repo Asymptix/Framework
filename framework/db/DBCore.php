@@ -663,8 +663,13 @@ class DBCore {
             while ($resultSet = self::bindResults($stmt)) {
                 $dbObject = new $className();
                 self::selectDBObjectFromResultSet($dbObject, $resultSet);
-                //$objectsList[] = $dbObject;
-                $objectsList[$dbObject->getId()] = $dbObject;
+
+                $id = $dbObject->getId();
+                if (!is_null($id)) {
+                    $objectsList[$id] = $dbObject;
+                } else {
+                    $objectsList[] = $dbObject;
+                }
             }
             return $objectsList;
         } else {
