@@ -88,6 +88,39 @@ class Request {
     }
 
     /**
+     * Returns value of the HTTP GET requet field.
+     *
+     * @param mixed $fieldName String name of the field or complex name as array.
+     *
+     * @return mixed Value of the field, NULL otherwise.
+     */
+    public static function _get($fieldName) {
+        return self::getFieldValue($fieldName, Http::GET);
+    }
+
+    /**
+     * Returns value of the HTTP POST requet field.
+     *
+     * @param mixed $fieldName String name of the field or complex name as array.
+     *
+     * @return mixed Value of the field, NULL otherwise.
+     */
+    public static function _post($fieldName) {
+        return self::getFieldValue($fieldName, Http::POST);
+    }
+
+    /**
+     * Returns value of the HTTP POST or GET requet field.
+     *
+     * @param mixed $fieldName String name of the field or complex name as array.
+     *
+     * @return mixed Value of the field, NULL otherwise.
+     */
+    public static function _field($fieldName) {
+        return self::getFieldValue($fieldName);
+    }
+
+    /**
      * Sets value of the field or creates new field by pair $fieldName => $fieldValue.
      *
      * @global array<mixed> $_FIELDS Global fields list.
