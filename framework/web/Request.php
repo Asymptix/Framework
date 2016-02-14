@@ -2,6 +2,7 @@
 
 namespace Asymptix\web;
 
+use Asymptix\core\Tools;
 use Asymptix\web\Http;
 
 /**
@@ -91,33 +92,60 @@ class Request {
      * Returns value of the HTTP GET requet field.
      *
      * @param mixed $fieldName String name of the field or complex name as array.
+     * @param mixed $defaultValue Default value.
      *
      * @return mixed Value of the field, NULL otherwise.
      */
-    public static function _get($fieldName) {
-        return self::getFieldValue($fieldName, Http::GET);
+    public static function _get($fieldName, $defaultValue = null) {
+        $fieldValue = self::getFieldValue($fieldName, Http::GET);
+        if (is_null($fieldValue) && !is_null($defaultValue)) {
+            return $defaultValue;
+        }
+        return $fieldValue;
     }
 
     /**
      * Returns value of the HTTP POST requet field.
      *
      * @param mixed $fieldName String name of the field or complex name as array.
+     * @param mixed $defaultValue Default value.
      *
      * @return mixed Value of the field, NULL otherwise.
      */
-    public static function _post($fieldName) {
-        return self::getFieldValue($fieldName, Http::POST);
+    public static function _post($fieldName, $defaultValue = null) {
+        $fieldValue = self::getFieldValue($fieldName, Http::POST);
+        if (is_null($fieldValue) && !is_null($defaultValue)) {
+            return $defaultValue;
+        }
+        return $fieldValue;
     }
 
     /**
      * Returns value of the HTTP POST or GET requet field.
      *
      * @param mixed $fieldName String name of the field or complex name as array.
+     * @param mixed $defaultValue Default value.
      *
      * @return mixed Value of the field, NULL otherwise.
      */
-    public static function _field($fieldName) {
-        return self::getFieldValue($fieldName);
+    public static function _field($fieldName, $defaultValue = null) {
+        $fieldValue = self::getFieldValue($fieldName);
+        if (is_null($fieldValue) && !is_null($defaultValue)) {
+            return $defaultValue;
+        }
+        return $fieldValue;
+    }
+
+    /**
+     * Returns value of the filter field.
+     *
+     * @param string $filterName Name of the filter field.
+     * @param mixed $defaultValue Default value.
+     *
+     * @return mixed
+     */
+    public static function _filter($filterName, $defaultValue) {
+        return Tools::getFilterValue($filterName, $defaultValue);
     }
 
     /**
