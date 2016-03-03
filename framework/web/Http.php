@@ -336,6 +336,14 @@ class Http {
         );
     }
 
+    /**
+     * Force HTTP status code.
+     *
+     * @param integer $code Status code.
+     * @param string $path Include path if needed.
+     *
+     * @throws HttpException If invalid HTTP status provided.
+     */
     public static function forceHttpStatus($code, $path = null) {
         switch ($code) {
             //TODO: implement other statuses
@@ -351,6 +359,17 @@ class Http {
         exit();
     }
 
+    /**
+     * Magic methods:
+     *    force404($path = null) - force HTTP status codes.
+     *
+     * @param string $name The name of the method being called.
+     * @param type $arguments Enumerated array containing the parameters passed
+     *           to the method.
+     * @return mixed
+     *
+     * @throws HttpException If invalid method name provided.
+     */
     public static function __callStatic($name, $arguments) {
         if (substr($name, 0, 5) === "force") {
             $code = (int)substr($name, 5);
