@@ -18,6 +18,29 @@ class Http {
     const GET = "GET";
 
     /**
+     * Redirect to the given url.
+     *
+     * @param string $url The URL to redirect to.
+     * @param array<mixed> $params Associative array of query parameters.
+     * @param boolean $session Whether to append session information.
+     */
+    public static function http_redirect($url, $params = array(), $session = false) {
+        $paramsString = "";
+        foreach ($params as $key => $value) {
+            $paramsString .= "&" . $key . "=" . $value;
+        }
+        if ($session) {
+            $paramsString .= "&" . session_name() . "=" . session_id();
+        }
+        $paramsString = substr($paramsString, 1);
+        if ($paramsString) {
+            $paramsString = "?" . $paramsString;
+        }
+        header("Location: " . $url . $paramsString);
+        exit();
+    }
+
+    /**
      * Perform HTTP redirect with saving POST params in session.
      *
      * @param string $url URL redirect to.
@@ -25,7 +48,11 @@ class Http {
      */
     public static function httpRedirect($url = "", $postData = array()) {
         if (preg_match("#^http[s]?://.+#", $url)) { // absolute url
-            \http_redirect($url);
+            if (function_exists("http_redirect")) {
+                http_redirect($url);
+            } else {
+                self::http_redirect($url);
+            }
         } else { // same domain (relative url)
             if (!empty($postData)) {
                 if (is_array($postData)) {
@@ -37,10 +64,14 @@ class Http {
                         $_SESSION['_post'][$fieldName] = serialize($fieldValue);
                     }
                 } else {
-                    throw new \Exception("Wrong POST data.");
+                    throw new HttpException("Wrong POST data.");
                 }
             }
-            \http_redirect("http://" . $_SERVER['SERVER_NAME'] . "/" . $url);
+            if (function_exists("http_redirect")) {
+                http_redirect("http://" . $_SERVER['SERVER_NAME'] . "/" . $url);
+            } else {
+                self::http_redirect("http://" . $_SERVER['SERVER_NAME'] . "/" . $url);
+            }
         }
     }
 
@@ -305,4 +336,34 @@ class Http {
         );
     }
 
+    public static function forceHttpStatus($code, $path = null) {
+        switch ($code) {
+            //TODO: implement other statuses
+            case (404):
+                header('HTTP/1.0 404 Not Found', true, 404);
+                break;
+            default:
+                throw new HttpException("Invalid HTTP status code '" . $code . "'");
+        }
+        if (!is_null($path)) {
+            include($path);
+        }
+        exit();
+    }
+
+    public static function __callStatic($name, $arguments) {
+        if (substr($name, 0, 5) === "force") {
+            $code = (int)substr($name, 5);
+            $path = isset($arguments[0]) ? $arguments[0] : null;
+
+            return self::forceHttpStatus($code, $path);
+        }
+        throw new HttpException("Invalid HTTP class method '" . $name . "'");
+    }
+
 }
+
+/**
+ * Service exception class.
+ */
+class HttpException extends \Exception {}
