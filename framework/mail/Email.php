@@ -2,14 +2,15 @@
 
 namespace Asymptix\mail;
 
-use \Asymptix\core\Validator;
+use Asymptix\core\Validator;
+use Asymptix\core\Content;
 
 /**
  * Mail send functionality wrapper.
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2010 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2010 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -65,7 +66,7 @@ class Email {
      */
     public function __construct($fromEmail, $fromName, $tplFolder, $signatureTpl = "") {
         if (!Validator::isEmail($fromEmail)) {
-            throw new \Exception("Invalid from e-mail address");
+            throw new EmailException("Invalid from e-mail address");
         }
 
         $this->fromEmail = $fromEmail;
@@ -102,6 +103,32 @@ class Email {
     }
 
     /**
+     * Send mail with standard PHP mail() function.
+     * See more details in the standard PHP mail() function documentation.
+     *
+     * @param string $to Receiver, or receivers of the mail.
+     * @param string $subject Subject of the email to be sent.
+     * @param mixed $message String message or two elements array:
+     *           0 - path to the template file
+     *           1 - template variables
+     * @param array $headers String to be inserted at the end of the email header.
+     * @param type $parameters Additional parameters.
+     *
+     * @return bool Returns TRUE if the mail was successfully accepted for delivery,
+     *           FALSE otherwise.
+     */
+    public static function send($to, $subject, $message, $headers = array(), $parameters = "") {
+        if (is_array($message)) {
+            $tplPath = $message[0];
+            $tplVars = $message[1];
+
+            $message = Content::render($tplPath, $tplVars);
+        }
+
+        return mail($to, $subject, $message, implode("\r\n", $headers), $parameters);
+    }
+
+    /**
      * Sends specific E-mail notification.
      *
      * @param string $email E-mail of the reciver.
@@ -133,3 +160,5 @@ class Email {
     }
 
 }
+
+class EmailException extends \Exception {};
