@@ -275,11 +275,11 @@ abstract class DBObject extends \Asymptix\core\Object {
          * Inits LIMIT if called dynamic select() or update() method.
          */
         if (is_null($this->dbQuery->limit)) {
-            $backTrace = debug_backtrace(false, 2);
-            if (!is_array($backTrace) && isset($backTrace[1])) {
+            $backTrace = debug_backtrace();
+            if (is_array($backTrace) && isset($backTrace[1])) {
                 $prevCall = $backTrace[1];
                 if (is_array($prevCall) && isset($prevCall['type'])) {
-                    if ($prevCall['type'] == '->') { // called dynamic method
+                    if ($prevCall['type'] == '->') { // dynamic method was called
                         $this->dbQuery->limit = 1;
                     }
                 }
