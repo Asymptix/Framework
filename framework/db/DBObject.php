@@ -327,14 +327,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return DBObject Current object.
      */
-    public function update($fields = array(), $conditions = array(), $debug = false) {
-        //TODO: decide if is needed below functionality
-        /*if (!$this->isNewRecord()) { // Process only current record on fire.
-            $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
-
-            return $this->go($debug);
-        }*/
-
+    public function update($fields = array(), $conditions = array()) {
         return $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
     }
 
