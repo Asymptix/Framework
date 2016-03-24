@@ -36,6 +36,23 @@ class Content {
     }
 
     /**
+     * Performs str_replace() on a content.
+     *
+     * @param string $content Content.
+     * @param array $tplVariables Replacements list, keys will be replaced by
+     *           values.
+     *
+     * @return string
+     */
+    public static function replace($content, $tplVariables = array()) {
+        return str_replace(
+            array_keys($tplVariables),
+            array_values($tplVariables),
+            $content
+        );
+    }
+
+    /**
      * Returns XSS secured string before output it (use htmlspecialchars()).
      *
      * @param string $value Value to secure.
