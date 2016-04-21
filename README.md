@@ -21,7 +21,7 @@ tests/               tests of the core framework code
 REQUIREMENTS
 ---
 
-The minimum requirement by Asymptix Framework is that your Web server supports PHP 5.3.
+The minimum requirement by Asymptix Framework is that your Web server supports PHP 5.4.
 
 INSTALLATION
 ---
@@ -42,7 +42,7 @@ To install basic framework libs use [Composer](https://getcomposer.org/) `compos
                     "reference": "trunk/framework"
                 },
 				"require": {
-					"php": ">=5.3.0"
+					"php": ">=5.4.0"
 				},
 				"autoload": {
 					"psr-4": {
@@ -54,7 +54,7 @@ To install basic framework libs use [Composer](https://getcomposer.org/) `compos
     ],
 	"minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
 		"asymptix/framework": ">=2.0.0"
     }
 }
