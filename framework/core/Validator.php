@@ -107,7 +107,9 @@ class Validator {
     /**
      * Validate if field value is real password.
      *
-     * @param string $fieldValue Value of the field.
+     * @param string $passwordFieldName Name of password field.
+     * @param string $rePasswordFieldName Name of password repeting field.
+     *
      * @return boolean
      */
     public static function validatePassword($passwordFieldName, $rePasswordFieldName) {
