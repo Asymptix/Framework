@@ -57,7 +57,7 @@ class Config {
      * @return array
      */
     public static function getDBConfig() {
-        if (isset(self::$db[$_SERVER['HTTP_HOST']])) {
+        if (isset($_SERVER['HTTP_HOST']) && isset(self::$db[$_SERVER['HTTP_HOST']])) {
             return self::$db[$_SERVER['HTTP_HOST']];
         }
         return self::$db['default'];
