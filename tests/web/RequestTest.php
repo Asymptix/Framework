@@ -1,7 +1,6 @@
 <?php
 
-namespace Asymptix\web;
-
+use Asymptix\web\Request;
 use Asymptix\web\Http;
 
 /**
