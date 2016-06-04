@@ -53,18 +53,18 @@ class User extends \Asymptix\db\DBTimedObject {
         // additional fields according to your database structure
     );
 
-    public function User() {
-        // initialisation
+    public function __construct() {
+        parent::__construct();
     }
 
     /**
      * For user accounts we must verify if login field ID is unique.
      */
-    public function save() {
+    public function save($debug = false) {
         try {
-            return parent::save();
+            return parent::save($debug);
         } catch (DBException $ex) {
-            print($ex->getMessage());exit();
+            print($ex->getMessage());
             return false; //TODO: maybe verify if duplicate or other error
         }
     }
