@@ -42,16 +42,18 @@ class DBTimedObject extends DBObject {
     /**
      * Save record to the database.
      *
+     * @param boolean $debug Debug mode flag.
+     *
      * @return integer Id of the record.
      */
-    public function save() {
+    public function save($debug = false) {
         if ($this->isNewRecord()) { // new record
             $this->changeCreateTime();
         } else {
             $this->changeUpdateTime();
         }
 
-        return parent::save();
+        return parent::save($debug);
     }
 
     /**
