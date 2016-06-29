@@ -2,6 +2,8 @@
 
 namespace Asymptix\app;
 
+use Asymptix\core\Route;
+
 /**
  * Abstract Controller class, parent for all controllers.
  *
@@ -18,7 +20,7 @@ abstract class Controller {
     protected $defaultAction = "";
     public $view = null;
 
-    public function __construct($route = null) {
+    public function __construct(Route $route = null) {
         $this->route = $route;
         $this->route->getAction('action', $this->defaultAction);
 
@@ -28,7 +30,15 @@ abstract class Controller {
     }
 
     protected function init() {
-        $action = 'action' . ucfirst($this->route->action);
+        $action = 'action' . ucfirst(
+            preg_replace_callback(
+                "#_([a-z])#",
+                function($matches) {
+                    return strtoupper($matches[1]);
+                },
+                $this->route->action
+            )
+        );
         return $this->$action();
     }
 
