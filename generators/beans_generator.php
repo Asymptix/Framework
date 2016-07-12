@@ -13,6 +13,13 @@ const AUTHOR = "Dmytro Zarezenko";
 const EMAIL = "dmytro.zarezenko@gmail.com";
 
 OutputStream::start();
+
+if (!file_exists(RESULTS_PATH) || is_file(RESULTS_PATH)) {
+    OutputStream::msg(OutputStream::MSG_ERROR, "Destination directory '" . RESULTS_PATH . "' doesn't exists.");
+    OutputStream::close();
+    exit();
+}
+
 OutputStream::msg(OutputStream::MSG_INFO, "Reading tables list...");
 $query = new DBPreparedQuery("SHOW TABLES");
 $stmt = $query->go();
@@ -38,32 +45,36 @@ if ($stmt !== false) {
                 $comment = trim($comment);
 
                 $fieldsListStr.= "        '" . $field . "' => ";
-                if (strpos($type, "varchar") === 0
-                 || strpos($type, "text") === 0
-                 || strpos($type, "longtext") === 0
-                 || strpos($type, "enum") === 0
-                 || strpos($type, "char") === 0
-                 || strpos($type, "datetime") === 0
-                 || strpos($type, "timestamp") === 0
-                 || strpos($type, "date") === 0) {
-                    $fieldsListStr.= '"' . $default . '"';
-                } elseif (strpos($type, "int") === 0
-                 || strpos($type, "tinyint") === 0
-                 || strpos($type, "smallint") === 0
-                 || strpos($type, "mediumint") === 0
-                 || strpos($type, "bigint") === 0) {
-                    if (!empty($default)) {
-                        $fieldsListStr.= $default;
-                    } else {
-                        $fieldsListStr.= 0;
-                    }
-                } elseif (strpos($type, "float") === 0
-                 || strpos($type, "double") === 0
-                 || strpos($type, "decimal") === 0) {
-                    if (!empty($default)) {
-                        $fieldsListStr.= $default;
-                    } else {
-                        $fieldsListStr.= "0.0";
+                if ($null === 'YES' && is_null($default)) {
+                    $fieldsListStr.= "null";
+                } else {
+                    if (strpos($type, "varchar") === 0
+                     || strpos($type, "text") === 0
+                     || strpos($type, "longtext") === 0
+                     || strpos($type, "enum") === 0
+                     || strpos($type, "char") === 0
+                     || strpos($type, "datetime") === 0
+                     || strpos($type, "timestamp") === 0
+                     || strpos($type, "date") === 0) {
+                        $fieldsListStr.= '"' . $default . '"';
+                    } elseif (strpos($type, "int") === 0
+                     || strpos($type, "tinyint") === 0
+                     || strpos($type, "smallint") === 0
+                     || strpos($type, "mediumint") === 0
+                     || strpos($type, "bigint") === 0) {
+                        if (!empty($default)) {
+                            $fieldsListStr.= $default;
+                        } else {
+                            $fieldsListStr.= 0;
+                        }
+                    } elseif (strpos($type, "float") === 0
+                     || strpos($type, "double") === 0
+                     || strpos($type, "decimal") === 0) {
+                        if (!empty($default)) {
+                            $fieldsListStr.= $default;
+                        } else {
+                            $fieldsListStr.= "0.0";
+                        }
                     }
                 }
                 $fieldsListStr.= ", // " . $type .
