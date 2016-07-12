@@ -9,7 +9,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2011 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2011 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -121,7 +121,9 @@ class DBField {
      * @throws DBFieldTypeException If can't detect field type by value.
      */
     public static function getType($fieldValue) {
-        if (Tools::isInteger($fieldValue)) {
+        if (is_null($fieldValue)) { // Type is not principled for NULL
+            return "i";
+        } else if (Tools::isInteger($fieldValue)) {
             return "i";
         } elseif (Tools::isDouble($fieldValue)) {
             return "d";
@@ -197,5 +199,5 @@ class DBField {
 /**
  * Service exception classes.
  */
-class DBFieldException extends \Exception {};
-class DBFieldTypeException extends \Exception {};
+class DBFieldException extends \Exception {}
+class DBFieldTypeException extends \Exception {}
