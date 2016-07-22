@@ -318,6 +318,20 @@ abstract class DBObject extends \Asymptix\core\Object {
     }
 
     /**
+     * Select and returns DB record for current DBObject table by record ID.
+     *
+     * @param mixed $id Record ID.
+     * @param bool $debug Debug mode flag.
+     *
+     * @return DBObject Record object or null.
+     */
+    public static function _get($id, $debug = false) {
+        return static::_select([
+            static::ID_FIELD_NAME => $id
+        ])->limit(1)->go($debug);
+    }
+
+    /**
      * Prepare DBObject for the UPDATE SQL query.
      *
      * @param type $fields List of fields to be updated
