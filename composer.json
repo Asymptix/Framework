@@ -1,5 +1,5 @@
 {
-    "name": "asymptix/framework-dev",
+    "name": "asymptix/framework",
     "description": "The Fast and Easy PHP Framework for Rapid Development.",
     "type": "library",
     "keywords": ["framework", "php", "asymptix"],
@@ -17,9 +17,6 @@
         "email": "dmytro.zarezenko@gmail.com"
     },
     "minimum-stability": "dev",
-    "replace": {
-        "asymptix/framework": "self.version"
-    },
     "require": {
         "php": ">=5.4.0"
     },
