@@ -91,10 +91,9 @@ class DBCore {
      */
     public static function connection($connResource = null, $connName = null) {
         if ($connResource == null) {
-            return DBCore::getInstance()->getCurrentConnection();
-        } else {
-            DBCore::getInstance()->openConnection($connResource, $connName);
+            return self::getInstance()->getCurrentConnection();
         }
+        self::getInstance()->openConnection($connResource, $connName);
     }
 
     /**
@@ -440,17 +439,15 @@ class DBCore {
          || strpos($type, "bigint") === 0) {
             if (!empty($value)) {
                 return $value;
-            } else {
-                return "0";
             }
+            return "0";
         } elseif (strpos($type, "float") === 0
          || strpos($type, "double") === 0
          || strpos($type, "decimal") === 0) {
             if (!empty($value)) {
                 return $value;
-            } else {
-                return "0.0";
             }
+            return "0.0";
         }
         return $value;
     }
@@ -515,7 +512,7 @@ class DBCore {
      * @param DBObject $dbObject DBObject to insert.
      * @param boolean $debug Debug mode flag.
      *
-     * @return integer Insertion ID (primary key value).
+     * @return integer Insertion ID (primary key value) or null on debug.
      */
     public static function insertDBObject($dbObject, $debug = false) {
         $fieldsList = $dbObject->getFieldsList();
@@ -535,11 +532,10 @@ class DBCore {
 
         if ($debug) {
             DBQuery::showQueryDebugInfo($query, $typesString, $valuesList);
-        } else {
-            self::doUpdateQuery($query, $typesString, $valuesList);
-
-            return (self::connection()->insert_id);
+            return null;
         }
+        self::doUpdateQuery($query, $typesString, $valuesList);
+        return (self::connection()->insert_id);
     }
 
     /**
@@ -654,10 +650,10 @@ class DBCore {
      * @return DBObject Selected DBObject or NULL otherwise.
      */
     public static function selectDBObject($query, $types, $params, $instance) {
-        $stmt = DBCore::doSelectQuery($query, $types, $params);
+        $stmt = self::doSelectQuery($query, $types, $params);
         $obj = null;
         if ($stmt) {
-            $obj = DBCore::selectDBObjectFromStatement($stmt, $instance);
+            $obj = self::selectDBObjectFromStatement($stmt, $instance);
 
             $stmt->close();
         }
@@ -692,9 +688,8 @@ class DBCore {
                 }
             }
             return $objectsList;
-        } else {
-            return [];
         }
+        return [];
     }
 
     /**
@@ -708,10 +703,10 @@ class DBCore {
      * @return DBObject Selected DBObject or NULL otherwise.
      */
     public static function selectDBObjects($query, $types, $params, $instance) {
-        $stmt = DBCore::doSelectQuery($query, $types, $params);
+        $stmt = self::doSelectQuery($query, $types, $params);
         $obj = null;
         if ($stmt) {
-            $obj = DBCore::selectDBObjectsFromStatement($stmt, $instance);
+            $obj = self::selectDBObjectsFromStatement($stmt, $instance);
 
             $stmt->close();
         }
@@ -742,7 +737,7 @@ class DBCore {
         if ($stmt !== false) {
             $record = null;
             if ($stmt->num_rows === 1) {
-                $record = DBCore::bindResults($stmt);
+                $record = self::bindResults($stmt);
             }
             $stmt->close();
 
