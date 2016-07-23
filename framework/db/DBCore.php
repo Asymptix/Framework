@@ -48,10 +48,6 @@ class DBCore {
         return self::$instance;
     }
 
-    public static function Instance() {
-        return self::getInstance();
-    }
-
     /**
      * Reset the internal static instance
      *
@@ -851,7 +847,10 @@ class DBCore {
          * Delete selected record from the database
          */
         if (preg_match("#delete([a-zA-Z]+)#", $methodName, $matches)) {
-            return call_user_func(array(self::Instance(), $methodName . "s"), array($methodParams[0]));
+            return call_user_func(
+                [self::getInstance(), $methodName . "s"],
+                [$methodParams[0]]
+            );
         }
 
         /**
