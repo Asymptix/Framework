@@ -422,6 +422,14 @@ class DBCore {
         return [];
     }
 
+    /**
+     * Returns printable SQL field value for table fields list generator.
+     *
+     * @param string $type SQL type of the field.
+     * @param mixed $value Field value.
+     *
+     * @return string
+     */
     private static function getPrintableSQLValue($type, $value) {
         if (strpos($type, "varchar") === 0
          || strpos($type, "text") === 0
@@ -452,6 +460,14 @@ class DBCore {
         return $value;
     }
 
+    /**
+     * Returns printable field description string for table fields list generator.
+     *
+     * @param string $field Field name.
+     * @param array $attributes List of field attributes.
+     *
+     * @return string
+     */
     public static function getPrintableFieldString($field, $attributes) {
         $extra = trim($attributes['extra']);
         $comment = trim($attributes['comment']);
