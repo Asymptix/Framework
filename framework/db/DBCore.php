@@ -34,8 +34,6 @@ class DBCore {
 
     protected static $instance;
 
-    protected $selector = null;
-
     /**
      * Returns an instance of this class
      *
@@ -231,20 +229,6 @@ class DBCore {
             throw new DBCoreException('There is no open connection');
         }
         return $this->connections[$key];
-    }
-
-    /**
-     * Inits DBCore internal selector.
-     *
-     * @param mixed $className Class name of DBObject instance.
-     *
-     * @return DBSelector
-     */
-    public static function Selector($className = null) {
-        if (!empty($className)) {
-            self::getInstance()->selector = new DBSelector($className);
-        }
-        return self::getInstance()->selector;
     }
 
     /**
