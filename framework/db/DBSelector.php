@@ -136,12 +136,7 @@ class DBSelector extends \Asymptix\core\Object {
             $query .= " AND " . $this->conditions;
         }
 
-        if ($this->order != "") {
-            $query .= " ORDER BY " . $this->order;
-        } else {
-            $query .= " ORDER BY " . $this->dbObject->getIdFieldName() . " DESC";
-        }
-
+        $query.= $this->getQueryOrderSQL();
         $query.= " LIMIT 1";
 
         $fieldType = DBField::getType($fieldValue);
@@ -189,19 +184,8 @@ class DBSelector extends \Asymptix\core\Object {
             $query .= " WHERE " . $this->conditions;
         }
 
-        if ($this->order != "") {
-            $query .= " ORDER BY " . $this->order;
-        } else {
-            $query .= " ORDER BY " . $this->dbObject->getIdFieldName() . " DESC";
-        }
-
-        if ($this->count !== "all") {
-            if ($this->offset > 0) {
-                $query .= " LIMIT " . $this->offset . "," . $this->count;
-            } else {
-                $query .= " LIMIT " . $this->count;
-            }
-        }
+        $query.= $this->getQueryOrderSQL();
+        $query.= $this->getQueryLimitSQL();
 
         if (!$debug) {
             $stmt = DBCore::doSelectQuery($query);
@@ -235,19 +219,8 @@ class DBSelector extends \Asymptix\core\Object {
             $query .= " AND " . $this->conditions;
         }
 
-        if ($this->order != "") {
-            $query .= " ORDER BY " . $this->order;
-        } else {
-            $query .= " ORDER BY " . $this->dbObject->getIdFieldName() . " DESC";
-        }
-
-        if ($this->count !== "all") {
-            if ($this->offset > 0) {
-                $query .= " LIMIT " . $this->offset . "," . $this->count;
-            } else {
-                $query .= " LIMIT " . $this->count;
-            }
-        }
+        $query.= $this->getQueryOrderSQL();
+        $query.= $this->getQueryLimitSQL();
 
         $fieldType = DBField::getType($fieldValue);
         if (!$debug) {
@@ -308,6 +281,33 @@ class DBSelector extends \Asymptix\core\Object {
         }
 
         return DBCore::selectSingleValue($query);
+    }
+
+    /**
+     * Returns SQL ORDER string for current selector.
+     *
+     * @return string
+     */
+    private function getQueryOrderSQL() {
+        if ($this->order != "") {
+            return (" ORDER BY " . $this->order);
+        }
+        return (" ORDER BY " . $this->dbObject->getIdFieldName() . " DESC");
+    }
+
+    /**
+     * Returns SQL LIMIT string for current selector.
+     *
+     * @return string
+     */
+    private function getQueryLimitSQL() {
+        if ($this->count !== "all") {
+            if ($this->offset > 0) {
+                return (" LIMIT " . $this->offset . "," . $this->count);
+            }
+            return (" LIMIT " . $this->count);
+        }
+        return "";
     }
 
     /**
