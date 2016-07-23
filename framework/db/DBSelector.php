@@ -7,7 +7,7 @@ namespace Asymptix\db;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -113,9 +113,9 @@ class DBSelector extends \Asymptix\core\Object {
                 $stmt->close();
                 return $dbObject;
             }
-        } else {
-            DBQuery::showQueryDebugInfo($query);
+            return null;
         }
+        DBQuery::showQueryDebugInfo($query);
 
         return null;
     }
@@ -153,9 +153,9 @@ class DBSelector extends \Asymptix\core\Object {
                 $stmt->close();
                 return $dbObject;
             }
-        } else {
-            DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
+            return null;
         }
+        DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
 
         return null;
     }
@@ -211,11 +211,11 @@ class DBSelector extends \Asymptix\core\Object {
                 $stmt->close();
                 return $dbObjects;
             }
-        } else {
-            DBQuery::showQueryDebugInfo($query);
+            return [];
         }
+        DBQuery::showQueryDebugInfo($query);
 
-        return array();
+        return [];
     }
 
     /**
@@ -258,11 +258,11 @@ class DBSelector extends \Asymptix\core\Object {
                 $stmt->close();
                 return $dbObjects;
             }
-        } else {
-            DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
+            return [];
         }
+        DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
 
-        return array();
+        return [];
     }
 
     /**
