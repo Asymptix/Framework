@@ -655,21 +655,21 @@ class DBCore {
         }
 
         if ($stmt->num_rows > 0) {
-            $objectsList = array();
+            $objectsList = [];
             while ($resultSet = self::bindResults($stmt)) {
                 $dbObject = new $className();
                 self::selectDBObjectFromResultSet($dbObject, $resultSet);
 
-                $id = $dbObject->getId();
-                if (!is_null($id)) {
-                    $objectsList[$id] = $dbObject;
+                $recordId = $dbObject->getId();
+                if (!is_null($recordId)) {
+                    $objectsList[$recordId] = $dbObject;
                 } else {
                     $objectsList[] = $dbObject;
                 }
             }
             return $objectsList;
         } else {
-            return array();
+            return [];
         }
     }
 
