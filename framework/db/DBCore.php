@@ -20,18 +20,27 @@ class DBCore {
      *
      * @var array $connections
      */
-    protected $connections = array();
+    protected $connections = [];
 
     /**
-     * @var integer $index The incremented index of connections
+     * The incremented index of connections.
+     *
+     * @var integer
      */
     protected $index = 0;
 
     /**
-     * @var integer $currIndex The current connection index
+     * Current connection index.
+     *
+     * @var integer
      */
     protected $currIndex = 0;
 
+    /**
+     * Instance of a class
+     *
+     * @var DBCore
+     */
     protected static $instance;
 
     /**
