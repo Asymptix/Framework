@@ -4,6 +4,12 @@
 
 The Fast and Easy PHP Framework for Rapid Development.
 
+[![Total Downloads](https://poser.pugx.org/asymptix/framework/downloads)](https://packagist.org/packages/asymptix/framework)
+[![Latest Stable Version](https://poser.pugx.org/asymptix/framework/v/stable)](https://packagist.org/packages/asymptix/framework)
+[![Latest Unstable Version](https://poser.pugx.org/asymptix/framework/v/unstable)](https://packagist.org/packages/asymptix/framework)
+[![License](https://poser.pugx.org/asymptix/framework/license)](https://packagist.org/packages/asymptix/framework)
+[![Code Climate](https://codeclimate.com/github/Asymptix/Framework/badges/gpa.svg)](https://codeclimate.com/github/Asymptix/Framework)
+
 DIRECTORY STRUCTURE
 ---
 
