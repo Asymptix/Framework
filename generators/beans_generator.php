@@ -32,60 +32,15 @@ if ($stmt !== false) {
 
         $idFieldName = 'id';
         $fieldsListStr = "";
-        $query1 = new DBPreparedQuery("SHOW FULL COLUMNS FROM " . $tableName);
-        $stmt1 = $query1->go();
-        if ($stmt1 !== false) {
-            $stmt1->bind_result($field, $type, $collation, $null, $key, $default, $extra, $privileges, $comment);
-
-            while ($stmt1->fetch()) {
-                if ($key === 'PRI') {
+        $fieldsList = DBCore::getTableFieldsList($tableName);
+        if (!empty($fieldsList)) {
+            foreach ($fieldsList as $field => $attributes) {
+                if ($attributes['key'] === 'PRI') {
                     $idFieldName = $field;
                 }
-                $extra = trim($extra);
-                $comment = trim($comment);
-
-                $fieldsListStr.= "        '" . $field . "' => ";
-                if ($null === 'YES' && is_null($default)) {
-                    $fieldsListStr.= "null";
-                } else {
-                    if (strpos($type, "varchar") === 0
-                     || strpos($type, "text") === 0
-                     || strpos($type, "longtext") === 0
-                     || strpos($type, "enum") === 0
-                     || strpos($type, "char") === 0
-                     || strpos($type, "datetime") === 0
-                     || strpos($type, "timestamp") === 0
-                     || strpos($type, "date") === 0) {
-                        $fieldsListStr.= '"' . $default . '"';
-                    } elseif (strpos($type, "int") === 0
-                     || strpos($type, "tinyint") === 0
-                     || strpos($type, "smallint") === 0
-                     || strpos($type, "mediumint") === 0
-                     || strpos($type, "bigint") === 0) {
-                        if (!empty($default)) {
-                            $fieldsListStr.= $default;
-                        } else {
-                            $fieldsListStr.= 0;
-                        }
-                    } elseif (strpos($type, "float") === 0
-                     || strpos($type, "double") === 0
-                     || strpos($type, "decimal") === 0) {
-                        if (!empty($default)) {
-                            $fieldsListStr.= $default;
-                        } else {
-                            $fieldsListStr.= "0.0";
-                        }
-                    }
-                }
-                $fieldsListStr.= ", // " . $type .
-                    ", " . (($null == "NO")?"not null":"null")
-                    . ", default '" . $default ."'" .
-                    ($extra?", " . $extra:"") .
-                    ($comment?" (" . $comment . ")":"") . "\n";
+                $fieldsListStr.= "        " . DBCore::getPrintableFieldString($field, $attributes);
             }
             $fieldsListStr = substr($fieldsListStr, 0, strlen($fieldsListStr) - 1);
-
-            $stmt1->close();
 
             $className = getClassName($tableName);
 

@@ -395,23 +395,83 @@ class DBCore {
      */
     public static function getTableFieldsList($tableName) {
         if (!empty($tableName)) {
-            $query = "DESCRIBE " . $tableName;
+            $query = "SHOW FULL COLUMNS FROM " . $tableName;
             $stmt = self::doSelectQuery($query);
             if ($stmt !== false) {
-                $stmt->bind_result($field, $type, $null, $key, $default, $extra);
-                $fieldsList = array();
+                $stmt->bind_result(
+                    $field, $type, $collation, $null, $key, $default, $extra, $privileges, $comment
+                );
+
+                $fieldsList = [];
                 while ($stmt->fetch()) {
-                    $fieldsList[$field] = array(
+                    $fieldsList[$field] = [
                         'type' => $type,
-                        'default' => $default
-                    );
+                        'collation' => $collation,
+                        'null' => $null,
+                        'key' => $key,
+                        'default' => $default,
+                        'extra' => $extra,
+                        'privileges' => $privileges,
+                        'comment' => $comment
+                    ];
                 }
                 $stmt->close();
 
                 return $fieldsList;
             }
         }
-        return array();
+        return [];
+    }
+
+    private static function getPrintableSQLValue($type, $value) {
+        if (strpos($type, "varchar") === 0
+         || strpos($type, "text") === 0
+         || strpos($type, "longtext") === 0
+         || strpos($type, "enum") === 0
+         || strpos($type, "char") === 0
+         || strpos($type, "datetime") === 0
+         || strpos($type, "timestamp") === 0
+         || strpos($type, "date") === 0) {
+            return ('"' . $value . '"');
+        } elseif (strpos($type, "int") === 0
+         || strpos($type, "tinyint") === 0
+         || strpos($type, "smallint") === 0
+         || strpos($type, "mediumint") === 0
+         || strpos($type, "bigint") === 0) {
+            if (!empty($value)) {
+                return $value;
+            } else {
+                return "0";
+            }
+        } elseif (strpos($type, "float") === 0
+         || strpos($type, "double") === 0
+         || strpos($type, "decimal") === 0) {
+            if (!empty($value)) {
+                return $value;
+            } else {
+                return "0.0";
+            }
+        }
+        return $value;
+    }
+
+    public static function getPrintableFieldString($field, $attributes) {
+        $extra = trim($attributes['extra']);
+        $comment = trim($attributes['comment']);
+
+        $fieldStr= "'" . $field . "' => ";
+        if ($attributes['null'] === 'YES' && is_null($attributes['default'])) {
+            $fieldStr.= "null";
+        } else {
+            $fieldStr.= self::getPrintableSQLValue($attributes['type'], $attributes['default']);
+        }
+        $fieldStr.= ", // " . $attributes['type'] .
+            ", " . (($attributes['null'] == "NO") ? "not null" : "null")
+            . ", default '" . $attributes['default'] . "'" .
+            ($extra ? ", " . $extra : "") .
+            ($comment ? " (" . $comment . ")" : "") . "\n";
+
+        return $fieldStr;
     }
 
     /**
@@ -424,37 +484,8 @@ class DBCore {
         if (!empty($tableName)) {
             $fieldsList = self::getTableFieldsList($tableName);
             if (!empty($fieldsList)) {
-                foreach ($fieldsList as $fieldName => $data) {
-                    print("'" . $fieldName . "' => ");
-                    if (strpos($data['type'], "varchar") === 0
-                     || strpos($data['type'], "text") === 0
-                     || strpos($data['type'], "longtext") === 0
-                     || strpos($data['type'], "enum") === 0
-                     || strpos($data['type'], "char") === 0
-                     || strpos($data['type'], "datetime") === 0
-                     || strpos($data['type'], "timestamp") === 0
-                     || strpos($data['type'], "date") === 0) {
-                        print('"' . $data['default'] . '"');
-                    } elseif (strpos($data['type'], "int") === 0
-                     || strpos($data['type'], "tinyint") === 0
-                     || strpos($data['type'], "smallint") === 0
-                     || strpos($data['type'], "mediumint") === 0
-                     || strpos($data['type'], "bigint") === 0) {
-                        if (!empty($data['default'])) {
-                            print($data['default']);
-                        } else {
-                            print(0);
-                        }
-                    } elseif (strpos($data['type'], "float") === 0
-                     || strpos($data['type'], "double") === 0
-                     || strpos($data['type'], "decimal") === 0) {
-                        if (!empty($data['default'])) {
-                            print($data['default']);
-                        } else {
-                            print("0.0");
-                        }
-                    }
-                    print(", // " . $data['type'] . ", default '" . $data['default'] . "'\n");
+                foreach ($fieldsList as $field => $attributes) {
+                    print(self::getPrintableFieldString($field, $attributes));
                 }
             }
         }
