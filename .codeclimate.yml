@@ -1,4 +1,6 @@
 languages:
-  JavaScript: true
   PHP: true
+  JavaScript: true
 exclude_paths:
+- "tests/"
+- "docs/"
