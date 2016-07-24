@@ -108,76 +108,97 @@ class Http {
      */
     public static function getBrowser() {
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
-        $browserFullName = $browserShortName = 'Unknown';
-        $platform = 'Unknown';
-        $version = 'Unknown';
+        $browserFullName = $browserShortName = $browserVersion = null;
+        $platformName = $platformVersion = null;
 
-        // Detect platform (operation system)
+        /*
+         * Detect platform (operation system)
+         */
         if (preg_match('/linux/i', $userAgent)) {
-            $platform = 'linux';
+            $platformName = 'linux';
         } elseif (preg_match('/macintosh|mac os x/i', $userAgent)) {
-            $platform = 'mac';
+            $platformName = 'mac';
         } elseif (preg_match('/windows|win32/i', $userAgent)) {
-            $platform = 'windows';
+            $platformName = 'windows';
+        }
+        $platformFragment = substr($userAgent, stripos($userAgent, $platformName) + strlen($platformName) + 1);
+        $platformFragments = explode(";", $platformFragment);
+        if (isset($platformFragments[0])) {
+            $platformVersion = $platformFragments[0];
         }
 
+        // Browser identifiers
+        $identifiers = ['Version', 'other'];
+
         // Detect browser
-        if (preg_match('/MSIE/i', $userAgent) && !preg_match('/Opera/i', $userAgent)) {
+        if ((preg_match('/MSIE/i', $userAgent) || preg_match('/Trident/i', $userAgent)) && !preg_match('/Opera/i', $userAgent)) {
             $browserFullName = 'Internet Explorer';
             $browserShortName = "MSIE";
+            $identifiers[] = "Trident";
         } elseif (preg_match('/Firefox/i', $userAgent)) {
             $browserFullName = 'Mozilla Firefox';
             $browserShortName = "Firefox";
-        } elseif (preg_match('/Chrome/i', $userAgent)) {
+        } elseif (preg_match('/Chrome/i', $userAgent) && !preg_match('/OPR/i', $userAgent)) {
             $browserFullName = 'Google Chrome';
             $browserShortName = "Chrome";
-        } elseif (preg_match('/Safari/i', $userAgent)) {
+        } elseif (preg_match('/Safari/i', $userAgent) && !preg_match('/OPR/i', $userAgent)) {
             $browserFullName = 'Apple Safari';
             $browserShortName = "Safari";
-        } elseif (preg_match('/Opera/i', $userAgent)) {
+        } elseif (preg_match('/Opera/i', $userAgent) || preg_match('/OPR/i', $userAgent)) {
             $browserFullName = 'Opera';
             $browserShortName = "Opera";
+            $identifiers[] = "OPR";
         } elseif (preg_match('/Netscape/i', $userAgent)) {
             $browserFullName = 'Netscape';
             $browserShortName = "Netscape";
         }
 
-        // Detect browser version number
-        $known = array('Version', $browserShortName, 'other');
-        $pattern = '#(?<browser>' . join('|', $known) .
+        /*
+         * Detect browser version number
+         */
+        $identifiers[] = $browserShortName;
+        $pattern = '#(?<browser>' . join('|', $identifiers) .
                 ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
         if (!preg_match_all($pattern, $userAgent, $matches)) {
             // we have no matching number just continue
         }
 
         // see how many we have
-        $i = count($matches['browser']);
-        if ($i != 1) {
-            //we will have two since we are not using 'other' argument yet
+        $chunks = count($matches['browser']);
+        if ($chunks > 1) { //we will have two since we are not using 'other' argument yet
             //see if version is before or after the name
-            if (strripos($userAgent, "Version") < strripos($userAgent, $browserShortName)) {
-                $version = $matches['version'][0];
+            if (strripos($userAgent, "Version") < strripos($userAgent, $browserShortName) && isset($matches['version'][0])) {
+                $browserVersion = $matches['version'][0];
             } elseif (isset($matches['version'][1])) {
-                $version = $matches['version'][1];
-            } else {
-                $version = "N/A";
+                $browserVersion = $matches['version'][1];
             }
-        } else {
-            $version = $matches['version'][0];
+        } elseif (isset($matches['version'][0])) {
+            $browserVersion = $matches['version'][0];
+        }
+
+        // New IE version detection
+        if (isset($matches['browser'][0]) && $matches['browser'][0] == 'Trident') {
+            $browserVersion = sprintf("%.1f", (int)$browserVersion + 4);;
         }
 
         // check if we have a number
-        if ($version == null || $version == "") {
-            $version = "?";
+        if (empty($browserVersion)) {
+            $browserVersion = null;
         }
 
-        return array(
-            'userAgent' => $userAgent,
-            'name' => $browserFullName,
-            'version' => $version,
-            'platform' => $platform,
+        return [
+            'browser' => [
+                'full_name' => $browserFullName,
+                'short_name' => $browserShortName,
+                'version' => $browserVersion
+            ],
+            'platform' => [
+                'name' => $platformName,
+                'version' => $platformVersion
+            ],
+            'user_agent' => $userAgent,
             'pattern' => $pattern
-        );
+        ];
     }
 
     /**
