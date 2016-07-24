@@ -4,6 +4,7 @@ namespace Asymptix\web;
 
 use Asymptix\core\Tools;
 use Asymptix\web\Http;
+use Asymptix\helpers\Naming;
 
 /**
  * Request functionality.
@@ -52,24 +53,24 @@ class Request {
      * @return mixed Value of the field, NULL otherwise.
      */
     public static function getFieldValue($fieldName, $source = null) {
-        $fieldName = self::parseComplexFieldName($fieldName);
+        $fieldName = Naming::parseComplexName($fieldName);
         $value = null;
 
         try {
             switch ($source) {
                 case (Http::GET):
-                    $value = self::getArrayElement($_GET, $fieldName);
+                    $value = Naming::getValueByComplexName($_GET, $fieldName);
                     break;
                 case (Http::POST):
-                    $value = self::getArrayElement($_POST, $fieldName);
+                    $value = Naming::getValueByComplexName($_POST, $fieldName);
                     break;
                 default:
-                    $value = self::getArrayElement($_REQUEST, $fieldName);
+                    $value = Naming::getValueByComplexName($_REQUEST, $fieldName);
             }
         } catch (\Exception $ex) {
             try {
                 if (isset($_SESSION['_post'])) {
-                    $value = self::getArrayElement($_SESSION['_post'], $fieldName);
+                    $value = Naming::getValueByComplexName($_SESSION['_post'], $fieldName);
                 }
             } catch (\Exception $ex) {
                 return null;
@@ -161,7 +162,7 @@ class Request {
     public static function setFieldValue($fieldName, $fieldValue) {
         global $_FIELDS;
 
-        $fieldName = self::parseComplexFieldName($fieldName);
+        $fieldName = Naming::parseComplexName($fieldName);
 
         if (!is_array($fieldName)) {
             $_FIELDS[$fieldName] = $fieldValue;
@@ -296,7 +297,7 @@ class Request {
         global $_FIELDS;
 
         foreach ($fieldNames as $fieldName) {
-            $fieldName = self::parseComplexFieldName($fieldName);
+            $fieldName = Naming::parseComplexName($fieldName);
 
             if (!is_array($fieldName)) {
                 if (isset($_FIELDS[$fieldName])) {
@@ -320,65 +321,6 @@ class Request {
                 }
             }
         }
-    }
-
-    /**
-     * Returns value of the complex array element by it's complex key.
-     *
-     * @param array $array Complex associated array (dictionary);
-     * @param mixed $complexKey List with hierarchy complex key or a value of the
-     *            simple (one level) key.
-     *
-     * @return mixed Value of the array element if found.
-     * @throws \Exception If can't find element by complex key.
-     */
-    private static function getArrayElement($array, $complexKey) {
-        if (!empty($complexKey)) {
-            if (is_array($complexKey)) { // Complex key is provided
-                $temp = $array;
-
-                foreach ($complexKey as $key) {
-                    if (isset($temp[$key])) {
-                        $temp = $temp[$key];
-                    } else {
-                        throw new \Exception("Invalid complex key");
-                    }
-                }
-
-                return $temp;
-            } else { // Simple key is provided
-                if (isset($array[$complexKey])) {
-                    return $array[$complexKey];
-                } else {
-                    throw new \Exception("Invalid simple key");
-                }
-            }
-        }
-        throw new \Exception("No array element key provided");
-    }
-
-    /**
-     * Parse usual HTML notation complex field name into array.
-     *
-     * @param string  $fieldName Field name.
-     *
-     * @return mixed String or array.
-     */
-    private static function parseComplexFieldName($fieldName) {
-        $normName = str_replace(
-            array('][', '[', ']'),
-            array('|', '|', ''),
-            $fieldName
-        );
-
-        $complexName = explode("|", $normName);
-        if (empty($complexName)) {
-            return "";
-        } elseif (count($complexName) == 1) {
-            return $complexName[0];
-        }
-
-        return $complexName;
     }
 
 }
