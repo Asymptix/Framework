@@ -42,18 +42,22 @@ class Naming {
      * Returns value of the complex array element by it's complex key.
      *
      * @param array $array Complex associated array (dictionary);
-     * @param mixed $complexKey List with hierarchy complex key or a value of the
-     *            simple (one level) key.
+     * @param mixed $complexName List with hierarchy complex key or a string
+     *            value of complex or simple (one level) key.
      *
      * @return mixed Value of the array element if found.
-     * @throws \Exception If can't find element by complex key.
+     * @throws \Exception If can't find element by complex key or no name provided.
      */
-    public static function getValueByComplexName($array, $complexKey) {
-        if (!empty($complexKey)) {
-            if (is_array($complexKey)) { // Complex key is provided
+    public static function getValueByComplexName($array, $complexName) {
+        if (!is_array($complexName)) {
+            $complexName = self::parseComplexName($complexName);
+        }
+
+        if (!empty($complexName)) {
+            if (is_array($complexName)) { // Complex key is provided
                 $temp = $array;
 
-                foreach ($complexKey as $key) {
+                foreach ($complexName as $key) {
                     if (isset($temp[$key])) {
                         $temp = $temp[$key];
                     } else {
@@ -63,14 +67,124 @@ class Naming {
 
                 return $temp;
             } else { // Simple key is provided
-                if (isset($array[$complexKey])) {
-                    return $array[$complexKey];
+                if (isset($array[$complexName])) {
+                    return $array[$complexName];
                 } else {
                     throw new \Exception("Invalid simple key");
                 }
             }
         }
-        throw new \Exception("No array element key provided");
+        throw new \Exception("No name provided");
+    }
+
+    /**
+     * Sets value of the complex array element by it's complex key.
+     *
+     * @param array $array Complex associated array (dictionary);
+     * @param mixed $complexName List with hierarchy complex key or a string
+     *            value of complex or simple (one level) key.
+     * @param mixed $value Value.
+     * @param bool $rewrite Rewrite existed values with the same name tree or not.
+     *
+     * @throws \Exception If can't find element by complex key or no name provided.
+     */
+    public static function setValueWithComplexName(&$array, $complexName, $value, $rewrite = false) {
+        if (!is_array($complexName)) {
+            $complexName = self::parseComplexName($complexName);
+        }
+
+        if (!empty($complexName)) {
+            if (is_array($complexName)) { // Complex key is provided
+                for ($i = 0; $i < count($complexName); $i++) {
+                    $key = $complexName[$i];
+
+                    if ($i < (count($complexName) - 1)) {
+                        if (!isset($array[$key])) { // declare value as empty array as not last element
+                            $array[$key] = [];
+                        } else {
+                            if (!is_array($array[$key])) { // detect if current value is array because not last element
+                                if ($rewrite) {
+                                    $array[$key] = [];
+                                } else {
+                                    throw new \Exception(
+                                        "Try to assign value as array element to the not an array"
+                                    );
+                                }
+                            }
+                        }
+                        $array = &$array[$key];
+                    } else { // last element
+                        $array[$key] = $value;
+                    }
+                }
+            } else { // Simple key is provided
+                $array[$complexName] = $value;
+            }
+            return;
+        }
+        throw new \Exception("No name provided");
+    }
+
+    /**
+     * Removes value of the complex array element by it's complex key.
+     *
+     * @param array $array Complex associated array (dictionary);
+     * @param mixed $complexName List with hierarchy complex key or a string
+     *            value of complex or simple (one level) key.
+     *
+     * @throws \Exception If no name provided.
+     */
+    public static function unsetValueWithComplexName(&$array, $complexName) {
+        if (!is_array($complexName)) {
+            $complexName = self::parseComplexName($complexName);
+        }
+
+        if (!empty($complexName)) {
+            if (is_array($complexName)) { // Complex key is provided
+                for ($i = 0; $i < count($complexName); $i++) {
+                    $key = $complexName[$i];
+
+                    if ($i < (count($complexName) - 1)) {
+                        if (!isset($array[$key]) || !is_array($array[$key])) {
+                            break;
+                        }
+                        $array = &$array[$key];
+                    } elseif(isset($array[$key])) { // last element
+                        unset($array[$key]);
+                    }
+                }
+            } elseif (isset($array[$complexName])) { // Simple key is provided
+                unset($array[$complexName]);
+            }
+            return;
+        }
+        throw new \Exception("No name provided");
+    }
+
+    /**
+     * Removes value of the complex array element by it's complex key.
+     *
+     * @param array $array Complex associated array (dictionary);
+     * @param mixed $complexName List with hierarchy complex key or a string
+     *            value of complex or simple (one level) key.
+     *
+     * @throws \Exception If no name provided.
+     */
+    public static function deleteValueWithComplexName(&$array, $complexName) {
+        self::unsetValueWithComplexName($array, $complexName);
+    }
+
+    /**
+     * Removes value of the complex array element by it's complex key.
+     *
+     * @param array $array Complex associated array (dictionary);
+     * @param mixed $complexName List with hierarchy complex key or a string
+     *            value of complex or simple (one level) key.
+     *
+     * @throws \Exception If no name provided.
+     */
+    public static function removeValueWithComplexName(&$array, $complexName) {
+        self::unsetValueWithComplexName($array, $complexName);
     }
 
 }
