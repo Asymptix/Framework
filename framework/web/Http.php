@@ -2,6 +2,8 @@
 
 namespace Asymptix\web;
 
+use Asymptix\web\Session;
+
 /**
  * Http protocol functionality and other connected tools.
  *
@@ -24,7 +26,7 @@ class Http {
      * @param array<mixed> $params Associative array of query parameters.
      * @param boolean $session Whether to append session information.
      */
-    public static function http_redirect($url, $params = array(), $session = false) {
+    public static function http_redirect($url, $params = [], $session = false) {
         $paramsString = "";
         foreach ($params as $key => $value) {
             $paramsString .= "&" . $key . "=" . $value;
@@ -46,7 +48,7 @@ class Http {
      * @param string $url URL redirect to.
      * @param array<mixed> $postData List of post params to save.
      */
-    public static function httpRedirect($url = "", $postData = array()) {
+    public static function httpRedirect($url = "", $postData = []) {
         if (preg_match("#^http[s]?://.+#", $url)) { // absolute url
             if (function_exists("http_redirect")) {
                 http_redirect($url);
@@ -56,12 +58,12 @@ class Http {
         } else { // same domain (relative url)
             if (!empty($postData)) {
                 if (is_array($postData)) {
-                    if (!isset($_SESSION['_post']) || !is_array($_SESSION['_post'])) {
-                        $_SESSION['_post'] = array();
+                    if (!Session::exists('_post') || !is_array($_SESSION['_post'])) {
+                        Session::set('_post', []);
                     }
 
                     foreach ($postData as $fieldName => $fieldValue) {
-                        $_SESSION['_post'][$fieldName] = serialize($fieldValue);
+                        Session::set("_post[{$fieldName}]", serialize($fieldValue));
                     }
                 } else {
                     throw new HttpException("Wrong POST data.");
@@ -81,7 +83,7 @@ class Http {
      * @param string $url URL redirect to.
      * @param array<mixed> $postData List of post params to save.
      */
-    public static function redirect($url = "", $postData = array()) {
+    public static function redirect($url = "", $postData = []) {
         self::httpRedirect($url, $postData);
     }
 
@@ -95,39 +97,39 @@ class Http {
             return $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { //to check ip is pass from proxy
             return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
         }
-        return "";
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     /**
      * Gets the address that the provided URL redirects to,
      * or FALSE if there's no redirect.
      *
-     * @param string $url
+     * @param string $url URL.
+     *
      * @return mixed String with redirect URL or FALSE if no redirect.
+     * @throws HttpException
      */
     public static function getRedirectUrl($url) {
-        $url_parts = @parse_url($url);
-        if (!$url_parts) {
+        $urlParts = @parse_url($url);
+        if (!$urlParts) {
             return false;
         }
-        if (!isset($url_parts['host'])) { //can't process relative URLs
+        if (!isset($urlParts['host'])) { //can't process relative URLs
             return false;
         }
 
-        if (!isset($url_parts['path'])) {
-            $url_parts['path'] = '/';
+        if (!isset($urlParts['path'])) {
+            $urlParts['path'] = '/';
         }
 
-        $sock = fsockopen($url_parts['host'], (isset($url_parts['port']) ? (int) $url_parts['port'] : 80), $errno, $errstr, 30);
+        $sock = fsockopen($urlParts['host'], (isset($urlParts['port']) ? (int) $urlParts['port'] : 80), $errno, $errstr, 30);
         if (!$sock) {
-            return false;
+            throw new HttpException("$errstr ($errno)");
         }
 
-        $request = "HEAD " . $url_parts['path'] . (isset($url_parts['query']) ? '?' . $url_parts['query'] : '') . " HTTP/1.1\r\n";
-        $request .= 'Host: ' . $url_parts['host'] . "\r\n";
+        $request = "HEAD " . $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '') . " HTTP/1.1\r\n";
+        $request .= 'Host: ' . $urlParts['host'] . "\r\n";
         $request .= "Connection: Close\r\n\r\n";
         fwrite($sock, $request);
         $response = '';
@@ -138,13 +140,11 @@ class Http {
 
         if (preg_match('/^Location: (.+?)$/m', $response, $matches)) {
             if (substr($matches[1], 0, 1) == "/") {
-                return $url_parts['scheme'] . "://" . $url_parts['host'] . trim($matches[1]);
-            } else {
-                return trim($matches[1]);
+                return $urlParts['scheme'] . "://" . $urlParts['host'] . trim($matches[1]);
             }
-        } else {
-            return false;
+            return trim($matches[1]);
         }
+        return false;
     }
 
     /**
@@ -154,7 +154,7 @@ class Http {
      * @return array
      */
     public static function getAllRedirects($url) {
-        $redirects = array();
+        $redirects = [];
         while ($newurl = self::getRedirectUrl($url)) {
             if (in_array($newurl, $redirects)) {
                 break;
@@ -177,9 +177,8 @@ class Http {
         $redirects = self::getAllRedirects($url);
         if (count($redirects) > 0) {
             return array_pop($redirects);
-        } else {
-            return $url;
         }
+        return $url;
     }
 
     /**
@@ -193,7 +192,7 @@ class Http {
      * @return type
      */
     public static function curlRequestAsync($url, $params, $type = self::POST, $timeout = 30) {
-        $postParams = array();
+        $postParams = [];
         foreach ($params as $key => &$val) {
             if (is_array($val)) {
                 $val = implode(',', $val);
@@ -206,7 +205,7 @@ class Http {
 
         $port = isset($parts['port']) ? (integer)$parts['port'] : 80;
 
-        $fp = fsockopen($parts['host'], $port, $errno, $errstr, $timeout);
+        $sock = fsockopen($parts['host'], $port, $errno, $errstr, $timeout);
 
         // Data goes in the path for a GET request
         if ($type == self::GET) {
@@ -228,33 +227,33 @@ class Http {
             $request.= $postString;
         }
 
-        fwrite($fp, $request);
+        fwrite($sock, $request);
 
         $response = "";
-        while (!feof($fp) && $result = fgets($fp)) {
+        while (!feof($sock) && $result = fgets($sock)) {
             $response.= $result;
         }
 
-        fclose($fp);
+        fclose($sock);
 
         list($respHeader, $respBody) = preg_split("/\R\R/", $response, 2);
 
-        $headers = array_map(array('self', "pair"), explode("\r\n", $respHeader));
-        $headerList = array();
+        $headers = array_map(['self', "pair"], explode("\r\n", $respHeader));
+        $headerList = [];
         foreach ($headers as $value) {
             $headerList[$value['key']] = $value['value'];
         }
 
-        return array(
+        return [
             'request' => $request,
-            'response' => array(
+            'response' => [
                 'header' => $respHeader,
                 'headerList' => $headerList,
                 'body' => trim(http_chunked_decode($respBody))
-            ),
+            ],
             'errno' => $errno,
             'errstr' => $errstr
-        );
+        ];
     }
 
     /**
