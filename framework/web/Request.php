@@ -3,6 +3,7 @@
 namespace Asymptix\web;
 
 use Asymptix\core\Tools;
+use Asymptix\web\Session;
 use Asymptix\web\Http;
 use Asymptix\helpers\Naming;
 
@@ -47,13 +48,12 @@ class Request {
      * needs to be stored by scenario). Also it takes values from $_GET or $_POST
      * separately if second parameter is passed.
      *
-     * @param mixed $fieldName String name of the field or complex name as array.
+     * @param mixed $fieldName String name of the field or complex hierarchy name.
      * @param string $source Http::GET or Http::POST constant.
      *
      * @return mixed Value of the field, NULL otherwise.
      */
     public static function getFieldValue($fieldName, $source = null) {
-        $fieldName = Naming::parseComplexName($fieldName);
         $value = null;
 
         try {
@@ -69,8 +69,10 @@ class Request {
             }
         } catch (\Exception $ex) {
             try {
-                if (isset($_SESSION['_post'])) {
-                    $value = Naming::getValueByComplexName($_SESSION['_post'], $fieldName);
+                if (Session::exists('_post')) {
+                    $value = Naming::getValueByComplexName(
+                        Session::get('_post'), $fieldName
+                    );
                 }
             } catch (\Exception $ex) {
                 return null;
@@ -162,29 +164,7 @@ class Request {
     public static function setFieldValue($fieldName, $fieldValue) {
         global $_FIELDS;
 
-        $fieldName = Naming::parseComplexName($fieldName);
-
-        if (!is_array($fieldName)) {
-            $_FIELDS[$fieldName] = $fieldValue;
-        } else {
-            $array = &$_FIELDS;
-            for ($i = 0; $i < count($fieldName); $i++) {
-                $key = $fieldName[$i];
-
-                if ($i < (count($fieldName) - 1)) {
-                    if (!isset($array[$key])) { // declare value as empty array as not last element
-                        $array[$key] = array();
-                    } else {
-                        if (!is_array($array[$key])) { // detect if current value is array because not last element
-                            throw new \Exception("Try to assign value as array element to the not an array");
-                        }
-                    }
-                    $array = &$array[$key];
-                } else { // last element
-                    $array[$key] = $fieldValue;
-                }
-            }
-        }
+        Naming::setValueWithComplexName($_FIELDS, $fieldName, $fieldValue);
     }
 
     /**
@@ -198,23 +178,23 @@ class Request {
     }
 
     /**
-     * TODO: add docs
+     * Forget cross session field.
      *
-     * @param type $fieldName
+     * @param string $fieldName Field name.
      */
-    public static function forgotField($fieldName) {
+    public static function forgetField($fieldName) {
         if (isset($_SESSION['_post']) && isset($_SESSION['_post'][$fieldName])) {
             unset($_SESSION['_post'][$fieldName]);
         }
     }
 
     /**
-     * TODO: add docs
+     * Forget all cross session fields.
+     *
+     * @return bool
      */
-    public static function forgotFields() {
-        if (isset($_SESSION['_post'])) {
-            unset($_SESSION['_post']);
-        }
+    public static function forgetFields() {
+        return Session::remove('_post');
     }
 
     /**
@@ -297,29 +277,7 @@ class Request {
         global $_FIELDS;
 
         foreach ($fieldNames as $fieldName) {
-            $fieldName = Naming::parseComplexName($fieldName);
-
-            if (!is_array($fieldName)) {
-                if (isset($_FIELDS[$fieldName])) {
-                    unset($_FIELDS[$fieldName]);
-                }
-            } else {
-                $array = &$_FIELDS;
-                for ($i = 0; $i < count($fieldName); $i++) {
-                    $key = $fieldName[$i];
-
-                    if ($i < (count($fieldName) - 1)) {
-                        if (!isset($array[$key])) {
-                            return;
-                        }
-                        $array = &$array[$key];
-                    } else { // last element
-                        if (isset($array[$key])) {
-                            unset($array[$key]);
-                        }
-                    }
-                }
-            }
+            Naming::unsetValueWithComplexName($_FIELDS, $fieldName);
         }
     }
 
