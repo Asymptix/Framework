@@ -2,6 +2,8 @@
 
 namespace Asymptix\web;
 
+use Asymptix\helpers\Naming;
+
 /**
  * Session functionality.
  *
@@ -100,7 +102,7 @@ class Session {
      * @param mixed $fieldValue
      */
     public static function set($fieldName, $fieldValue = true) {
-        $_SESSION[$fieldName] = $fieldValue;
+        Naming::setValueWithComplexName($_SESSION, $fieldName, $fieldValue);
     }
 
     /**
@@ -108,7 +110,7 @@ class Session {
      *
      * @param array $data
      */
-    public static function save(array $data = array()) {
+    public static function save($data = []) {
         foreach ($data as $key => $value) {
             $_SESSION[$key] = $value;
         }

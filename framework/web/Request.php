@@ -174,7 +174,7 @@ class Request {
      * @param mixed $fieldValue
      */
     public static function rememberField($fieldName, $fieldValue) {
-        $_SESSION['_post'][$fieldName] = serialize($fieldValue);
+        Session::set("_post[{$fieldName}]", serialize($fieldValue));
     }
 
     /**
@@ -183,9 +183,7 @@ class Request {
      * @param string $fieldName Field name.
      */
     public static function forgetField($fieldName) {
-        if (isset($_SESSION['_post']) && isset($_SESSION['_post'][$fieldName])) {
-            unset($_SESSION['_post'][$fieldName]);
-        }
+        Naming::unsetValueWithComplexName($_SESSION, "_post[{$fieldName}]");
     }
 
     /**
