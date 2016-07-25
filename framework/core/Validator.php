@@ -2,6 +2,8 @@
 
 namespace Asymptix\core;
 
+use Asymptix\core\Errors;
+use Asymptix\web\Session;
 use Asymptix\web\Request;
 
 /**
@@ -142,7 +144,7 @@ class Validator {
         if (!validateNoSpaces($fieldName)) {
             return false;
         }
-        if (Request::getFieldValue($fieldName) != $_SESSION[$fieldName]) {
+        if (Request::getFieldValue($fieldName) != Session::get($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_CAPTCHA_CODE);
             return false;
         }
@@ -249,11 +251,12 @@ class Validator {
      * @return boolean
      */
     public static function validateTextMaxLength($fieldName, $maxTextLength) {
-        global $_ERRORS;
-
         $text = trim(strip_tags(Request::getFieldValue($fieldName)));
         if (strlen($text) > $maxTextLength) {
-            $_ERRORS[$fieldName] = str_replace("[[1]]", $maxTextLength, \__ERRORS::MAX_TEXT_LENGTH);
+            Errors::saveErrorFor(
+                $fieldName,
+                str_replace("[[1]]", $maxTextLength, \__ERRORS::MAX_TEXT_LENGTH)
+            );
             return false;
         }
         return true;
@@ -269,11 +272,12 @@ class Validator {
      * @return boolean
      */
     public static function validateTextMinLength($fieldName, $minTextLength) {
-        global $_ERRORS;
-
         $text = trim(strip_tags(Request::getFieldValue($fieldName)));
         if (strlen($text) < $minTextLength) {
-            $_ERRORS[$fieldName] = str_replace("[[1]]", $minTextLength, \__ERRORS::MIN_TEXT_LENGTH);
+            Errors::saveErrorFor(
+                $fieldName,
+                str_replace("[[1]]", $minTextLength, \__ERRORS::MIN_TEXT_LENGTH)
+            );
             return false;
         }
         return true;
@@ -290,7 +294,7 @@ class Validator {
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::FIELD_CANT_BE_EMPTY);
             return false;
-        } elseif (!(/* isDouble($fieldValue) || */ Tools::isInteger($fieldValue))) {
+        } elseif (!Tools::isInteger($fieldValue)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_INTEGER);
             return false;
         }
@@ -375,10 +379,11 @@ class Validator {
     }
 
     /**
-     * TODO: add docs
+     * Validates if some value is in array.
      *
-     * @param type $fieldName
-     * @param type $range
+     * @param string $fieldName Field name.
+     * @param array $range Array with values.
+     *
      * @return boolean
      */
     public static function validateRange($fieldName, $range) {
