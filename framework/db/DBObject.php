@@ -52,13 +52,13 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Sets primary key value.
      *
-     * @param mixed $id Key vaue
+     * @param mixed $recordId Key vaue.
      *
      * @return boolean Success flag.
      * @throws DBCoreException If object has no field with such name.
      */
-    public function setId($id) {
-        return $this->setFieldValue(static::ID_FIELD_NAME, $id);
+    public function setId($recordId) {
+        return $this->setFieldValue(static::ID_FIELD_NAME, $recordId);
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class DBObject extends \Asymptix\core\Object {
              WHERE " . static::ID_FIELD_NAME . " = ?
              LIMIT 1",
             "ii",
-            array($this->activation, $this->id)
+            [$this->activation, $this->id]
         );
     }
 
@@ -107,12 +107,9 @@ abstract class DBObject extends \Asymptix\core\Object {
         $activation = $this->getFieldValue('activation');
         if (is_null($activation)) {
             throw new DBCoreException("This object has no parameter 'activation'");
-        } else {
-            if ($activation > 0) {
-                return true;
-            }
-            return false;
         }
+
+        return ($activation > 0);
     }
 
     /**
@@ -161,7 +158,7 @@ abstract class DBObject extends \Asymptix\core\Object {
              WHERE " . static::ID_FIELD_NAME . " = ?
              LIMIT 1",
             "ii",
-            array($this->removed, $this->id)
+            [$this->removed, $this->id]
         );
     }
 
@@ -176,12 +173,9 @@ abstract class DBObject extends \Asymptix\core\Object {
         $isRemoved = $this->getFieldValue('removed');
         if (is_null($isRemoved)) {
             throw new DBCoreException("This object has no parameter 'removed'");
-        } else {
-            if ($isRemoved == self::STATUS_REMOVED) {
-                return true;
-            }
-            return false;
         }
+
+        return ($isRemoved == self::STATUS_REMOVED);
     }
 
     /**
@@ -243,16 +237,14 @@ abstract class DBObject extends \Asymptix\core\Object {
             $insertionId = DBCore::insertDBObject($this, $debug);
             if (Tools::isInteger($insertionId) && $insertionId > 0) {
                 $this->setId($insertionId);
-            } else {
-                throw new DBCoreException("Save database object error");
+
+                return $insertionId;
             }
-
-            return $insertionId;
-        } else {
-            DBCore::updateDBObject($this, $debug);
-
-            return $this->id;
+            throw new DBCoreException("Save database object error");
         }
+
+        DBCore::updateDBObject($this, $debug);
+        return $this->id;
     }
 
     /**
@@ -264,7 +256,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return DBObject Itself.
      */
-    public function initQuery($queryType, $conditions = array(), $fields = array()) {
+    public function initQuery($queryType, $conditions = [], $fields = []) {
         $this->dbQuery = new DBPreparedQuery();
 
         $this->dbQuery->setType($queryType);
@@ -298,7 +290,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return DBObject Current object.
      */
-    public function select($conditions = array()) {
+    public function select($conditions = []) {
         return $this->initQuery(DBQueryType::SELECT, $conditions);
     }
 
@@ -310,7 +302,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return DBObject Current object.
      */
-    public static function _select($conditions = array()) {
+    public static function _select($conditions = []) {
         $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
@@ -320,14 +312,14 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Select and returns DB record for current DBObject table by record ID.
      *
-     * @param mixed $id Record ID.
+     * @param mixed $recordId Record ID.
      * @param bool $debug Debug mode flag.
      *
      * @return DBObject Record object or null.
      */
-    public static function _get($id, $debug = false) {
+    public static function _get($recordId, $debug = false) {
         return static::_select([
-            static::ID_FIELD_NAME => $id
+            static::ID_FIELD_NAME => $recordId
         ])->limit(1)->go($debug);
     }
 
@@ -341,7 +333,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return DBObject Current object.
      */
-    public function update($fields = array(), $conditions = array()) {
+    public function update($fields = [], $conditions = []) {
         return $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
     }
 
@@ -355,7 +347,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return DBObject Current object.
      */
-    public static function _update($fields = array(), $conditions = array()) {
+    public static function _update($fields = [], $conditions = []) {
         $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
@@ -389,7 +381,7 @@ abstract class DBObject extends \Asymptix\core\Object {
         if (is_null($count)) {
             $this->dbQuery->limit = $offset;
         } else {
-            $this->dbQuery->limit = array($offset, $count);
+            $this->dbQuery->limit = [$offset, $count];
         }
 
         return $this;
@@ -427,7 +419,7 @@ abstract class DBObject extends \Asymptix\core\Object {
             }
         } else {
             $this->dbQuery->query.= " WHERE ";
-            $this->dbQuery->sqlPushValues(array(static::ID_FIELD_NAME => $this->id));
+            $this->dbQuery->sqlPushValues([static::ID_FIELD_NAME => $this->id]);
         }
 
         /**
@@ -493,11 +485,10 @@ abstract class DBObject extends \Asymptix\core\Object {
 
                     return $data;
                 }
-            } else {
-                return $this->dbQuery->go();
+                return null;
             }
+            return $this->dbQuery->go();
         }
-
         return null;
     }
 
@@ -519,15 +510,15 @@ abstract class DBObject extends \Asymptix\core\Object {
      *           or ID value of the record
      * @return DBObject Current object.
      */
-    public static function _delete($conditions = array()) {
+    public static function _delete($conditions = []) {
         $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
         if (!is_array($conditions)) { // Just record ID provided
             $recordId = $conditions;
-            $conditions = array(
+            $conditions = [
                 $dbObject->getIdFieldName() => $recordId
-            );
+            ];
             $dbObject->initQuery(DBQueryType::DELETE, $conditions);
             $dbObject->dbQuery->limit = 1;
 
