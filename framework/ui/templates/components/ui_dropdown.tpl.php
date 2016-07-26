@@ -8,7 +8,7 @@
             $this->currentValue,
             $this->dataSet[$this->currentValue],
             null,
-            "core/ui/templates/components/ui_list_label.tpl.php"
+            'core/ui/templates/components/ui_list_label.tpl.php'
         )
 
         ?>
@@ -27,7 +27,7 @@
             $optionValue,
             $option,
             $this->currentValue,
-            "core/ui/templates/components/ui_listoption.tpl.php"
+            'core/ui/templates/components/ui_listoption.tpl.php'
         )
 
         ?>

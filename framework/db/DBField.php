@@ -8,13 +8,16 @@ use Asymptix\core\Tools;
  * DB field representation class.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2011 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class DBField {
+class DBField
+{
     /**
      * Name of the field.
      *
@@ -39,13 +42,14 @@ class DBField {
     /**
      * Constructor of the class with parameters validation.
      *
-     * @param string $type Type of the field.
-     * @param string $name Name of the field.
-     * @param mixed $value Value of the field.
+     * @param string $type  Type of the field.
+     * @param string $name  Name of the field.
+     * @param mixed  $value Value of the field.
      */
-    public function __construct($type = "", $name = "", $value = null) {
-        if (!(boolean)preg_match("#^[a-zA-Z][a-zA-Z0-9_]*$#", $name)) {
-            throw new DBFieldException("Can't create DBField object: invalid field name '" . $name . "'");
+    public function __construct($type = '', $name = '', $value = null)
+    {
+        if (!(bool) preg_match('#^[a-zA-Z][a-zA-Z0-9_]*$#', $name)) {
+            throw new DBFieldException("Can't create DBField object: invalid field name '".$name."'");
         }
         $this->name = $name;
 
@@ -63,17 +67,17 @@ class DBField {
             $this->type = self::castType($type);
             if (!is_null($value)) {
                 switch ($this->type) {
-                    case ("i"):
-                        $this->value = (integer)$value;
+                    case 'i':
+                        $this->value = (int) $value;
                         break;
-                    case ("d"):
-                        $this->value = (double)$value;
+                    case 'd':
+                        $this->value = (float) $value;
                         break;
-                    case ("s"):
-                        $this->value = (string)$value;
+                    case 's':
+                        $this->value = (string) $value;
                         break;
-                    case ("b"):
-                        $this->value = (boolean)$value;
+                    case 'b':
+                        $this->value = (bool) $value;
                         break;
                 }
             }
@@ -84,32 +88,34 @@ class DBField {
      * Returns SQL type equivalent ("idsb") for common used types.
      *
      * @param string $fieldType Type of the field (example: "integer", "int",
-     *           "double", "real", "bool", ...).
+     *                          "double", "real", "bool", ...).
+     *
+     * @throws DBFieldTypeException If invalid field type passed.
      *
      * @return string
-     * @throws DBFieldTypeException If invalid field type passed.
      */
-    public static function castType($fieldType) {
-        $typesList = array(
-            'integer' => "i",
-            'int'     => "i",
-            'i'       => "i",
-            'real'    => "d",
-            'float'   => "d",
-            'double'  => "d",
-            'd'       => "d",
-            'string'  => "s",
-            'str'     => "s",
-            's'       => "s",
-            'boolean' => "b",
-            'bool'    => "b",
-            'b'       => "b"
-        );
+    public static function castType($fieldType)
+    {
+        $typesList = [
+            'integer' => 'i',
+            'int'     => 'i',
+            'i'       => 'i',
+            'real'    => 'd',
+            'float'   => 'd',
+            'double'  => 'd',
+            'd'       => 'd',
+            'string'  => 's',
+            'str'     => 's',
+            's'       => 's',
+            'boolean' => 'b',
+            'bool'    => 'b',
+            'b'       => 'b',
+        ];
 
         if (isset($typesList[$fieldType])) {
             return $typesList[$fieldType];
         }
-        throw new DBFieldTypeException("Invalid SQL type");
+        throw new DBFieldTypeException('Invalid SQL type');
     }
 
     /**
@@ -117,23 +123,25 @@ class DBField {
      *
      * @param mixed $fieldValue
      *
-     * @return string Types of the parameter ("idsb").
      * @throws DBFieldTypeException If can't detect field type by value.
+     *
+     * @return string Types of the parameter ("idsb").
      */
-    public static function getType($fieldValue) {
+    public static function getType($fieldValue)
+    {
         if (is_null($fieldValue)) { // Type is not principled for NULL
-            return "i";
-        } else if (Tools::isInteger($fieldValue)) {
-            return "i";
+            return 'i';
+        } elseif (Tools::isInteger($fieldValue)) {
+            return 'i';
         } elseif (Tools::isDouble($fieldValue)) {
-            return "d";
+            return 'd';
         } elseif (Tools::isBoolean($fieldValue)) {
-            return "b";
+            return 'b';
         } elseif (Tools::isString($fieldValue)) {
-            return "s";
+            return 's';
         } else {
             throw new DBFieldTypeException(
-                "Can't detect field value type for value '" . (string)$fieldValue . "'"
+                "Can't detect field value type for value '".(string) $fieldValue."'"
             );
         }
     }
@@ -141,63 +149,71 @@ class DBField {
     /**
      * Casts field value to it's type.
      *
-     * @param string $type Field type.
-     * @param mixed $value Field value.
+     * @param string $type  Field type.
+     * @param mixed  $value Field value.
+     *
+     * @throws DBFieldTypeException If invalid field type provided.
      *
      * @return mixed Casted field value.
-     * @throws DBFieldTypeException If invalid field type provided.
      */
-    public static function castValue($type, $value) {
+    public static function castValue($type, $value)
+    {
         switch (self::castType($type)) {
-            case ("i"):
-                return (integer)$value;
-            case ("d"):
-                return (double)$value;
-            case ("s"):
-                return (string)$value;
-            case ("b"):
-                return (boolean)$value;
+            case 'i':
+                return (int) $value;
+            case 'd':
+                return (float) $value;
+            case 's':
+                return (string) $value;
+            case 'b':
+                return (bool) $value;
         }
 
-        throw new DBFieldTypeException("Invalid SQL type");
+        throw new DBFieldTypeException('Invalid SQL type');
     }
 
     /**
      * Returns field value in the SQL query format.
      *
-     * @param string $type Field type.
-     * @param mixed $value Field value.
+     * @param string $type  Field type.
+     * @param mixed  $value Field value.
+     *
+     * @throws DBFieldTypeException If invalid field type provided.
      *
      * @return mixed SQL formatted value of the field.
-     * @throws DBFieldTypeException If invalid field type provided.
      */
-    public static function sqlValue($type, $value) {
+    public static function sqlValue($type, $value)
+    {
         $type = self::castType($type);
         $value = self::castValue($type, $value);
         switch ($type) {
-            case ("i"):
-            case ("d"):
+            case 'i':
+            case 'd':
                 return $value;
-            case ("s"):
-                if (!in_array($value, array('NOW()'))) {
-                    return "'" . $value . "'";
+            case 's':
+                if (!in_array($value, ['NOW()'])) {
+                    return "'".$value."'";
                 } else {
                     return $value;
                 }
-            case ("b"):
+            case 'b':
                 if ($value) {
-                    return "TRUE";
+                    return 'TRUE';
                 }
-                return "FALSE";
+
+                return 'FALSE';
         }
 
-        throw new DBFieldTypeException("Invalid SQL type");
+        throw new DBFieldTypeException('Invalid SQL type');
     }
-
 }
 
 /**
  * Service exception classes.
  */
-class DBFieldException extends \Exception {}
-class DBFieldTypeException extends \Exception {}
+class DBFieldException extends \Exception
+{
+}
+class DBFieldTypeException extends \Exception
+{
+}

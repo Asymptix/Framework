@@ -8,18 +8,20 @@ use Asymptix\web\Request;
  * Main route functionality class.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2011 - 2015, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class Route {
-
+class Route
+{
     public $controller = null;
     public $action = null;
     public $id = null;
-    public $customFields = array();
+    public $customFields = [];
 
     public $isBackend = false;
 
@@ -28,16 +30,17 @@ class Route {
      *
      * @param string $request URL request string without GET params.
      */
-    public function __construct($request = "") {
-        $route = array_values(array_filter(explode("/", $request)));
+    public function __construct($request = '')
+    {
+        $route = array_values(array_filter(explode('/', $request)));
 
         // result array must contain keys starts from 0
-        if (isset($route[0]) && $route[0] == "admin") {
+        if (isset($route[0]) && $route[0] == 'admin') {
             array_shift($route);
             $this->isBackend = true;
         }
         if (count($route) < 3) {
-            $route = array_merge($route, array_fill(0, 3 - count($route), ""));
+            $route = array_merge($route, array_fill(0, 3 - count($route), ''));
         } else {
             $route = array_values($route);
         }
@@ -55,9 +58,10 @@ class Route {
      *
      * @param array<string> $aliases List of aliases.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isOneOf($aliases) {
+    public function isOneOf($aliases)
+    {
         return in_array($this->controller, $aliases);
     }
 
@@ -66,13 +70,14 @@ class Route {
      * Priority is Request Field value, Route->action field value, $defaultAction.
      *
      * @param string $actionFieldName $_REQUEST action field name if form was
-     *           submitted (default: 'action').
-     * @param string $defaultAction Default action if no action detected
-     *           (default: 'list').
+     *                                submitted (default: 'action').
+     * @param string $defaultAction   Default action if no action detected
+     *                                (default: 'list').
      *
      * @return string Action name.
      */
-    public function getAction($actionFieldName = 'action', $defaultAction = 'list') {
+    public function getAction($actionFieldName = 'action', $defaultAction = 'list')
+    {
         $action = Request::getFieldValue($actionFieldName);
         if (empty($action)) {
             if (!empty($this->action)) {
@@ -89,26 +94,28 @@ class Route {
     /**
      * Generates URL for current Route with action, id and GET params.
      *
-     * @param string $action Action.
-     * @param mixed $id Id of the record (optional).
-     * @param array $getParams List of GET params (optional).
+     * @param string $action    Action.
+     * @param mixed  $id        Id of the record (optional).
+     * @param array  $getParams List of GET params (optional).
      *
      * @return string URL.
      */
-    public function getUrl($action, $id = null, $getParams = array()) {
-        $url = $this->controller . "/";
+    public function getUrl($action, $id = null, $getParams = [])
+    {
+        $url = $this->controller.'/';
         if (!is_null($id)) {
-            $url.= $action . "/" . $id;
+            $url .= $action.'/'.$id;
         } else {
-            $url.= $action;
+            $url .= $action;
         }
 
         if (!empty($getParams)) {
-            $url.= "?";
+            $url .= '?';
             foreach ($getParams as $key => $value) {
-                $url.= $key . "=" . $value;
+                $url .= $key.'='.$value;
             }
         }
+
         return $url;
     }
 
@@ -117,13 +124,13 @@ class Route {
      *
      * @return string
      */
-    public function tplPath() {
-        $path = $this->controller . "/" . $this->controller;
+    public function tplPath()
+    {
+        $path = $this->controller.'/'.$this->controller;
         if (!empty($this->action)) {
-            $path.= "_" . $this->action;
+            $path .= '_'.$this->action;
         }
 
         return $path;
     }
-
 }

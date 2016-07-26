@@ -6,14 +6,16 @@ namespace Asymptix\core;
  * Messages functionlity.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2013 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class Messages {
-
+class Messages
+{
     const MSG_EMPTY = 0;
     const MSG_INFO = 1;
     const MSG_SUCCESS = 2;
@@ -25,19 +27,20 @@ class Messages {
      *
      * @var array
      */
-    private static $messages = array();
+    private static $messages = [];
 
     /**
      * Push new message to the global messages list.
      *
-     * @param int $type Priority type of the message.
+     * @param int    $type Priority type of the message.
      * @param string $text Text of the message.
      * @param string $code Code of the message in the message list (optional).
      *
      * @throws \Exception If wrong priority message type provided.
      */
-    public static function pushMessage($type, $text, $code = null) {
-        $oClass = new \ReflectionClass(new Messages);
+    public static function pushMessage($type, $text, $code = null)
+    {
+        $oClass = new \ReflectionClass(new self());
         $constantsList = $oClass->getConstants();
 
         if (in_array($type, $constantsList)) {
@@ -47,20 +50,21 @@ class Messages {
                 self::$messages[$code] = new __MSG($type, $text);
             }
         } else {
-            throw new \Exception("Invalid message type code");
+            throw new \Exception('Invalid message type code');
         }
     }
 
     /**
      * Push new message to the global messages list.
      *
-     * @param int $type Priority type of the message.
+     * @param int    $type Priority type of the message.
      * @param string $text Text of the message.
      * @param string $code Code of the message in the message list (optional).
      *
      * @throws \Exception If wrong priority message type provided.
      */
-    public static function addMessage($type, $text, $code = null) {
+    public static function addMessage($type, $text, $code = null)
+    {
         return self::pushMessage($type, $text, $code);
     }
 
@@ -69,15 +73,16 @@ class Messages {
      *
      * @param string $code Code of the message in the message list.
      *
-     * @return __MSG Message object.
-     *
      * @throws \Exception If message with such code is not exists.
+     *
+     * @return __MSG Message object.
      */
-    public static function getMessage($code) {
+    public static function getMessage($code)
+    {
         if (isset(self::$messages[$code])) {
             return self::$messages[$code];
         } else {
-            throw new \Exception("Invalid message code");
+            throw new \Exception('Invalid message code');
         }
     }
 
@@ -88,13 +93,14 @@ class Messages {
      *
      * @return string
      */
-    public static function get($code) {
+    public static function get($code)
+    {
         try {
             $msg = self::getMessage($code);
 
             return $msg->text;
         } catch (\Exception $ex) {
-            return "";
+            return '';
         }
     }
 
@@ -103,7 +109,8 @@ class Messages {
      *
      * @param string $code Code of the message in the message list.
      */
-    public static function popMessages($code) {
+    public static function popMessages($code)
+    {
         if (isset(self::$messages[$code])) {
             unset(self::$messages[$code]);
         }
@@ -114,7 +121,8 @@ class Messages {
      *
      * @param string $code Code of the message in the message list.
      */
-    public static function removeMessages($code) {
+    public static function removeMessages($code)
+    {
         return self::popMessages($code);
     }
 
@@ -122,9 +130,10 @@ class Messages {
      * Sort messages list with most important messages priority but save order if
      * priority the same.
      */
-    public static function reorderMessages() {
-        uasort(self::$messages, function($a, $b) {
-            return ($a->type <= $b->type);
+    public static function reorderMessages()
+    {
+        uasort(self::$messages, function ($a, $b) {
+            return $a->type <= $b->type;
         });
     }
 
@@ -132,7 +141,8 @@ class Messages {
      * Sort messages list with most important messages priority but save order if
      * priority the same.
      */
-    public static function sortMessages() {
+    public static function sortMessages()
+    {
         return self::reorderMessages();
     }
 
@@ -141,24 +151,25 @@ class Messages {
      *
      * @return array<_MSG> List with reordered by prioroty messages.
      */
-    public static function getMessages() {
+    public static function getMessages()
+    {
         self::reorderMessages();
+
         return self::$messages;
     }
-
 }
 
 /**
  * Message item helper class.
  */
-class __MSG {
-
+class __MSG
+{
     public $type = null;
-    public $text = "";
+    public $text = '';
 
-    public function __construct($type, $text) {
+    public function __construct($type, $text)
+    {
         $this->type = $type;
         $this->text = trim($text);
     }
-
 }

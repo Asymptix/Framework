@@ -13,9 +13,9 @@
 
     <?php endif; ?>
 
-    <?php for ($i = $this->firstPage; $i <= $this->lastPage; $i ++): if($i > 0 && $i <= $this->pagesNumber): ?>
+    <?php for ($i = $this->firstPage; $i <= $this->lastPage; $i++): if ($i > 0 && $i <= $this->pagesNumber): ?>
 
-    <li<?= ($this->currentPage == $i?' class="active"':'') ?>><a href="<?= $this->url ?>?pn=<?= $i ?>"><?= $i ?></a></li>
+    <li<?= ($this->currentPage == $i ? ' class="active"' : '') ?>><a href="<?= $this->url ?>?pn=<?= $i ?>"><?= $i ?></a></li>
 
     <?php endif; endfor; ?>
 

@@ -2,39 +2,44 @@
 
 namespace Asymptix\localization;
 
-use Asymptix\web\Request;
 use Asymptix\core\Errors;
+use Asymptix\web\Request;
 
 /**
  * Localization class for using multiple languages and store localized lexems
  * into the database.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2010 - 2015, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class Localization {
+class Localization
+{
     /**
      * Return localized value for some value.
      *
      * @global array<mixed> $_CONFIG Global configuration.
+     *
      * @param string, array<string> $value Value for localization, string or
-     *           associative array of language key and value.
+     *                                     associative array of language key and value.
      *
      * @return array<string> Localized value as associative array of string values
-     *           for all languages.
+     *                       for all languages.
      */
-    static public function localize($value = "") {
+    public static function localize($value = '')
+    {
         $localizedValue = Languages::$langs;
         if (is_array($value)) {
             foreach ($localizedValue as $langKey => &$lValue) {
                 if (isset($value[$langKey])) {
                     $lValue = $value[$langKey];
                 } else {
-                    $lValue = "";
+                    $lValue = '';
                 }
             }
         } elseif (is_string($value)) {
@@ -42,7 +47,7 @@ class Localization {
                 $lValue = $value;
             }
         } else {
-            throw new Exception("Invalid value for localization");
+            throw new Exception('Invalid value for localization');
         }
 
         return $localizedValue;
@@ -53,9 +58,10 @@ class Localization {
      *
      * @param string $fieldName Name of the field.
      *
-     * @return boolean
+     * @return bool
      */
-    static public function validateNotEmpty($fieldName) {
+    public static function validateNotEmpty($fieldName)
+    {
         $fieldValue = Request::getFieldValue($fieldName);
         if (is_array($fieldValue)) {
             foreach ($fieldValue as $value) {
@@ -69,6 +75,7 @@ class Localization {
         } else {
             return validateNotEmpty($fieldName);
         }
+
         return true;
     }
 }

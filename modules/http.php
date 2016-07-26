@@ -4,48 +4,51 @@
  * HTTP functions declaration.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009-2015, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-
-if (!function_exists("http_redirect")) {
+if (!function_exists('http_redirect')) {
     /**
      * Redirect to the given url.
      *
-     * @param string $url The URL to redirect to.
-     * @param array<mixed> $params Associative array of query parameters.
-     * @param boolean $session Whether to append session information.
+     * @param string       $url     The URL to redirect to.
+     * @param array<mixed> $params  Associative array of query parameters.
+     * @param bool         $session Whether to append session information.
      */
-    function http_redirect($url, $params = array(), $session = false) {
-        $paramsString = "";
+    function http_redirect($url, $params = [], $session = false)
+    {
+        $paramsString = '';
         foreach ($params as $key => $value) {
-            $paramsString .= "&" . $key . "=" . $value;
+            $paramsString .= '&'.$key.'='.$value;
         }
         if ($session) {
-            $paramsString .= "&" . session_name() . "=" . session_id();
+            $paramsString .= '&'.session_name().'='.session_id();
         }
         $paramsString = substr($paramsString, 1);
         if ($paramsString) {
-            $paramsString = "?" . $paramsString;
+            $paramsString = '?'.$paramsString;
         }
-        header("Location: " . $url . $paramsString);
+        header('Location: '.$url.$paramsString);
         exit();
     }
-
 }
 
 if (!function_exists('http_response_code')) {
     /**
      * Get or Set the HTTP response code.
      *
-     * @param integer $code The optional response_code will set the response code.
-     * @return integer The current response code. By default the return value is int(200).
+     * @param int $code The optional response_code will set the response code.
+     *
+     * @return int The current response code. By default the return value is int(200).
      */
-    function http_response_code($code = NULL) {
-        if ($code !== NULL) {
+    function http_response_code($code = null)
+    {
+        if ($code !== null) {
             switch ($code) {
                 case 100: $text = 'Continue';
                     break;
@@ -122,13 +125,13 @@ if (!function_exists('http_response_code')) {
                 case 505: $text = 'HTTP Version not supported';
                     break;
                 default:
-                    exit('Unknown http status code "' . htmlentities($code) . '"');
+                    exit('Unknown http status code "'.htmlentities($code).'"');
                     break;
             }
 
             $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
 
-            header($protocol . ' ' . $code . ' ' . $text);
+            header($protocol.' '.$code.' '.$text);
 
             $GLOBALS['http_response_code'] = $code;
         } else {
@@ -144,10 +147,12 @@ if (!function_exists('http_chunked_decode')) {
      * Dechunk an http 'transfer-encoding: chunked' message.
      *
      * @param string $chunk the encoded message
+     *
      * @return string the decoded message.
-     *         If $chunk wasn't encoded properly it will be returned unmodified.
+     *                If $chunk wasn't encoded properly it will be returned unmodified.
      */
-    function http_chunked_decode($chunk) {
+    function http_chunked_decode($chunk)
+    {
         $pos = 0;
         $len = strlen($chunk);
         $dechunk = null;
@@ -155,6 +160,7 @@ if (!function_exists('http_chunked_decode')) {
         while (($pos < $len) && ($chunkLenHex = substr($chunk, $pos, ($newlineAt = strpos($chunk, "\n", $pos + 1)) - $pos))) {
             if (!is_hex($chunkLenHex)) {
                 trigger_error('Value is not properly chunk encoded', E_USER_WARNING);
+
                 return $chunk;
             }
 
@@ -163,6 +169,7 @@ if (!function_exists('http_chunked_decode')) {
             $dechunk .= substr($chunk, $pos, $chunkLen);
             $pos = strpos($chunk, "\n", $pos + $chunkLen) + 1;
         }
+
         return $dechunk;
     }
 
@@ -170,15 +177,17 @@ if (!function_exists('http_chunked_decode')) {
      * Determine if a string can represent a number in hexadecimal.
      *
      * @param string $hex
-     * @return boolean true if the string is a hex, otherwise false
+     *
+     * @return bool true if the string is a hex, otherwise false
      */
-    function is_hex($hex) {
-        $hex = strtolower(trim(ltrim($hex, "0")));
+    function is_hex($hex)
+    {
+        $hex = strtolower(trim(ltrim($hex, '0')));
         if (empty($hex)) {
             $hex = 0;
-        };
+        }
         $dec = hexdec($hex);
-        return ($hex == dechex($dec));
-    }
 
+        return $hex == dechex($dec);
+    }
 }
