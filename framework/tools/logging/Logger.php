@@ -9,20 +9,21 @@ use Asymptix\core\OutputStream;
  * logging.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2016, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Logger {
-
+class Logger
+{
     /**
      * Log messages types constants.
      */
-    const LOG_INFO    = "info";
-    const LOG_DEBUG   = "debug";
-    const LOG_SUCCESS = "success";
-    const LOG_WARNING = "warning";
-    const LOG_ERROR   = "error";
+    const LOG_INFO = 'info';
+    const LOG_DEBUG = 'debug';
+    const LOG_SUCCESS = 'success';
+    const LOG_WARNING = 'warning';
+    const LOG_ERROR = 'error';
 
     /**
      * Log messages output directions constants.
@@ -56,27 +57,28 @@ class Logger {
     /**
      * Initiates Logger setting and starts logging.
      *
-     * @param int $direction Output direction.
-     * @param mixed $output Output file name od DB object.
+     * @param int   $direction Output direction.
+     * @param mixed $output    Output file name od DB object.
      *
      * @throws LoggerException
      */
-    public function __construct($direction = null, $output = null) {
+    public function __construct($direction = null, $output = null)
+    {
         switch ($direction) {
-            case (null):
-            case (self::TO_OUTPUT_STREAM):
+            case null:
+            case self::TO_OUTPUT_STREAM:
                 $this->direction = self::TO_OUTPUT_STREAM;
                 break;
-            case (self::TO_FILE):
+            case self::TO_FILE:
                 $this->direction = self::TO_FILE;
                 $this->fileName = $output;
                 break;
-            case (self::TO_DB):
+            case self::TO_DB:
                 $this->direction = self::TO_DB;
                 $this->dbObject = $output;
                 break;
             default:
-                throw new LoggerException("Invalid logging output direction type");
+                throw new LoggerException('Invalid logging output direction type');
         }
         $this->start();
     }
@@ -86,97 +88,99 @@ class Logger {
      *
      * @throws LoggerException
      */
-    public function start() {
+    public function start()
+    {
         switch ($this->direction) {
-            case (self::TO_OUTPUT_STREAM):
+            case self::TO_OUTPUT_STREAM:
                 OutputStream::start();
 
                 return;
-            case (self::TO_FILE):
+            case self::TO_FILE:
                 if (empty($this->fileName)) {
-                    throw new LoggerException("Log file name is invalid");
+                    throw new LoggerException('Log file name is invalid');
                 }
                 if (file_exists($this->fileName)) {
                     if (!is_file($this->fileName)) {
-                        throw new LoggerException("Log file name is invalid");
+                        throw new LoggerException('Log file name is invalid');
                     }
                 }
-                if (file_put_contents($this->fileName, "", FILE_APPEND) === false) {
+                if (file_put_contents($this->fileName, '', FILE_APPEND) === false) {
                     throw new LoggerException("Can't write to a file");
                 }
 
                 return;
-            case (self::TO_DB):
+            case self::TO_DB:
                 if (empty($this->dbObject) || !is_object($this->dbObject)) {
-                    throw new LoggerException("Invalid LogDBObject object");
+                    throw new LoggerException('Invalid LogDBObject object');
                 }
-                if (!method_exists($this->dbObject, "log")) {
-                    throw new LoggerException("No log() method in the LogDBObject object");
+                if (!method_exists($this->dbObject, 'log')) {
+                    throw new LoggerException('No log() method in the LogDBObject object');
                 }
 
                 return;
             default:
-                throw new LoggerException("Invalid logging output direction type");
+                throw new LoggerException('Invalid logging output direction type');
         }
     }
 
     /**
      * Main logging method, performes log writing.
      *
-     * @param int $type Log message type.
+     * @param int    $type    Log message type.
      * @param string $message Message text.
-     * @param string $format Time label format.
-     * @param int $time Timestamp.
+     * @param string $format  Time label format.
+     * @param int    $time    Timestamp.
      *
      * @throws LoggerException
      */
-    public function log($type, $message, $format = "\[Y-m-d H:i:s\]", $time = null) {
+    public function log($type, $message, $format = "\[Y-m-d H:i:s\]", $time = null)
+    {
         $msgType = null;
         switch ($type) {
-            case (self::LOG_INFO):
+            case self::LOG_INFO:
                 $msgType = OutputStream::MSG_INFO;
                 break;
-            case (self::LOG_DEBUG):
+            case self::LOG_DEBUG:
                 $msgType = OutputStream::MSG_DEBUG;
                 break;
-            case (self::LOG_SUCCESS):
+            case self::LOG_SUCCESS:
                 $msgType = OutputStream::MSG_SUCCESS;
                 break;
-            case (self::LOG_WARNING):
+            case self::LOG_WARNING:
                 $msgType = OutputStream::MSG_WARNING;
                 break;
-            case (self::LOG_ERROR):
+            case self::LOG_ERROR:
                 $msgType = OutputStream::MSG_ERROR;
                 break;
             default:
-                throw new LoggerException("Invalid message type");
+                throw new LoggerException('Invalid message type');
         }
 
         switch ($this->direction) {
-            case (self::TO_OUTPUT_STREAM):
+            case self::TO_OUTPUT_STREAM:
                 OutputStream::msg($msgType, $message, $format, $time);
 
                 return;
-            case (self::TO_FILE):
-                $message = "({$type}) " . $message;
+            case self::TO_FILE:
+                $message = "({$type}) ".$message;
 
-                if (strpos($message, "{{time}}") === false) {
-                    $message = "{{time}} " . $message;
+                if (strpos($message, '{{time}}') === false) {
+                    $message = '{{time}} '.$message;
                 }
                 if (is_null($time)) {
                     $time = time();
                 }
-                $message = str_replace("{{time}}", date($format, $time), $message);
+                $message = str_replace('{{time}}', date($format, $time), $message);
 
                 file_put_contents($this->fileName, "{$message}\n", FILE_APPEND);
 
                 return;
-            case (self::TO_DB):
+            case self::TO_DB:
                 $this->dbObject->log($type, $message, $time = null);
 
                 return;
             default:
-                throw new LoggerException("Invalid logging output direction type");
+                throw new LoggerException('Invalid logging output direction type');
         }
     }
 
@@ -185,22 +189,25 @@ class Logger {
      *
      * @throws LoggerException
      */
-    public function close() {
+    public function close()
+    {
         switch ($this->direction) {
-            case (self::TO_OUTPUT_STREAM):
+            case self::TO_OUTPUT_STREAM:
                 OutputStream::close();
+
                 return;
-            case (self::TO_FILE):
+            case self::TO_FILE:
                 // nothing to do
                 return;
-            case (self::TO_DB):
+            case self::TO_DB:
                 // nothing to do
                 return;
             default:
-                throw new LoggerException("Invalid logging output direction type");
+                throw new LoggerException('Invalid logging output direction type');
         }
     }
-
 }
 
-class LoggerException extends \Exception {}
+class LoggerException extends \Exception
+{
+}

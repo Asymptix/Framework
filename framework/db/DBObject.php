@@ -8,16 +8,18 @@ use Asymptix\core\Tools;
  * DBObject class. Object oriented representation of DB record.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-abstract class DBObject extends \Asymptix\core\Object {
-
+abstract class DBObject extends \Asymptix\core\Object
+{
     /**
-     * Status constants
+     * Status constants.
      */
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
@@ -26,7 +28,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     const STATUS_RESTORED = 0;
 
     /**
-     * DB Query object for Prepared Statement
+     * DB Query object for Prepared Statement.
      *
      * @var DBPreparedQuery
      */
@@ -35,17 +37,21 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Creates new default object.
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * Returns primary key value.
      *
      * @return mixed.
      */
-    public function getId() {
+    public function getId()
+    {
         if (is_null(static::ID_FIELD_NAME)) {
-            return null;
+            return;
         }
+
         return $this->getFieldValue(static::ID_FIELD_NAME);
     }
 
@@ -54,10 +60,12 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @param mixed $recordId Key vaue.
      *
-     * @return boolean Success flag.
      * @throws DBCoreException If object has no field with such name.
+     *
+     * @return bool Success flag.
      */
-    public function setId($recordId) {
+    public function setId($recordId)
+    {
         return $this->setFieldValue(static::ID_FIELD_NAME, $recordId);
     }
 
@@ -66,7 +74,8 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return mixed
      */
-    public static function getIdFieldName() {
+    public static function getIdFieldName()
+    {
         return static::ID_FIELD_NAME;
     }
 
@@ -75,23 +84,25 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @return string
      */
-    public static function getTableName() {
+    public static function getTableName()
+    {
         return static::TABLE_NAME;
     }
 
     /**
      * Saves activation flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
-     *            the last query failed.
+     * @return int Returns the number of affected rows on success, and -1 if
+     *             the last query failed.
      */
-    public function saveActivationFlag() {
+    public function saveActivationFlag()
+    {
         return DBCore::doUpdateQuery(
-            "UPDATE " . static::TABLE_NAME . "
+            'UPDATE '.static::TABLE_NAME.'
                 SET activation = ?
-             WHERE " . static::ID_FIELD_NAME . " = ?
-             LIMIT 1",
-            "ii",
+             WHERE '.static::ID_FIELD_NAME.' = ?
+             LIMIT 1',
+            'ii',
             [$this->activation, $this->id]
         );
     }
@@ -99,25 +110,27 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Detects if current record is activated.
      *
-     * @return boolean
-     *
      * @throws DBCoreException If record hos no 'activation' field.
+     *
+     * @return bool
      */
-    public function isActivated() {
+    public function isActivated()
+    {
         $activation = $this->getFieldValue('activation');
         if (is_null($activation)) {
             throw new DBCoreException("This object has no parameter 'activation'");
         }
 
-        return ($activation > 0);
+        return $activation > 0;
     }
 
     /**
      * Activates record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
-    public function activate() {
+    public function activate()
+    {
         $this->setFieldValue('activation', self::STATUS_ACTIVATED);
 
         return $this->saveActivationFlag();
@@ -126,9 +139,10 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Deactivates record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
-    public function deactivate() {
+    public function deactivate()
+    {
         $this->setFieldValue('activation', self::STATUS_DEACTIVATED);
 
         return $this->saveActivationFlag();
@@ -137,7 +151,8 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Changes record activation flag and save changes into the database.
      */
-    public function changeActivation() {
+    public function changeActivation()
+    {
         if ($this->isActivated()) {
             $this->deactivate();
         } else {
@@ -148,16 +163,17 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Saves removement flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
-     *            the last query failed.
+     * @return int Returns the number of affected rows on success, and -1 if
+     *             the last query failed.
      */
-    public function saveRemovementFlag() {
+    public function saveRemovementFlag()
+    {
         return DBCore::doUpdateQuery(
-            "UPDATE " . static::TABLE_NAME . "
+            'UPDATE '.static::TABLE_NAME.'
                 SET removed = ?
-             WHERE " . static::ID_FIELD_NAME . " = ?
-             LIMIT 1",
-            "ii",
+             WHERE '.static::ID_FIELD_NAME.' = ?
+             LIMIT 1',
+            'ii',
             [$this->removed, $this->id]
         );
     }
@@ -165,25 +181,27 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Detects if current record is removed.
      *
-     * @return boolean
-     *
      * @throws DBCoreException If record hos no 'removed' field.
+     *
+     * @return bool
      */
-    public function isRemoved() {
+    public function isRemoved()
+    {
         $isRemoved = $this->getFieldValue('removed');
         if (is_null($isRemoved)) {
             throw new DBCoreException("This object has no parameter 'removed'");
         }
 
-        return ($isRemoved == self::STATUS_REMOVED);
+        return $isRemoved == self::STATUS_REMOVED;
     }
 
     /**
      * Enable removed flag of the record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
-    public function remove() {
+    public function remove()
+    {
         $this->setFieldValue('removed', self::STATUS_REMOVED);
 
         return $this->saveRemovementFlag();
@@ -192,9 +210,10 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Disable removed flag of the record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
-    public function restore() {
+    public function restore()
+    {
         $this->setFieldValue('removed', self::STATUS_RESTORED);
 
         return $this->saveRemovementFlag();
@@ -203,7 +222,8 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Changes record removement flag and save changes into the database.
      */
-    public function changeRemovement() {
+    public function changeRemovement()
+    {
         if ($this->isRemoved()) {
             $this->restore();
         } else {
@@ -214,25 +234,29 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Detects if current DBObject represents not existed DB record.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isNewRecord() {
+    public function isNewRecord()
+    {
         if (is_null(static::ID_FIELD_NAME)) {
             return true;
         }
-        return ($this->id == 0);
+
+        return $this->id == 0;
     }
 
     /**
      * Saves DBObject to the database. If this is a new object - INSERT SQL
      *           instruction executes, if existed one - UPDATE.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
+     *
+     * @throws DBCoreException If some database error occurred.
      *
      * @return mixed Primary key value.
-     * @throws DBCoreException If some database error occurred.
      */
-    public function save($debug = false) {
+    public function save($debug = false)
+    {
         if ($this->isNewRecord()) {
             $insertionId = DBCore::insertDBObject($this, $debug);
             if (Tools::isInteger($insertionId) && $insertionId > 0) {
@@ -240,30 +264,32 @@ abstract class DBObject extends \Asymptix\core\Object {
 
                 return $insertionId;
             }
-            throw new DBCoreException("Save database object error");
+            throw new DBCoreException('Save database object error');
         }
 
         DBCore::updateDBObject($this, $debug);
+
         return $this->id;
     }
 
     /**
      * Inits SQL query.
      *
-     * @param string $queryType Type of the SQL query from types list from DBQuery.
-     * @param array $conditions List of conditions for WHERE instruction.
-     * @param array $fields List of fields for INSERT or UPDATE types of SQL queries.
+     * @param string $queryType  Type of the SQL query from types list from DBQuery.
+     * @param array  $conditions List of conditions for WHERE instruction.
+     * @param array  $fields     List of fields for INSERT or UPDATE types of SQL queries.
      *
      * @return DBObject Itself.
      */
-    public function initQuery($queryType, $conditions = [], $fields = []) {
+    public function initQuery($queryType, $conditions = [], $fields = [])
+    {
         $this->dbQuery = new DBPreparedQuery();
 
         $this->dbQuery->setType($queryType);
         $this->dbQuery->conditions = $conditions;
         $this->dbQuery->fields = $fields;
 
-        /**
+        /*
          * Inits LIMIT if called dynamic select() or update() method.
          */
         if (is_null($this->dbQuery->limit)) {
@@ -286,11 +312,12 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Prepare DBObject for the SELECT SQL query.
      *
      * @param array $conditions List of the conditions fields
-     *           (fieldName => fieldValue or sqlCondition => params).
+     *                          (fieldName => fieldValue or sqlCondition => params).
      *
      * @return DBObject Current object.
      */
-    public function select($conditions = []) {
+    public function select($conditions = [])
+    {
         return $this->initQuery(DBQueryType::SELECT, $conditions);
     }
 
@@ -298,11 +325,12 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Static way to prepare DBObject for the SELECT SQL query.
      *
      * @param array $conditions List of the conditions fields
-     *           (fieldName => fieldValue or sqlCondition => params).
+     *                          (fieldName => fieldValue or sqlCondition => params).
      *
      * @return DBObject Current object.
      */
-    public static function _select($conditions = []) {
+    public static function _select($conditions = [])
+    {
         $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
@@ -313,41 +341,44 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Select and returns DB record for current DBObject table by record ID.
      *
      * @param mixed $recordId Record ID.
-     * @param bool $debug Debug mode flag.
+     * @param bool  $debug    Debug mode flag.
      *
      * @return DBObject Record object or null.
      */
-    public static function _get($recordId, $debug = false) {
+    public static function _get($recordId, $debug = false)
+    {
         return static::_select([
-            static::ID_FIELD_NAME => $recordId
+            static::ID_FIELD_NAME => $recordId,
         ])->limit(1)->go($debug);
     }
 
     /**
      * Prepare DBObject for the UPDATE SQL query.
      *
-     * @param type $fields List of fields to be updated
-     *           (fieldName => fieldValue or sqlAssignment => params).
+     * @param type  $fields     List of fields to be updated
+     *                          (fieldName => fieldValue or sqlAssignment => params).
      * @param array $conditions List of the conditions fields
-     *           (fieldName => fieldValue or sqlCondition => params).
+     *                          (fieldName => fieldValue or sqlCondition => params).
      *
      * @return DBObject Current object.
      */
-    public function update($fields = [], $conditions = []) {
+    public function update($fields = [], $conditions = [])
+    {
         return $this->initQuery(DBQueryType::UPDATE, $conditions, $fields);
     }
 
     /**
      * Static way to prepare DBObject for the UPDATE SQL query.
      *
-     * @param type $fields List of fields to be updated
-     *           (fieldName => fieldValue or sqlAssignment => params).
+     * @param type  $fields     List of fields to be updated
+     *                          (fieldName => fieldValue or sqlAssignment => params).
      * @param array $conditions List of the conditions fields
-     *           (fieldName => fieldValue or sqlCondition => params).
+     *                          (fieldName => fieldValue or sqlCondition => params).
      *
      * @return DBObject Current object.
      */
-    public static function _update($fields = [], $conditions = []) {
+    public static function _update($fields = [], $conditions = [])
+    {
         $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
@@ -358,26 +389,29 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Prepare DBObject for the select query (for ORDER expression).
      *
      * @param array $order List of order conditions (fieldName => order),
-     *           order may be 'ASC' OR 'DESC'.
-     *
+     *                     order may be 'ASC' OR 'DESC'.
      * @param array $order
+     *
      * @return DBObject Current object.
      */
-    public function order($order = null) {
+    public function order($order = null)
+    {
         $this->dbQuery->order = $order;
+
         return $this;
     }
 
     /**
      * Prepare DBObject for the select query (for LIMIT expression).
      *
-     * @param integer $offset Limit offset value (or count if this is single
-     *           parameter).
-     * @param integer $count Number of records to select.
+     * @param int $offset Limit offset value (or count if this is single
+     *                    parameter).
+     * @param int $count  Number of records to select.
      *
      * @return DBObject Current object.
      */
-    public function limit($offset = 1, $count = null) {
+    public function limit($offset = 1, $count = null)
+    {
         if (is_null($count)) {
             $this->dbQuery->limit = $offset;
         } else {
@@ -390,78 +424,80 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Selects DB record(s) for current DBObject table according to params.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
+     *
+     * @throws DBCoreException If some DB or query syntax errors occurred.
      *
      * @return mixed DBObject, array of DBObject or null.
-     * @throws DBCoreException If some DB or query syntax errors occurred.
      */
-    public function go($debug = false) {
+    public function go($debug = false)
+    {
         switch ($this->dbQuery->getType()) {
-            case (DBQueryType::SELECT):
-                $this->dbQuery->query = "SELECT * FROM " . static::TABLE_NAME;
+            case DBQueryType::SELECT:
+                $this->dbQuery->query = 'SELECT * FROM '.static::TABLE_NAME;
                 break;
-            case (DBQueryType::UPDATE):
-                $this->dbQuery->query = "UPDATE " . static::TABLE_NAME . " SET ";
+            case DBQueryType::UPDATE:
+                $this->dbQuery->query = 'UPDATE '.static::TABLE_NAME.' SET ';
                 $this->dbQuery->sqlPushValues($this->dbQuery->fields);
                 break;
-            case (DBQueryType::DELETE):
-                $this->dbQuery->query = "DELETE FROM " . static::TABLE_NAME;
+            case DBQueryType::DELETE:
+                $this->dbQuery->query = 'DELETE FROM '.static::TABLE_NAME;
                 break;
         }
 
-        /**
+        /*
          * Conditions
          */
         if ($this->isNewRecord()) {
             if (!empty($this->dbQuery->conditions)) {
-                $this->dbQuery->query.= " WHERE ";
-                $this->dbQuery->sqlPushValues($this->dbQuery->conditions, " AND ");
+                $this->dbQuery->query .= ' WHERE ';
+                $this->dbQuery->sqlPushValues($this->dbQuery->conditions, ' AND ');
             }
         } else {
-            $this->dbQuery->query.= " WHERE ";
+            $this->dbQuery->query .= ' WHERE ';
             $this->dbQuery->sqlPushValues([static::ID_FIELD_NAME => $this->id]);
         }
 
-        /**
+        /*
          * Order
          */
         if ($this->isNewRecord()) {
             if (!empty($this->dbQuery->order)) {
-                $this->dbQuery->query.= " ORDER BY";
+                $this->dbQuery->query .= ' ORDER BY';
                 if (is_array($this->dbQuery->order)) {
                     foreach ($this->dbQuery->order as $fieldName => $ord) {
-                        $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
+                        $this->dbQuery->query .= ' '.$fieldName.' '.$ord.',';
                     }
                     $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
                 } elseif (is_string($this->dbQuery->order)) {
-                    $this->dbQuery->query.= " " . $this->dbQuery->order;
+                    $this->dbQuery->query .= ' '.$this->dbQuery->order;
                 }
             }
         }
 
-        /**
+        /*
          * Limit
          */
         $count = null;
         if ($this->isNewRecord()) {
             if (!is_null($this->dbQuery->limit)) {
                 if (Tools::isInteger($this->dbQuery->limit)) {
-                    $this->dbQuery->query.= " LIMIT " . $this->dbQuery->limit;
+                    $this->dbQuery->query .= ' LIMIT '.$this->dbQuery->limit;
                     $count = $this->dbQuery->limit;
                 } elseif (is_array($this->dbQuery->limit) && count($this->dbQuery->limit) == 2) {
                     $offset = $this->dbQuery->limit[0];
                     $count = $this->dbQuery->limit[1];
                     if (Tools::isInteger($offset) && Tools::isInteger($count)) {
-                        $this->dbQuery->query.= " LIMIT " . $offset . ", " . $count;
+                        $this->dbQuery->query .= ' LIMIT '.$offset.', '.$count;
                     } else {
-                        throw new DBCoreException("Invalid LIMIT param in select() method.");
+                        throw new DBCoreException('Invalid LIMIT param in select() method.');
                     }
                 } else {
-                    throw new DBCoreException("Invalid LIMIT param in select() method.");
+                    throw new DBCoreException('Invalid LIMIT param in select() method.');
                 }
             }
         } else {
-            $this->dbQuery->query.= " LIMIT 1";
+            $this->dbQuery->query .= ' LIMIT 1';
             $count = 1;
         }
 
@@ -485,20 +521,22 @@ abstract class DBObject extends \Asymptix\core\Object {
 
                     return $data;
                 }
-                return null;
+
+                return;
             }
+
             return $this->dbQuery->go();
         }
-        return null;
     }
 
     /**
      * Deletes DB record for current DBObject.
      *
      * @return mixed Number of affected rows (1 if some record was deleted,
-     *            0 - if no) or FALSE if some error occurred.
+     *               0 - if no) or FALSE if some error occurred.
      */
-    public function delete() {
+    public function delete()
+    {
         return DBCore::deleteDBObject($this);
     }
 
@@ -506,18 +544,20 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Deletes DB record by ID or condition.
      *
      * @param mixed $conditions List of the conditions fields
-     *           (fieldName => fieldValue or sqlCondition => params).
-     *           or ID value of the record
+     *                          (fieldName => fieldValue or sqlCondition => params).
+     *                          or ID value of the record
+     *
      * @return DBObject Current object.
      */
-    public static function _delete($conditions = []) {
+    public static function _delete($conditions = [])
+    {
         $ref = new \ReflectionClass(get_called_class());
         $dbObject = $ref->newInstance();
 
         if (!is_array($conditions)) { // Just record ID provided
             $recordId = $conditions;
             $conditions = [
-                $dbObject->getIdFieldName() => $recordId
+                $dbObject->getIdFieldName() => $recordId,
             ];
             $dbObject->initQuery(DBQueryType::DELETE, $conditions);
             $dbObject->dbQuery->limit = 1;
@@ -528,7 +568,8 @@ abstract class DBObject extends \Asymptix\core\Object {
         return $dbObject->initQuery(DBQueryType::DELETE, $conditions);
     }
 
-    protected function getFieldName($methodNameFragment) {
-        return substr(strtolower(preg_replace("#([A-Z]{1})#", "_$1", $methodNameFragment)), 1);
+    protected function getFieldName($methodNameFragment)
+    {
+        return substr(strtolower(preg_replace('#([A-Z]{1})#', '_$1', $methodNameFragment)), 1);
     }
 }

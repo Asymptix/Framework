@@ -6,14 +6,16 @@ use Asymptix\core\Tools;
 
 /**
  * Simple User bean class.
- * (You can modify this class according to your database structure)
+ * (You can modify this class according to your database structure).
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2015, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class User extends \Asymptix\db\DBTimedObject {
+class User extends \Asymptix\db\DBTimedObject
+{
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
 
@@ -25,46 +27,49 @@ class User extends \Asymptix\db\DBTimedObject {
     const GENDER_MALE = 'male';
     const GENDER_FEMALE = 'female';
 
-    const TABLE_NAME = "users";
-    const ID_FIELD_NAME = "user_id";
-    protected $fieldsList = array(
-        'user_id' => 0, // int(10) unsigned NOT NULL AUTO_INCREMENT
-        'username' => "", // varchar(255) NOT NULL
-        'email' => "", // varchar(255) NOT NULL
-        'password' => "", // varchar(255) NOT NULL
-        'auth_key' => "", // varchar(32) NOT NULL
-        'role' => 0, // int(1) unsigned not null
+    const TABLE_NAME = 'users';
+    const ID_FIELD_NAME = 'user_id';
+    protected $fieldsList = [
+        'user_id'  => 0, // int(10) unsigned NOT NULL AUTO_INCREMENT
+        'username' => '', // varchar(255) NOT NULL
+        'email'    => '', // varchar(255) NOT NULL
+        'password' => '', // varchar(255) NOT NULL
+        'auth_key' => '', // varchar(32) NOT NULL
+        'role'     => 0, // int(1) unsigned not null
 
-        'full_name' => "", // VARCHAR(255) NOT NULL
-        'gender' => self::GENDER_NONE, // ENUM( 'male', 'female', 'none', '' ) NOT NULL DEFAULT 'none'
-        'language' => "en", // VARCHAR(2) NOT NULL DEFAULT 'en'
+        'full_name' => '', // VARCHAR(255) NOT NULL
+        'gender'    => self::GENDER_NONE, // ENUM( 'male', 'female', 'none', '' ) NOT NULL DEFAULT 'none'
+        'language'  => 'en', // VARCHAR(2) NOT NULL DEFAULT 'en'
 
-        'last_login_time' => "0000-00-00 00:00:00", // datetime DEFAULT NULL
-        'create_time' => "0000-00-00 00:00:00", // datetime DEFAULT NULL
-        'create_user_id' => 0, // int(11) DEFAULT NULL
-        'update_time' => "0000-00-00 00:00:00", // datetime DEFAULT NULL
-        'update_user_id' => 0, // int(11) DEFAULT NULL
+        'last_login_time' => '0000-00-00 00:00:00', // datetime DEFAULT NULL
+        'create_time'     => '0000-00-00 00:00:00', // datetime DEFAULT NULL
+        'create_user_id'  => 0, // int(11) DEFAULT NULL
+        'update_time'     => '0000-00-00 00:00:00', // datetime DEFAULT NULL
+        'update_user_id'  => 0, // int(11) DEFAULT NULL
 
         'activation' => 0, // tinyint(1) NOT NULL DEFAULT '0'
 
-        'signature' => "", // TEXT NOT NULL
-        'avatar' => "", // varchar(100) not null
+        'signature' => '', // TEXT NOT NULL
+        'avatar'    => '', // varchar(100) not null
 
         // additional fields according to your database structure
-    );
+    ];
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     /**
      * For user accounts we must verify if login field ID is unique.
      */
-    public function save($debug = false) {
+    public function save($debug = false)
+    {
         try {
             return parent::save($debug);
         } catch (DBException $ex) {
-            print($ex->getMessage());
+            echo $ex->getMessage();
+
             return false; //TODO: maybe verify if duplicate or other error
         }
     }
@@ -73,45 +78,52 @@ class User extends \Asymptix\db\DBTimedObject {
      * Password encoding method.
      *
      * @param string $password Password
+     *
      * @return string Encoded password string.
      */
-    public static function passwordEncode($password) {
+    public static function passwordEncode($password)
+    {
         return md5($password);
     }
 
     /**
      * Login functionality.
      *
-     * @param string $login Username from login form.
+     * @param string $login    Username from login form.
      * @param string $password Password from login form.
      *
      * @return mixed User object on success or integer result code if some problems occurred.
      */
-    public static function login($login, $password) {
-        $selector = new DBSelector(new User());
+    public static function login($login, $password)
+    {
+        $selector = new DBSelector(new self());
         $user = $selector->selectDBObjectByField('email', $login);
-        if (Tools::isInstanceOf($user, new User())) {
+        if (Tools::isInstanceOf($user, new self())) {
             if ($user->isActivated()) {
                 if ($user->password == self::passwordEncode($password)) {
                     $user->updateLoginTime();
+
                     return $user;
                 }
 
                 return self::LOGIN_INVALID_PASSWORD;
             }
+
             return self::LOGIN_NOT_ACTIVATED;
         }
+
         return self::LOGIN_INVALID_USERNAME;
     }
 
     /**
      * Updates login time.
      */
-    public function updateLoginTime() {
-        $query = "UPDATE " . self::TABLE_NAME . "
+    public function updateLoginTime()
+    {
+        $query = 'UPDATE '.self::TABLE_NAME.'
                      SET last_login_time = NOW()
-                   WHERE " . self::ID_FIELD_NAME . " = ?";
-        DBCore::doUpdateQuery($query, "i", array($this->id));
+                   WHERE '.self::ID_FIELD_NAME.' = ?';
+        DBCore::doUpdateQuery($query, 'i', [$this->id]);
     }
 
     /**
@@ -119,14 +131,16 @@ class User extends \Asymptix\db\DBTimedObject {
      *
      * @global User $_USER Current user object.
      *
-     * @return boolean
+     * @return bool
      */
-    public static function checkLoggedIn() {
+    public static function checkLoggedIn()
+    {
         global $_USER;
 
-        if (Tools::isInstanceOf($_USER, new User())) {
+        if (Tools::isInstanceOf($_USER, new self())) {
             return true;
         }
+
         return false;
     }
 
@@ -134,11 +148,13 @@ class User extends \Asymptix\db\DBTimedObject {
      * Checks if account of the current user is equal to the needed account page.
      *
      * @global User $_USER Current user object.
+     *
      * @param array $roles Needed roles.
      *
-     * @return boolean
+     * @return bool
      */
-    public static function checkAccountAccess($roles = array()) {
+    public static function checkAccountAccess($roles = [])
+    {
         global $_USER;
 
         if (self::checkLoggedIn()) {
@@ -147,22 +163,25 @@ class User extends \Asymptix\db\DBTimedObject {
             }
 
             if (!is_array($roles)) {
-                $roles = array($roles);
+                $roles = [$roles];
             }
             foreach ($roles as $role) {
                 if ($_USER->role == $role) {
                     return true;
                 }
             }
+
             return false;
         }
+
         return false;
     }
 
     /**
      * Logout functionality.
      */
-    public static function logout() {
+    public static function logout()
+    {
         $_USER = null;
         session_unset();
     }
@@ -170,19 +189,21 @@ class User extends \Asymptix\db\DBTimedObject {
     /**
      * Returns current users avatar image file path.
      *
-     * @param boolean $icon Return only default icon flag.
+     * @param bool $icon Return only default icon flag.
      *
      * @return string Image path.
      */
-    public function getAvatarPath($icon = false) {
+    public function getAvatarPath($icon = false)
+    {
         $currentAvatarFileName = $this->avatar;
-        if (!empty($currentAvatarFileName) && file_exists(Config::DIR_AVATARS . $currentAvatarFileName)) {
-            return Config::DIR_AVATARS . $currentAvatarFileName;
+        if (!empty($currentAvatarFileName) && file_exists(Config::DIR_AVATARS.$currentAvatarFileName)) {
+            return Config::DIR_AVATARS.$currentAvatarFileName;
         }
         if ($icon) {
-            return "img/user_avatar.png";
+            return 'img/user_avatar.png';
         }
-        return "img/placehold/100x100.png";
+
+        return 'img/placehold/100x100.png';
     }
 
     /**
@@ -190,23 +211,25 @@ class User extends \Asymptix\db\DBTimedObject {
      *
      * @param string $newAvatarFileName New filename.
      *
-     * @return boolean Success flag.
+     * @return bool Success flag.
      */
-    public function updateAvatar($newAvatarFileName) {
+    public function updateAvatar($newAvatarFileName)
+    {
         $currentAvatarFileName = $this->avatar;
-        if (!empty($currentAvatarFileName) && file_exists(Config::DIR_AVATARS . $currentAvatarFileName)) {
-            unlink(Config::DIR_AVATARS . $currentAvatarFileName);
+        if (!empty($currentAvatarFileName) && file_exists(Config::DIR_AVATARS.$currentAvatarFileName)) {
+            unlink(Config::DIR_AVATARS.$currentAvatarFileName);
         }
 
-        if (file_exists(Config::DIR_AVATARS . $newAvatarFileName)) {
-            $query = "UPDATE " . self::TABLE_NAME
-                    . " SET avatar = ?"
-                    . " WHERE " . self::ID_FIELD_NAME . " = ?";
-            if (DBCore::doUpdateQuery($query, "si", array(
+        if (file_exists(Config::DIR_AVATARS.$newAvatarFileName)) {
+            $query = 'UPDATE '.self::TABLE_NAME
+                    .' SET avatar = ?'
+                    .' WHERE '.self::ID_FIELD_NAME.' = ?';
+            if (DBCore::doUpdateQuery($query, 'si', [
                 $newAvatarFileName,
-                $this->id
-            ))) {
+                $this->id,
+            ])) {
                 $this->avatar = $newAvatarFileName;
+
                 return true;
             } else {
                 return false;
@@ -215,5 +238,4 @@ class User extends \Asymptix\db\DBTimedObject {
             return false;
         }
     }
-
 }

@@ -25,13 +25,13 @@
     <?php
 
     new UI_CheckBox(
-        array(
-            'name' => $this->name . "[]",
-            'value' => $checkbox->id,
-            'title' => $checkbox->title,
-            'checked' => in_array($checkbox->id, $this->currentValue)
-        ),
-        "core/ui/templates/components/ui_checkbox.tpl.php"
+        [
+            'name'    => $this->name.'[]',
+            'value'   => $checkbox->id,
+            'title'   => $checkbox->title,
+            'checked' => in_array($checkbox->id, $this->currentValue),
+        ],
+        'core/ui/templates/components/ui_checkbox.tpl.php'
     )
 
     ?>

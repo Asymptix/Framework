@@ -7,23 +7,26 @@ namespace Asymptix\db;
  * user ID.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2013 - 2015, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class DBTimedObject extends DBObject {
-
+class DBTimedObject extends DBObject
+{
     /**
      * Changes record creation time and user Id.
      *
      * @global DBObject $_USER User object.
      */
-    private function changeCreateTime() {
+    private function changeCreateTime()
+    {
         global $_USER;
 
-        $this->createTime = date("Y-m-d H:i:s");
+        $this->createTime = date('Y-m-d H:i:s');
         $this->createUserId = $_USER->id;
     }
 
@@ -32,21 +35,23 @@ class DBTimedObject extends DBObject {
      *
      * @global DBObject $_USER User object.
      */
-    private function changeUpdateTime() {
+    private function changeUpdateTime()
+    {
         global $_USER;
 
-        $this->updateTime = date("Y-m-d H:i:s");
+        $this->updateTime = date('Y-m-d H:i:s');
         $this->updateUserId = $_USER->id;
     }
 
     /**
      * Save record to the database.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
-     * @return integer Id of the record.
+     * @return int Id of the record.
      */
-    public function save($debug = false) {
+    public function save($debug = false)
+    {
         if ($this->isNewRecord()) { // new record
             $this->changeCreateTime();
         } else {
@@ -59,43 +64,44 @@ class DBTimedObject extends DBObject {
     /**
      * Saves activation flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
-     *            the last query failed.
+     * @return int Returns the number of affected rows on success, and -1 if
+     *             the last query failed.
      */
-    public function saveActivationFlag() {
+    public function saveActivationFlag()
+    {
         $this->changeUpdateTime();
 
         return DBCore::doUpdateQuery(
-            "UPDATE " . static::TABLE_NAME . "
+            'UPDATE '.static::TABLE_NAME.'
                 SET activation = ?,
                     update_time = ?,
                     update_user_id = ?
-             WHERE " . static::ID_FIELD_NAME . " = ?
-             LIMIT 1",
-            "isii",
-            array($this->activation, $this->updateTime, $this->updateUserId, $this->id)
+             WHERE '.static::ID_FIELD_NAME.' = ?
+             LIMIT 1',
+            'isii',
+            [$this->activation, $this->updateTime, $this->updateUserId, $this->id]
         );
     }
 
     /**
      * Saves removement flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
-     *            the last query failed.
+     * @return int Returns the number of affected rows on success, and -1 if
+     *             the last query failed.
      */
-    public function saveRemovementFlag() {
+    public function saveRemovementFlag()
+    {
         $this->changeUpdateTime();
 
         return DBCore::doUpdateQuery(
-            "UPDATE " . static::TABLE_NAME . "
+            'UPDATE '.static::TABLE_NAME.'
                 SET removed = ?,
                     update_time = ?,
                     update_user_id = ?
-             WHERE " . static::ID_FIELD_NAME . " = ?
-             LIMIT 1",
-            "isii",
-            array($this->removed, $this->updateTime, $this->updateUserId, $this->id)
+             WHERE '.static::ID_FIELD_NAME.' = ?
+             LIMIT 1',
+            'isii',
+            [$this->removed, $this->updateTime, $this->updateUserId, $this->id]
         );
     }
-
 }

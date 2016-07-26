@@ -1,1 +1,1 @@
-<?= $this->title ?>
+<?= $this->title;

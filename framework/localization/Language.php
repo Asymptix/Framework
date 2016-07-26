@@ -6,13 +6,16 @@ namespace Asymptix\localization;
  * Stores Language code and titles in different languages.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2010 - 2015, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class Language {
+class Language
+{
     /**
      * ISO 639-1 standard two-letter language code.
      *
@@ -32,9 +35,10 @@ class Language {
      *
      * @var array<string, string>
      */
-    public $titles = array();
+    public $titles = [];
 
-    public function __construct($code, $titles, $flag = "") {
+    public function __construct($code, $titles, $flag = '')
+    {
         $this->code = $code;
         $this->titles = $titles;
         $this->flag = $flag;
@@ -46,10 +50,12 @@ class Language {
      *
      * @param string $code 2-letters language ISO code (optional).
      *
-     * @return string Title of the language.
      * @throws Exception If language code is incorrect.
+     *
+     * @return string Title of the language.
      */
-    public function getTitle($code = null) {
+    public function getTitle($code = null)
+    {
         if (empty($code)) {
             $code = $this->code;
         }
@@ -57,8 +63,7 @@ class Language {
         if (isset($this->titles[$code])) {
             return $this->titles[$code];
         } else {
-            throw new Exception("Invalid language code '" . $code . "'");
+            throw new Exception("Invalid language code '".$code."'");
         }
     }
-
 }

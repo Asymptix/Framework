@@ -6,14 +6,16 @@ namespace Asymptix\db;
  * DB SQL query type class.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2015, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class DBQueryType {
-
+class DBQueryType
+{
     const SELECT = 'SELECT';
     const INSERT = 'INSERT';
     const UPDATE = 'UPDATE';
@@ -27,9 +29,11 @@ class DBQueryType {
      * Validates SQL query type value.
      *
      * @param string $type SQL query type to validate.
-     * @return boolean
+     *
+     * @return bool
      */
-    public static function isValidQueryType($type) {
+    public static function isValidQueryType($type)
+    {
         return in_array($type, self::getQueryTypes());
     }
 
@@ -38,8 +42,9 @@ class DBQueryType {
      *
      * @return array DBQuery types array.
      */
-    public static function getQueryTypes() {
-        $oClass = new \ReflectionClass(new \Asymptix\db\DBQueryType);
+    public static function getQueryTypes()
+    {
+        $oClass = new \ReflectionClass(new \Asymptix\db\DBQueryType());
         $constantsList = $oClass->getConstants();
 
         return array_keys($constantsList);
@@ -50,27 +55,30 @@ class DBQueryType {
      *
      * @param string $query SQL query or query template.
      *
-     * @return string Type of the SQL query.
      * @throws DBCoreException If SQL query is invalid.
+     *
+     * @return string Type of the SQL query.
      */
-    public static function detectQueryType($query) {
-        $chunks = explode(" ", trim($query));
+    public static function detectQueryType($query)
+    {
+        $chunks = explode(' ', trim($query));
         if (!isset($chunks[0])) {
             throw new DBQueryTypeException("Invalid SQL query format (can't detect query type)");
         } else {
             $type = strtoupper($chunks[0]);
 
             if (!self::isValidQueryType($type)) {
-                throw new DBQueryTypeException("Invalid SQL query type '" . $type . "'");
+                throw new DBQueryTypeException("Invalid SQL query type '".$type."'");
             }
 
             return $type;
         }
     }
-
 }
 
 /**
  * Service exception class.
  */
-class DBQueryTypeException extends \Exception {}
+class DBQueryTypeException extends \Exception
+{
+}

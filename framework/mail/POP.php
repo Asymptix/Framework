@@ -6,14 +6,16 @@ namespace Asymptix\mail;
  * Class for working with POP (Post Office Protocol).
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2010 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-class POP {
-
+class POP
+{
     /**
      * Email regular expression.
      */
@@ -43,66 +45,71 @@ class POP {
     /**
      * Open connection to POP server.
      *
-     * @param string $host POP server host (default: localhost).
-     * @param integer $port POP server port (default: 110)
+     * @param string $host     POP server host (default: localhost).
+     * @param int    $port     POP server port (default: 110)
      * @param string $username User name.
      * @param string $password User password.
      *
-     * @return resource Connection to the POP server or throw POPServerException
      * @throws POPServerException
+     *
+     * @return resource Connection to the POP server or throw POPServerException
      */
-    public function open($host = "localhost", $port = 110, $username = "", $password = "") {
+    public function open($host = 'localhost', $port = 110, $username = '', $password = '')
+    {
         $sock = fsockopen($host, $port);
 
         if ($sock) {
             fgets($sock, 1024);
 
             // Connection accepted
-            fputs($sock, "USER " . $username . "\r\n");
+            fwrite($sock, 'USER '.$username."\r\n");
             $userresponse = fgets($sock, 1024);
-            if ($userresponse[0] == "+") { // User accepted
-                fputs($sock, "PASS " . $password . "\r\n");
+            if ($userresponse[0] == '+') { // User accepted
+                fwrite($sock, 'PASS '.$password."\r\n");
                 $passresponse = fgets($sock, 1024);
-                if ($passresponse[0] != "+") { // Wrong password
-                    $passresponse = str_replace("\r", "", str_replace("\n", "", $passresponse));
+                if ($passresponse[0] != '+') { // Wrong password
+                    $passresponse = str_replace("\r", '', str_replace("\n", '', $passresponse));
 
                     throw new POPServerException(
-                        "Authentication not accepted. Incorrect password.", 1
+                        'Authentication not accepted. Incorrect password.', 1
                     );
                 }
             } else { // Invalid username
                 throw new POPServerException(
-                    "Username '" . $username . "' not accepted.", 1
+                    "Username '".$username."' not accepted.", 1
                 );
             }
         } else {
             throw new POPServerException(
-                "Unable to Connect to " . $host . ". Network Problems could be responsible.", 2
+                'Unable to Connect to '.$host.'. Network Problems could be responsible.', 2
             );
         }
         $this->connection = $sock;
+
         return $sock;
     }
 
     /**
      * Close connection to the POP server.
      */
-    public function close() {
-        fputs($this->connection, "QUIT\r\n");
+    public function close()
+    {
+        fwrite($this->connection, "QUIT\r\n");
         $quitresponse = fgets($this->connection, 1024);
-        $quitresponse = "";
+        $quitresponse = '';
         fclose($this->connection);
     }
 
     /**
      * Delete message from POP server.
      *
-     * @param integer $messageId Id of the message.
+     * @param int $messageId Id of the message.
      *
      * @return string Response string.
      */
-    public function delete($messageId) {
-        fputs($this->connection, "DELE $messageId\r\n");
+    public function delete($messageId)
+    {
+        fwrite($this->connection, "DELE $messageId\r\n");
 
         return fgets($this->connection, 1024);
     }
@@ -112,43 +119,47 @@ class POP {
      *
      * @return type
      */
-    public function countMessages() {
-        fputs($this->connection, "STAT\r\n");
+    public function countMessages()
+    {
+        fwrite($this->connection, "STAT\r\n");
         $statresponse = fgets($this->connection, 1024);
-        $avar = explode(" ", $statresponse);
+        $avar = explode(' ', $statresponse);
 
-        return (integer)$avar[1];
+        return (int) $avar[1];
     }
 
     /**
      * Return message header.
      *
-     * @param integer $messageNumber Number of the message.
+     * @param int $messageNumber Number of the message.
      *
      * @return string
      */
-    public function messageHeader($messageNumber) {
-        fputs($this->connection, "TOP $messageNumber 0\r\n");
-        $buffer = "";
+    public function messageHeader($messageNumber)
+    {
+        fwrite($this->connection, "TOP $messageNumber 0\r\n");
+        $buffer = '';
         $headerReceived = 0;
-        while( $headerReceived == 0 ) {
-            $temp = fgets( $this->connection, 1024 );
+        while ($headerReceived == 0) {
+            $temp = fgets($this->connection, 1024);
             $buffer .= $temp;
-            if( $temp == ".\r\n" ) {
+            if ($temp == ".\r\n") {
                 $headerReceived = 1;
             }
         }
+
         return $buffer;
     }
 
     /**
      * Return parsed message header.
      *
-     * @param integer $messageNumber Number of the message.
+     * @param int $messageNumber Number of the message.
      *
      * @return array
      */
-    public function getParsedMessageHeader($messageNumber) {
+    public function getParsedMessageHeader($messageNumber)
+    {
         return $this->parseHeader(
             $this->messageHeader($messageNumber)
         );
@@ -157,14 +168,15 @@ class POP {
     /**
      * Return message by number.
      *
-     * @param integer $messageNumber Number of the message
+     * @param int $messageNumber Number of the message
      *
      * @return string
      */
-    public function getMessage($messageNumber) {
-        fputs($this->connection, "RETR $messageNumber\r\n");
+    public function getMessage($messageNumber)
+    {
+        fwrite($this->connection, "RETR $messageNumber\r\n");
         $headerReceived = 0;
-        $buffer = "";
+        $buffer = '';
         while ($headerReceived == 0) {
             $temp = fgets($this->connection, 1024);
             $buffer .= $temp;
@@ -175,6 +187,7 @@ class POP {
                 $headerReceived = 1;
             }
         }
+
         return $buffer;
     }
 
@@ -183,10 +196,11 @@ class POP {
      *
      * @return array<string>
      */
-    public function getMessages() {
+    public function getMessages()
+    {
         $messages = [];
 
-        for ($i=1; ; $i++) {
+        for ($i = 1; ; $i++) {
             $message = $this->getMessage($i);
             if ($message === false) {
                 break;
@@ -194,6 +208,7 @@ class POP {
 
             $messages[] = $message;
         }
+
         return $messages;
     }
 
@@ -202,10 +217,11 @@ class POP {
      *
      * @return array<string>
      */
-    public function getBouncedEmails($delete = true, $number = null) {
+    public function getBouncedEmails($delete = true, $number = null)
+    {
         $emails = [];
 
-        for ($i = 1; (is_null($number) ? true : $i <= $number) ; $i++) {
+        for ($i = 1; (is_null($number) ? true : $i <= $number); $i++) {
             $message = $this->getMessage($i);
             if ($message !== false) {
                 $markers = [
@@ -222,7 +238,7 @@ class POP {
                     'Sorry, we were unable to deliver your message to the following address.',
                     'Your message cannot be delivered to the following recipients:',
                     'We have tried to deliver your message, but it was rejected by the recipient',
-                    'These recipients of your message have been processed by the mail server:'
+                    'These recipients of your message have been processed by the mail server:',
                 ];
                 $failSignaturePos = false;
                 for ($q = 0; $failSignaturePos === false && $q < count($markers); $q++) {
@@ -262,10 +278,11 @@ class POP {
      *
      * @return array<string>
      */
-    public function getEmails($delete = true, $number = null) {
+    public function getEmails($delete = true, $number = null)
+    {
         $emails = [];
 
-        for ($i = 1; (is_null($number) ? true : $i <= $number) ; $i++) {
+        for ($i = 1; (is_null($number) ? true : $i <= $number); $i++) {
             $message = $this->getMessage($i);
             if ($message !== false) {
                 $failSignaturePos = 0;
@@ -295,7 +312,8 @@ class POP {
      *
      * @return array<string> List of bounced e-mails.
      */
-    private function filterBouncedEmails($emailData) {
+    private function filterBouncedEmails($emailData)
+    {
         $emails = [];
 
         if (isset($emailData[0])) {
@@ -321,20 +339,23 @@ class POP {
      *
      * @param string $email Email address.
      *
-     * @return boolean
+     * @return bool
      */
-    private function isBouncedEmail($email) {
+    private function isBouncedEmail($email)
+    {
         $email = trim($email);
         if (!empty($email)) {
             if (in_array($email, $this->bouncedWhiteList)) {
                 return false;
             }
-            $domain = substr(strrchr($email, "@"), 1);
+            $domain = substr(strrchr($email, '@'), 1);
             if (in_array($domain, $this->bouncedWhiteDomains)) {
                 return false;
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -345,21 +366,23 @@ class POP {
      *
      * @return array
      */
-    public function parseHeader($header) {
+    public function parseHeader($header)
+    {
         $avar = explode("\n", $header);
         $len = count($avar);
         $ret = $L2 = $L3 = null;
         for ($i = 0; $i < $len; $i++) {
-            if( isset( $avar[$i] ) && isset( $avar[$i][0] ) && isset( $avar[$i][1] ) && isset( $avar[$i][2] ) ){
-                $L2 = $avar[$i][0] . $avar[$i][1];
-                $L3 = $avar[$i][0] . $avar[$i][1] . $avar[$i][2];
-                if ($L2 != "  " && $L3 != "Rec" && $L2 != "") {
-                    $avar2 = explode(":", $avar[$i]);
-                    $temp = str_replace("$avar2[0]:", "", $avar[$i]);
+            if (isset($avar[$i]) && isset($avar[$i][0]) && isset($avar[$i][1]) && isset($avar[$i][2])) {
+                $L2 = $avar[$i][0].$avar[$i][1];
+                $L3 = $avar[$i][0].$avar[$i][1].$avar[$i][2];
+                if ($L2 != '  ' && $L3 != 'Rec' && $L2 != '') {
+                    $avar2 = explode(':', $avar[$i]);
+                    $temp = str_replace("$avar2[0]:", '', $avar[$i]);
                     $ret[$avar2[0]] = $temp;
                 }
             }
         }
+
         return $ret;
     }
 
@@ -368,9 +391,10 @@ class POP {
      *
      * @return array
      */
-    public function uniqueListing() {
-        fputs($this->connection, "UIDL\r\n");
-        $response = "";
+    public function uniqueListing()
+    {
+        fwrite($this->connection, "UIDL\r\n");
+        $response = '';
 
         while (true) {
             $response .= fgets($this->connection, 1024);
@@ -387,8 +411,11 @@ class POP {
                 $em2[] = $t[1];
             }
         }
+
         return $em2;
     }
 }
 
-class POPServerException extends \Exception {}
+class POPServerException extends \Exception
+{
+}

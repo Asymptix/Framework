@@ -6,14 +6,16 @@ namespace Asymptix\core;
  * Basic Object class.
  *
  * @category Asymptix PHP Framework
+ *
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
  * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
+ *
  * @license http://opensource.org/licenses/MIT
  */
-
-abstract class Object {
+abstract class Object
+{
     /**
      * List of the database entity fields.
      *
@@ -26,7 +28,7 @@ abstract class Object {
      *
      * @var array
      */
-    protected $fieldsAliases = array();
+    protected $fieldsAliases = [];
 
     /**
      * Sets values of the object fields.
@@ -35,7 +37,8 @@ abstract class Object {
      *
      * @return mixed Number of added values or FALSE.
      */
-    public function setFieldsValues($valuesList) {
+    public function setFieldsValues($valuesList)
+    {
         if (is_array($valuesList)) {
             $count = 0;
             foreach ($this->fieldsList as $fieldName => &$fieldValue) {
@@ -46,7 +49,7 @@ abstract class Object {
                     } else {
                         $fieldValue = $newValue;
                     }
-                    $count ++;
+                    $count++;
                 } elseif (!empty($this->fieldsAliases)) { // look up for the field aliases
                     $fieldAliases = array_keys($this->fieldsAliases, $fieldName);
                     if (!empty($fieldAliases)) {
@@ -58,7 +61,7 @@ abstract class Object {
                                 } else {
                                     $fieldValue = $newValue;
                                 }
-                                $count ++;
+                                $count++;
 
                                 break;
                             }
@@ -66,6 +69,7 @@ abstract class Object {
                     }
                 }
             }
+
             return $count;
         } else {
             return false;
@@ -75,13 +79,15 @@ abstract class Object {
     /**
      * Sets value to the object's field.
      *
-     * @param string $fieldName Name of the field.
-     * @param mixed $fieldValue Value of the field.
+     * @param string $fieldName  Name of the field.
+     * @param mixed  $fieldValue Value of the field.
      *
-     * @return Object Object itself on success (for the method chaining support).
      * @throws \Exception If object has no field with such name.
+     *
+     * @return object Object itself on success (for the method chaining support).
      */
-    public function setFieldValue($fieldName, $fieldValue) {
+    public function setFieldValue($fieldName, $fieldValue)
+    {
         if (isset($this->fieldsAliases[$fieldName])) {
             $fieldName = $this->fieldsAliases[$fieldName];
         }
@@ -91,7 +97,7 @@ abstract class Object {
 
             return $this;
         } else {
-            throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
+            throw new \Exception("Object '".get_class($this)."' hasn't field '".$fieldName."'");
         }
     }
 
@@ -99,11 +105,12 @@ abstract class Object {
      * Returns fields list array.
      *
      * @param bool $withAliases If this flag is `true` then we will have fields
-     *           aliases in the result array as well.
+     *                          aliases in the result array as well.
      *
      * @return array
      */
-    public function getFieldsList($withAliases = false) {
+    public function getFieldsList($withAliases = false)
+    {
         if ($withAliases && !empty($this->fieldsAliases)) {
             $fieldsList = $this->fieldsList;
             foreach ($this->fieldsAliases as $alias => $fieldName) {
@@ -112,6 +119,7 @@ abstract class Object {
 
             return $fieldsList;
         }
+
         return $this->fieldsList;
     }
 
@@ -120,10 +128,12 @@ abstract class Object {
      *
      * @param string $fieldName Field name or alias.
      *
-     * @return mixed
      * @throws \Exception If object doesn't have this field or alias.
+     *
+     * @return mixed
      */
-    public function getFieldValue($fieldName) {
+    public function getFieldValue($fieldName)
+    {
         if (isset($this->fieldsAliases[$fieldName])) {
             $fieldName = $this->fieldsAliases[$fieldName];
         }
@@ -131,7 +141,7 @@ abstract class Object {
         if (isset($this->fieldsList[$fieldName])) {
             return $this->fieldsList[$fieldName];
         } else {
-            throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
+            throw new \Exception("Object '".get_class($this)."' hasn't field '".$fieldName."'");
         }
     }
 
@@ -139,75 +149,84 @@ abstract class Object {
      * Returns type custed new empty field value.
      *
      * @param mixed $fieldValue Current field value.
-     * @param mixed $newValue New value.
+     * @param mixed $newValue   New value.
      *
      * @return mixed
      */
-    private static function getEmptyValue($fieldValue, $newValue) {
-        if (is_integer($fieldValue)) {
+    private static function getEmptyValue($fieldValue, $newValue)
+    {
+        if (is_int($fieldValue)) {
             return 0;
         } elseif (is_string($fieldValue)) {
-            return "";
+            return '';
         } elseif (is_null($fieldValue)) {
-            return null;
+            return;
         }
+
         return $newValue;
     }
 
     /**
      * Shows current object in structure view in the browser.
      */
-    public function show() {
-        print("<pre>");
+    public function show()
+    {
+        echo '<pre>';
         print_r($this);
-        print("</pre>");
+        echo '</pre>';
     }
 
     /**
      * Returns object's field name by getter/setter method name.
      *
      * @param string $methodNameFragment Method name fragment without 'get' or
-     *            'set' prefix.
+     *                                   'set' prefix.
+     *
      * @return string Corresponded field name.
      */
-    protected function getFieldName($methodNameFragment) {
+    protected function getFieldName($methodNameFragment)
+    {
         return lcfirst($methodNameFragment);
     }
 
     /**
      * Magic method to wrap getters and setters with own methods.
      *
-     * @param string $methodName Name of the method.
-     * @param array $methodParams Array of method parameters.
+     * @param string $methodName   Name of the method.
+     * @param array  $methodParams Array of method parameters.
+     *
+     * @throws \Exception If some method is invalid or not exists.
      *
      * @return mixed
-     * @throws \Exception If some method is invalid or not exists.
      */
-    public function __call($methodName, $methodParams) {
+    public function __call($methodName, $methodParams)
+    {
         $method = substr($methodName, 0, 3);
         $fieldName = $this->getFieldName(substr($methodName, 3));
 
         switch ($method) {
-            case ("set"):
+            case 'set':
                 $fieldValue = $methodParams[0];
+
                 return $this->setFieldValue($fieldName, $fieldValue);
-            case ("get"):
+            case 'get':
                 return $this->getFieldValue($fieldName);
             default:
-                throw new \Exception("No such method in the Object class.");
+                throw new \Exception('No such method in the Object class.');
         }
     }
 
     /**
      * Magic method to wrap setters as fields values assignment.
      *
-     * @param string $fieldName Name of the field.
-     * @param mixed $fieldValue Value of the field.
+     * @param string $fieldName  Name of the field.
+     * @param mixed  $fieldValue Value of the field.
      *
      * @return mixed The return value of the callback, or FALSE on error.
      */
-    public function __set($fieldName, $fieldValue) {
-        return call_user_func_array(array($this, "set" . ucfirst($fieldName)), array($fieldValue));
+    public function __set($fieldName, $fieldValue)
+    {
+        return call_user_func_array([$this, 'set'.ucfirst($fieldName)], [$fieldValue]);
         //return $this->setFieldValue($this->getFieldName($fieldName), $fieldValue);
     }
 
@@ -218,8 +237,9 @@ abstract class Object {
      *
      * @return mixed The return value of the callback, or FALSE on error.
      */
-    public function __get($fieldName) {
-        return call_user_func_array(array($this, "get" . ucfirst($fieldName)), array());
+    public function __get($fieldName)
+    {
+        return call_user_func_array([$this, 'get'.ucfirst($fieldName)], []);
         //return $this->getFieldValue($this->getFieldName($fieldName));
     }
 }
