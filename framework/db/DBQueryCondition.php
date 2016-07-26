@@ -178,22 +178,22 @@ class DBQueryCondition {
      *
      * @param mixed $queryCondition List of DBQueryCondition objects or object
      *           itself.
-     * @param string $op Initial logical OR or AND operator.
+     * @param string $operator Initial logical OR or AND operator.
      *
      * @return string SQL query condition string.
      */
-    public static function getSQLCondition($queryCondition, $op = "") {
-        $op = strtoupper(trim($op));
-        if ($op === "OR" || $op === "AND") {
+    public static function getSQLCondition($queryCondition, $operator = "") {
+        $operator = strtoupper(trim($operator));
+        if ($operator === "OR" || $operator === "AND") {
             if (is_array($queryCondition)) {
-                if ($op == "AND") {
+                if ($operator === "AND") {
                     $cond = " (1";
                 } else {
                     $cond = " (0";
                 }
 
                 foreach ($queryCondition as $operation => $conditions) {
-                    $cond .= " " . $op . self::getSQLCondition($conditions, $operation);
+                    $cond .= " " . $operator . self::getSQLCondition($conditions, $operation);
                 }
 
                 $cond .= ")";
