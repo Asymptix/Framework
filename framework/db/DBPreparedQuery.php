@@ -9,7 +9,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -35,7 +35,7 @@ class DBPreparedQuery extends DBQuery {
      *
      * @var array
      */
-    public $params = array();
+    public $params = [];
 
 
     /* Service variables */
@@ -47,7 +47,7 @@ class DBPreparedQuery extends DBQuery {
      * @param string $types Parameters SQL types string ("idsb").
      * @param array $params List of the DB SQL query parameters.
      */
-    public function __construct($query = "", $types = "", $params = array()) {
+    public function __construct($query = "", $types = "", $params = []) {
         $this->query = $query;
         $this->types = $types;
         $this->params = $params;
@@ -84,11 +84,11 @@ class DBPreparedQuery extends DBQuery {
      * @return boolean
      */
     public function isSelect() {
-        return in_array($this->getType(), array(
+        return in_array($this->getType(), [
             DBQueryType::SELECT,
             DBQueryType::DESCRIBE,
             DBQueryType::SHOW
-        ));
+        ]);
     }
 
     /**
@@ -106,9 +106,8 @@ class DBPreparedQuery extends DBQuery {
         } else {
             if ($this->isSelect()) {
                 return DBCore::doSelectQuery($this);
-            } else {
-                return DBCore::doUpdateQuery($this);
             }
+            return DBCore::doUpdateQuery($this);
         }
     }
 
@@ -121,48 +120,59 @@ class DBPreparedQuery extends DBQuery {
      * @throws DBCoreException
      */
     private static function checkParameterTypes($params, $types) {
-        if (count($params) == strlen($types)) {
-            foreach ($params as $key => $value) {
-                $type = $types[$key];
+        if (count($params) != strlen($types)) {
+            throw new DBCoreException(
+                "Number of types is not equal parameters number"
+            );
+        }
 
-                if (!in_array($type, array('i', 'd', 's', 'b'))) {
+        foreach ($params as $key => $value) {
+            $type = $types[$key];
+
+            if (!in_array($type, ['i', 'd', 's', 'b'])) {
+                throw new DBCoreException(
+                    "Invalid query parameters types string (type '" . $type .
+                    "' is undefined, only 'i', 'd', 's' and 'b' types are acceptable)"
+                );
+            }
+
+            $typeByValue = DBField::getType($value);
+            if ($typeByValue != 's') {
+                if ($type != $typeByValue && !(
+                       ($type == 'd' && $typeByValue == 'i') || // We can put integer as double
+                       ($type == 's' && $typeByValue == 'i') // We can put integer as string
+                   )
+                ) {
                     throw new DBCoreException(
-                        "Invalid query parameters types string (type '" . $type .
-                        "' is undefined, only 'i', 'd', 's' and 'b' types are acceptable)"
+                        "Invalid query parameters types string ('" . $value .
+                        "' is not '" . $type . "' type but '" . $typeByValue . "' detected)"
                     );
                 }
-
-                $typeByValue = DBField::getType($value);
-                if ($typeByValue != 's') {
-                    if ($type != $typeByValue && !(
-                           ($type == 'd' && $typeByValue == 'i') || // We can put integer as double
-                           ($type == 's' && $typeByValue == 'i') // We can put integer as string
-                       )
-                    ) {
-                        throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . "' type but '" . $typeByValue . "' detected)");
-                    }
-                } else { // in case if we try send non-string parameters as a string value
-                    switch ($type) {
-                        case 'i':
-                            if (!(Tools::isNumeric($value) && ((string)(integer)$value === $value))) {
-                                throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . ")");
-                            }
-                            break;
-                        case 'd':
-                            if (!Tools::isDoubleString($value)) {
-                                throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . ")");
-                            }
-                            break;
-                        case 'b':
-                            if (!in_array(strtolower($value), array('true', 'false'))) {
-                                throw new DBCoreException("Invalid query parameters types string ('" . $value . "' is not '" . $type . ")");
-                            }
-                            break;
-                    }
+            } else { // in case if we try send non-string parameters as a string value
+                switch ($type) {
+                    case 'i':
+                        if (!(Tools::isNumeric($value) && ((string)(integer)$value === $value))) {
+                            throw new DBCoreException(
+                                "Invalid query parameters types string ('" . $value . "' is not '" . $type . ")"
+                            );
+                        }
+                        break;
+                    case 'd':
+                        if (!Tools::isDoubleString($value)) {
+                            throw new DBCoreException(
+                                "Invalid query parameters types string ('" . $value . "' is not '" . $type . ")"
+                            );
+                        }
+                        break;
+                    case 'b':
+                        if (!in_array(strtolower($value), ['true', 'false'])) {
+                            throw new DBCoreException(
+                                "Invalid query parameters types string ('" . $value . "' is not '" . $type . ")"
+                            );
+                        }
+                        break;
                 }
             }
-        } else {
-            throw new DBCoreException("Number of types is not equal parameters number");
         }
     }
 
@@ -186,8 +196,8 @@ class DBPreparedQuery extends DBQuery {
      * @return string
      */
     public static function sqlQMValuesString($fieldsList, $idFieldName = "") {
-        $chunks = array();
-        foreach ($fieldsList as $fieldName => $fieldValue) {
+        $chunks = [];
+        foreach (array_keys($fieldsList) as $fieldName) {
             if ($fieldName != $idFieldName) {
                 $chunks[]= "`" . $fieldName . "` = ?";
             }
@@ -204,7 +214,7 @@ class DBPreparedQuery extends DBQuery {
      * @return string
      */
     public static function sqlValuesString($fieldsList, $idFieldName) {
-        $chunks = array();
+        $chunks = [];
         foreach ($fieldsList as $fieldName => $fieldValue) {
             if ($fieldName != $idFieldName) {
                 $chunks[]= "`" . $fieldName . "` = '" . $fieldValue . "'";
@@ -269,7 +279,7 @@ class DBPreparedQuery extends DBQuery {
      * @param string $separator Join separator.
      */
     public function sqlPushValues($values, $separator = ", ") {
-        $chunks = array();
+        $chunks = [];
         foreach ($values as $fieldName => $fieldValue) {
             if (!is_array($fieldValue)) {
                 if (!is_null($fieldValue)) {
