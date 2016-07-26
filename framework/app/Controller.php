@@ -33,12 +33,13 @@ abstract class Controller {
         $action = 'action' . ucfirst(
             preg_replace_callback(
                 "#_([a-z])#",
-                function($matches) {
+                function ($matches) {
                     return strtoupper($matches[1]);
                 },
                 $this->route->action
             )
         );
+
         return $this->$action();
     }
 

@@ -20,15 +20,15 @@ class View {
     private $_route = null;
     private $_tpl = null;
 
-    private $_fields = array();
-    private $_messages = array();
-    private $_errors = array();
+    private $_fields = [];
+    private $_messages = [];
+    private $_errors = [];
 
     public function __construct($tpl) {
         if (!empty($tpl)) {
             if (is_string($tpl)) {
                 $this->_tpl = $tpl;
-            } else if (Tools::isInstanceOf($tpl, new Route)) {
+            } elseif (Tools::isInstanceOf($tpl, new Route)) {
                 $this->_route = $tpl;
                 $this->_tpl = $this->_route->controller . "/" . $this->_route->controller . "_" . $this->_route->action;
             } else {
@@ -47,7 +47,7 @@ class View {
         require_once($path . $this->_tpl . $suffix);
     }
 
-    function setTpl($_tpl) {
+    public function setTpl($_tpl) {
         $this->_tpl = $_tpl;
     }
 
