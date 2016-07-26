@@ -1,5 +1,3 @@
-![Asymptix](https://media.licdn.com/media/AAEAAQAAAAAAAAK-AAAAJDVhMDMzNDIxLWMzOTktNDhhNS04YWFjLWZmMjQ0Mzc1NDE4Ng.png)
-
 # Asymptix PHP Framework
 
 The Fast and Easy PHP Framework for Rapid Development.
@@ -32,33 +30,11 @@ The minimum requirement by Asymptix Framework is that your Web server supports P
 INSTALLATION
 ---
 
-To install basic framework libs use [Composer](https://getcomposer.org/) `composer install` command with `composer.json` configuration file (current version doesn't support [Packagist](https://packagist.org/) yet and uses SVN for load just subfolder of the repository directly from GitHub. This will be improved in future).
+To install basic framework libs use [Composer](https://getcomposer.org/) `composer install` command with `composer.json` configuration file.
 
 ```js
 {
-	"repositories": [
-        {
-			"type": "package",
-            "package": {
-                "name": "asymptix/framework",
-                "version": "dev-master",
-                "source": {
-                    "type": "svn",
-                    "url": "https://github.com/Asymptix/Framework",
-                    "reference": "trunk/framework"
-                },
-				"require": {
-					"php": ">=5.4.0"
-				},
-				"autoload": {
-					"psr-4": {
-						"Asymptix\\": ""
-					}
-				}
-            }
-        }
-    ],
-	"minimum-stability": "dev",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
 		"asymptix/framework": ">=2.0.0"
