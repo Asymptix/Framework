@@ -9,7 +9,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -62,7 +62,7 @@ class DBQueryCondition {
      *
      * @var array<mixed>
      */
-    private $preparedData = array();
+    private $preparedData = [];
 
     /**
      * Inits DBQueryCondition object.
@@ -89,7 +89,7 @@ class DBQueryCondition {
 
                     $this->preparedCondition = "`" . $field->name . "` " . $this->type . " ?";
                     $this->preparedTypes = $this->field->type;
-                    $this->preparedData = array(DBField::sqlValue($this->field->type, $value));
+                    $this->preparedData = [DBField::sqlValue($this->field->type, $value)];
                     break;
                 case ("LIKE"):
                 case ("NOT LIKE"):
@@ -102,12 +102,12 @@ class DBQueryCondition {
 
                     $this->preparedCondition = "`" . $field->name . "` " . $this->type . " ?";
                     $this->preparedTypes = $this->field->type;
-                    $this->preparedData = array(DBField::sqlValue($this->field->type, $value));
+                    $this->preparedData = [DBField::sqlValue($this->field->type, $value)];
                     break;
                 case ("IN"):
                 case ("NOT IN"):
                     if (is_array($value) &&  !empty($value)) {
-                        $dataList = array();
+                        $dataList = [];
                         foreach ($value as $dataItem) {
                             $dataList[] = DBField::sqlValue($this->field->type, $dataItem);
                         }
@@ -143,7 +143,7 @@ class DBQueryCondition {
 
                         $this->preparedCondition = "`" . $field->name . "` BETWEEN ? AND ?";
                         $this->preparedTypes = $this->field->type . $this->field->type;
-                        $this->preparedData = array($from, $to);
+                        $this->preparedData = [$from, $to];
                     } else {
                         throw new DBQueryConditionException("Invalid data for 'BETWEEN' condition");
                     }
@@ -203,7 +203,7 @@ class DBQueryCondition {
             if (is_array($queryCondition)) {
                 foreach ($queryCondition as $operation => $conditions) {
                     return trim(
-                        str_replace(array("(1 AND ", "(0 OR "), "(",
+                        str_replace(["(1 AND ", "(0 OR "], "(",
                             self::getSQLCondition($conditions, $operation)
                         )
                     );
@@ -226,7 +226,7 @@ class DBQueryCondition {
     private static function sqlConditionType($conditionType) {
         $conditionType = preg_replace("#[[:blank:]]{2,}#", " ", strtolower(trim($conditionType)));
 
-        $conditionTypes = array(
+        $conditionTypes = [
             // Equal operator
             '=' => "=",
             'eq' => "=",
@@ -266,7 +266,7 @@ class DBQueryCondition {
             'between' => "BETWEEN"
 
             //TODO: add all conditions from http://dev.mysql.com/doc/refman/5.0/en/comparison-operators.html
-        );
+        ];
 
         if (isset($conditionTypes[$conditionType])) {
             return $conditionTypes[$conditionType];
