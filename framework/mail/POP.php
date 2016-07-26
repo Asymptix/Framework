@@ -13,6 +13,12 @@ namespace Asymptix\mail;
  * @license http://opensource.org/licenses/MIT
  */
 class POP {
+
+    /**
+     * Email regular expression.
+     */
+    const EMAIL_REGEX = '/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i';
+
     /**
      * Instance of the connection to the POP server.
      *
@@ -25,14 +31,14 @@ class POP {
      *
      * @var array
      */
-    public $bouncedWhiteList = array();
+    public $bouncedWhiteList = [];
 
     /**
      * List of the acceptable for a bounce email domains.
      *
      * @var array
      */
-    public $bouncedWhiteDomains = array();
+    public $bouncedWhiteDomains = [];
 
     /**
      * Open connection to POP server.
@@ -46,17 +52,17 @@ class POP {
      * @throws POPServerException
      */
     public function open($host = "localhost", $port = 110, $username = "", $password = "") {
-        $sh = fsockopen($host, $port);
+        $sock = fsockopen($host, $port);
 
-        if ($sh) {
-            $banner = fgets($sh, 1024);
+        if ($sock) {
+            fgets($sock, 1024);
 
             // Connection accepted
-            fputs($sh, "USER " . $username . "\r\n");
-            $userresponse = fgets($sh, 1024);
+            fputs($sock, "USER " . $username . "\r\n");
+            $userresponse = fgets($sock, 1024);
             if ($userresponse[0] == "+") { // User accepted
-                fputs($sh, "PASS " . $password . "\r\n");
-                $passresponse = fgets($sh, 1024);
+                fputs($sock, "PASS " . $password . "\r\n");
+                $passresponse = fgets($sock, 1024);
                 if ($passresponse[0] != "+") { // Wrong password
                     $passresponse = str_replace("\r", "", str_replace("\n", "", $passresponse));
 
@@ -74,8 +80,8 @@ class POP {
                 "Unable to Connect to " . $host . ". Network Problems could be responsible.", 2
             );
         }
-        $this->connection = $sh;
-        return $sh;
+        $this->connection = $sock;
+        return $sock;
     }
 
     /**
@@ -124,12 +130,12 @@ class POP {
     public function messageHeader($messageNumber) {
         fputs($this->connection, "TOP $messageNumber 0\r\n");
         $buffer = "";
-        $header_received = 0;
-        while( $header_received == 0 ) {
+        $headerReceived = 0;
+        while( $headerReceived == 0 ) {
             $temp = fgets( $this->connection, 1024 );
             $buffer .= $temp;
             if( $temp == ".\r\n" ) {
-                $header_received = 1;
+                $headerReceived = 1;
             }
         }
         return $buffer;
@@ -157,16 +163,16 @@ class POP {
      */
     public function getMessage($messageNumber) {
         fputs($this->connection, "RETR $messageNumber\r\n");
-        $header_received = 0;
+        $headerReceived = 0;
         $buffer = "";
-        while ($header_received == 0) {
+        while ($headerReceived == 0) {
             $temp = fgets($this->connection, 1024);
             $buffer .= $temp;
             if (substr($buffer, 0, 4) === '-ERR') {
                 return false;
             }
             if ($temp == ".\r\n") {
-                $header_received = 1;
+                $headerReceived = 1;
             }
         }
         return $buffer;
@@ -178,7 +184,7 @@ class POP {
      * @return array<string>
      */
     public function getMessages() {
-        $messages = array();
+        $messages = [];
 
         for ($i=1; ; $i++) {
             $message = $this->getMessage($i);
@@ -197,12 +203,12 @@ class POP {
      * @return array<string>
      */
     public function getBouncedEmails($delete = true, $number = null) {
-        $emails = array();
+        $emails = [];
 
         for ($i = 1; (is_null($number) ? true : $i <= $number) ; $i++) {
             $message = $this->getMessage($i);
             if ($message !== false) {
-                $markers = array(
+                $markers = [
                     'The following address(es) failed:',
                     'Delivery to the following recipients failed permanently:',
                     'Delivery to the following recipients failed.',
@@ -217,7 +223,7 @@ class POP {
                     'Your message cannot be delivered to the following recipients:',
                     'We have tried to deliver your message, but it was rejected by the recipient',
                     'These recipients of your message have been processed by the mail server:'
-                );
+                ];
                 $failSignaturePos = false;
                 for ($q = 0; $failSignaturePos === false && $q < count($markers); $q++) {
                     $failSignaturePos = strpos($message, $markers[$q]);
@@ -234,22 +240,11 @@ class POP {
                         $endSignaturePos = strlen($message);
                     }
                     preg_match_all(
-                        '/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i', substr($message, $failSignaturePos, $endSignaturePos - $failSignaturePos), $emailData
+                        self::EMAIL_REGEX, substr($message, $failSignaturePos, $endSignaturePos - $failSignaturePos), $emailData
                     );
-                    if (isset($emailData[0])) {
-                        if (is_array($emailData[0])) {
-                            foreach ($emailData[0] as $email) {
-                                if ($this->isBouncedEmail($email)) {
-                                    $emails[] = $email;
-                                }
-                            }
-                        } else {
-                            $email = $emailData[0];
-                            if ($this->isBouncedEmail($email)) {
-                                $emails[] = $email;
-                            }
-                        }
-                    }
+
+                    $emails = $this->filterBouncedEmails($emailData);
+
                     if ($delete) {
                         $this->delete($i);
                     }
@@ -268,7 +263,7 @@ class POP {
      * @return array<string>
      */
     public function getEmails($delete = true, $number = null) {
-        $emails = array();
+        $emails = [];
 
         for ($i = 1; (is_null($number) ? true : $i <= $number) ; $i++) {
             $message = $this->getMessage($i);
@@ -277,22 +272,11 @@ class POP {
                 $endSignaturePos = strlen($message);
 
                 preg_match_all(
-                    '/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i', substr($message, $failSignaturePos, $endSignaturePos - $failSignaturePos), $emailData
+                    self::EMAIL_REGEX, substr($message, $failSignaturePos, $endSignaturePos - $failSignaturePos), $emailData
                 );
-                if (isset($emailData[0])) {
-                    if (is_array($emailData[0])) {
-                        foreach ($emailData[0] as $email) {
-                            if ($this->isBouncedEmail($email)) {
-                                $emails[] = $email;
-                            }
-                        }
-                    } else {
-                        $email = $emailData[0];
-                        if ($this->isBouncedEmail($email)) {
-                            $emails[] = $email;
-                        }
-                    }
-                }
+
+                $emails = $this->filterBouncedEmails($emailData);
+
                 if ($delete) {
                     $this->delete($i);
                 }
@@ -302,6 +286,34 @@ class POP {
         }
 
         return array_unique($emails);
+    }
+
+    /**
+     * Returns only bounced e-mails from matches.
+     *
+     * @param array $emailData Matches array after preg_math_all funciton.
+     *
+     * @return array<string> List of bounced e-mails.
+     */
+    private function filterBouncedEmails($emailData) {
+        $emails = [];
+
+        if (isset($emailData[0])) {
+            if (is_array($emailData[0])) {
+                foreach ($emailData[0] as $email) {
+                    if ($this->isBouncedEmail($email)) {
+                        $emails[] = $email;
+                    }
+                }
+            } else {
+                $email = $emailData[0];
+                if ($this->isBouncedEmail($email)) {
+                    $emails[] = $email;
+                }
+            }
+        }
+
+        return $emails;
     }
 
     /**
@@ -336,7 +348,7 @@ class POP {
     public function parseHeader($header) {
         $avar = explode("\n", $header);
         $len = count($avar);
-        $ret = $L2 = $L3 = NULL;
+        $ret = $L2 = $L3 = null;
         for ($i = 0; $i < $len; $i++) {
             if( isset( $avar[$i] ) && isset( $avar[$i][0] ) && isset( $avar[$i][1] ) && isset( $avar[$i][2] ) ){
                 $L2 = $avar[$i][0] . $avar[$i][1];
@@ -358,17 +370,17 @@ class POP {
      */
     public function uniqueListing() {
         fputs($this->connection, "UIDL\r\n");
-        $r = ''; //Response
+        $response = "";
 
         while (true) {
-            $r .= fgets($this->connection, 1024);
-            if (substr($r, -3) === ".\r\n") {
-                $r = substr($r, 0, strlen($r) - 3); //the ".\r\n" removed
+            $response .= fgets($this->connection, 1024);
+            if (substr($response, -3) === ".\r\n") {
+                $response = substr($response, 0, strlen($response) - 3); //the ".\r\n" removed
                 break;
             }
         }
-        $em = explode("\r\n", $r);
-        $em2 = array();
+        $em = explode("\r\n", $response);
+        $em2 = [];
         foreach ($em as $q) {
             if (strpos($q, ' ') !== false) {
                 $t = explode(' ', $q);
