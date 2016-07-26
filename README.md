@@ -6,6 +6,8 @@ The Fast and Easy PHP Framework for Rapid Development.
 [![Latest Stable Version](https://poser.pugx.org/asymptix/framework/v/stable)](https://packagist.org/packages/asymptix/framework)
 [![Latest Unstable Version](https://poser.pugx.org/asymptix/framework/v/unstable)](https://packagist.org/packages/asymptix/framework)
 [![License](https://poser.pugx.org/asymptix/framework/license)](https://packagist.org/packages/asymptix/framework)
+[![Build Status](https://scrutinizer-ci.com/g/Asymptix/Framework/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Asymptix/Framework/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Asymptix/Framework/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Asymptix/Framework/?branch=master)
 [![Code Climate](https://codeclimate.com/github/Asymptix/Framework/badges/gpa.svg)](https://codeclimate.com/github/Asymptix/Framework)
 
 DIRECTORY STRUCTURE
