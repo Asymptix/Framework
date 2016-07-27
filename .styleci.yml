@@ -1,0 +1,31 @@
+preset: recommended
+
+risky: false
+
+linting: true
+
+disabled:
+  - braces
+  - concat_without_spaces
+  - single_quote
+  - align_double_arrow
+  - print_to_echo
+  - trailing_comma_in_multiline_array
+  - include
+  - new_with_braces
+  - alias_functions
+  - no_blank_lines_after_class_opening
+  - ordered_imports
+
+  - phpdoc_align
+  - phpdoc_indent
+  - phpdoc_separation
+  - phpdoc_order
+
+finder:
+  path:
+    - "framework/"
+  exclude:
+    - "tests"
+  name:
+    - "*.php"
