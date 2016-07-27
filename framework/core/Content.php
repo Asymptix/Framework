@@ -24,7 +24,7 @@ class Content {
      *
      * @return string
      */
-    public static function render($tplPath, $tplVariables = array()) {
+    public static function render($tplPath, $tplVariables = []) {
         $_TPL = $tplVariables;
 
         ob_start();
@@ -44,7 +44,7 @@ class Content {
      *
      * @return string
      */
-    public static function replace($content, $tplVariables = array()) {
+    public static function replace($content, $tplVariables = []) {
         return str_replace(
             array_keys($tplVariables),
             array_values($tplVariables),
@@ -56,7 +56,7 @@ class Content {
      * Returns XSS secured string before output it (use htmlspecialchars()).
      *
      * @param string $value Value to secure.
-     * @param integer $flags A bitmask of one or more of the following flags,
+     * @param int $flags A bitmask of one or more of the following flags,
      *           which specify how to handle quotes, invalid code unit sequences
      *           and the used document type. The default is ENT_QUOTES.
      * @param string $encoding An optional argument defining the encoding used

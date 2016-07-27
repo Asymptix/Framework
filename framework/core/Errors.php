@@ -2,15 +2,15 @@
 
 namespace Asymptix\core;
 
-/**
+/*
  * Global fields values array.
  */
-$_FIELDS = array();
+$_FIELDS = [];
 
-/**
+/*
  * Global fields associated errors array.
  */
-$_ERRORS = array();
+$_ERRORS = [];
 
 /**
  * Form fields errors functionality.
@@ -74,7 +74,8 @@ class Errors {
      *
      * @global array $_ERRORS Global list of fields errors.
      * @param string $fieldName Name of the field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isSetErrorFor($fieldName) {
         global $_ERRORS;
@@ -83,27 +84,29 @@ class Errors {
     }
 
     /**
-     * TODO: add docs
+     * Checks if some common errors exists.
      *
      * @global array $_ERRORS
-     * @return type
+     *
+     * @return bool
      */
     public static function isErrorsExist() {
         global $_ERRORS;
 
-        return (isset($_ERRORS['_common']) && !empty($_ERRORS['_common']));
+        return isset($_ERRORS['_common']) && !empty($_ERRORS['_common']);
     }
 
     /**
-     * TODO: add docs
+     * Returns common errors array.
      *
      * @global array $_ERRORS
-     * @return type
+     *
+     * @return array
      */
     public static function getErrors() {
         global $_ERRORS;
 
-        return (isset($_ERRORS['_common'])?$_ERRORS['_common']:array());
+        return isset($_ERRORS['_common']) ? $_ERRORS['_common'] : [];
     }
 
     /**
@@ -129,7 +132,7 @@ class Errors {
         global $_ERRORS;
 
         if (!isset($_ERRORS['_common'])) {
-            $_ERRORS['_common'] = array();
+            $_ERRORS['_common'] = [];
         }
         $_ERRORS['_common'][] = $errorMessageText;
     }
