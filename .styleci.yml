@@ -5,7 +5,7 @@ preset: recommended
 linting: true
 
 enabled:
-  #- align_equals
+  - align_equals
   - combine_consecutive_unsets
   - echo_to_print
   #- modernize_types_casting
@@ -32,7 +32,7 @@ disabled:
   - single_quote
   #- switch_case_space
   - trailing_comma_in_multiline_array
-  #- unalign_equals
+  - unalign_equals
   - unary_operator_spaces
 
   # PHPDocs
