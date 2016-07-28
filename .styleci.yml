@@ -16,6 +16,7 @@ disabled:
   - alias_functions
   - no_blank_lines_after_class_opening
   - ordered_imports
+  - cast_spaces
 
   - phpdoc_align
   - phpdoc_indent
