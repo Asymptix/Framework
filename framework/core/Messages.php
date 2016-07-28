@@ -25,7 +25,7 @@ class Messages {
      *
      * @var array
      */
-    private static $messages = array();
+    private static $messages = [];
 
     /**
      * Push new message to the global messages list.
@@ -82,20 +82,23 @@ class Messages {
     }
 
     /**
-     * Returns message text (content).
+     * Returns message text (content) silently.
      *
      * @param mixed $code Key of the message.
      *
-     * @return string
+     * @return string Message text or empty string if message doesn't exist.
      */
     public static function get($code) {
         try {
             $msg = self::getMessage($code);
-
-            return $msg->text;
+            if (is_object($msg)) {
+                return $msg->text;
+            }
         } catch (\Exception $ex) {
-            return "";
+            unset($ex);
         }
+
+        return "";
     }
 
     /**
@@ -143,6 +146,7 @@ class Messages {
      */
     public static function getMessages() {
         self::reorderMessages();
+
         return self::$messages;
     }
 
