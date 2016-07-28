@@ -24,15 +24,15 @@ class Http {
      *
      * @param string $url The URL to redirect to.
      * @param array<mixed> $params Associative array of query parameters.
-     * @param boolean $session Whether to append session information.
+     * @param bool $session Whether to append session information.
      */
     public static function http_redirect($url, $params = [], $session = false) {
         $paramsString = "";
         foreach ($params as $key => $value) {
-            $paramsString .= "&" . $key . "=" . $value;
+            $paramsString.= "&" . $key . "=" . $value;
         }
         if ($session) {
-            $paramsString .= "&" . session_name() . "=" . session_id();
+            $paramsString.= "&" . session_name() . "=" . session_id();
         }
         $paramsString = substr($paramsString, 1);
         if ($paramsString) {
@@ -102,6 +102,15 @@ class Http {
     }
 
     /**
+     * Returns HTTP referrer.
+     *
+     * @return string
+     */
+    public static function getReferrer() {
+        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
+    }
+
+    /**
      * Gets the address that the provided URL redirects to,
      * or FALSE if there's no redirect.
      *
@@ -129,8 +138,8 @@ class Http {
         }
 
         $request = "HEAD " . $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '') . " HTTP/1.1\r\n";
-        $request .= 'Host: ' . $urlParts['host'] . "\r\n";
-        $request .= "Connection: Close\r\n\r\n";
+        $request.= 'Host: ' . $urlParts['host'] . "\r\n";
+        $request.= "Connection: Close\r\n\r\n";
         fwrite($sock, $request);
         $response = '';
         while (!feof($sock)) {
@@ -203,7 +212,7 @@ class Http {
 
         $parts = parse_url($url);
 
-        $port = isset($parts['port']) ? (integer)$parts['port'] : 80;
+        $port = isset($parts['port']) ? (int)$parts['port'] : 80;
 
         $sock = fsockopen($parts['host'], $port, $errno, $errstr, $timeout);
 
@@ -259,7 +268,7 @@ class Http {
     /**
      * Force HTTP status code.
      *
-     * @param integer $code Status code.
+     * @param int $code Status code.
      * @param string $path Include path if needed.
      *
      * @throws HttpException If invalid HTTP status provided.
