@@ -26,7 +26,6 @@ disabled:
   - no_unneeded_control_parentheses
   #- no_unused_imports
   - ordered_imports
-  - pre_increment
   - print_to_echo
   - self_accessor
   - simplified_null_return
