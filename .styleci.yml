@@ -4,22 +4,40 @@ risky: false
 
 linting: true
 
+enabled:
+  #- align_equals
+  - combine_consecutive_unsets
+  - echo_to_print
+  #- modernize_types_casting
+  - no_empty_comment
+  - no_php4_constructor
+  #- random_api_migration
+  - semicolon_after_instruction
+
 disabled:
   - align_double_arrow
-  #- braces
+  - braces
+  - cast_spaces
   - concat_without_spaces
-  - print_to_echo
-  - trailing_comma_in_multiline_array
+  - declare_equal_normalize
   - include
   - new_with_braces
-  - alias_functions
   - no_blank_lines_after_class_opening
+  - no_unneeded_control_parentheses
+  #- no_unused_imports
+  - not_operator_with_successor_space
   - ordered_imports
-  - cast_spaces
+  - pre_increment
+  - print_to_echo
   - self_accessor
   - simplified_null_return
   - single_quote
+  #- switch_case_space
+  - trailing_comma_in_multiline_array
+  #- unalign_equals
+  - unary_operator_spaces
 
+  # PHPDocs
   - phpdoc_align
   - phpdoc_indent
   - phpdoc_separation
