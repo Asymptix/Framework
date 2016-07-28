@@ -25,7 +25,6 @@ disabled:
   - no_blank_lines_after_class_opening
   - no_unneeded_control_parentheses
   #- no_unused_imports
-  - not_operator_with_successor_space
   - ordered_imports
   - pre_increment
   - print_to_echo
