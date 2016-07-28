@@ -11,9 +11,9 @@ engines:
     enabled: true
   duplication:
     enabled: true
-  phpcodesniffer:
-    enabled: true
-  #phan:
+  #phpcodesniffer:
+  #  enabled: true
+  #phan:)
   #  enabled: true
   #  config:
   #    file_extensions: "php"
