@@ -1,6 +1,6 @@
 preset: recommended
 
-risky: false
+#risky: false
 
 linting: true
 
