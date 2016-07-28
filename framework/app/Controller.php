@@ -16,8 +16,21 @@ use Asymptix\core\Route;
  */
 abstract class Controller {
 
+    /**
+     * @var Route
+     */
     public $route = null;
+
+    /**
+     * Default controller action.
+     *
+     * @var string
+     */
     protected $defaultAction = "";
+
+    /**
+     * @var View
+     */
     public $view = null;
 
     public function __construct(Route $route = null) {

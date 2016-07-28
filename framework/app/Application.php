@@ -14,7 +14,18 @@ namespace Asymptix\app;
  */
 class Application {
 
+    /**
+     * Current application controller object.
+     *
+     * @var Controller
+     */
     public static $controller = null;
+
+    /**
+     * Current application view object.
+     *
+     * @var View
+     */
     public static $view = null;
 
 }

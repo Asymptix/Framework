@@ -17,11 +17,37 @@ use Asymptix\core\Route;
  */
 class View {
 
+    /**
+     * @var Route
+     */
     private $_route = null;
+
+    /**
+     * Path to the template.
+     *
+     * @var string
+     */
     private $_tpl = null;
 
+    /**
+     * Template inside variables list.
+     *
+     * @var array
+     */
     private $_fields = [];
+
+    /**
+     * Template inside messages list.
+     *
+     * @var array
+     */
     private $_messages = [];
+
+    /**
+     * Template inside errors list.
+     *
+     * @var array
+     */
     private $_errors = [];
 
     public function __construct($tpl) {
