@@ -5,10 +5,9 @@ risky: false
 linting: true
 
 disabled:
-  - braces
-  - concat_without_spaces
-  - single_quote
   - align_double_arrow
+  #- braces
+  - concat_without_spaces
   - print_to_echo
   - trailing_comma_in_multiline_array
   - include
@@ -17,6 +16,9 @@ disabled:
   - no_blank_lines_after_class_opening
   - ordered_imports
   - cast_spaces
+  - self_accessor
+  - simplified_null_return
+  - single_quote
 
   - phpdoc_align
   - phpdoc_indent
@@ -28,5 +30,6 @@ finder:
     - "framework/"
   exclude:
     - "tests"
+    - "docs"
   name:
     - "*.php"
