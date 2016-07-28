@@ -1,6 +1,26 @@
-languages:
-  PHP: true
-  JavaScript: true
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - javascript
+        - php
+  fixme:
+    enabled: true
+  phpmd:
+    enabled: true
+  duplication:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+  phan:
+    enabled: true
+    config:
+      file_extensions: "php"
+ratings:
+  paths:
+    - "**.php"
+    - "**.js"
 exclude_paths:
-- "tests/"
-- "docs/"
+  - tests/
+  - docs/
