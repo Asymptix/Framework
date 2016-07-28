@@ -7,7 +7,7 @@ namespace Asymptix\core;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -42,7 +42,7 @@ class OutputStream {
      * @param string $str String to output.
      */
     public static function output($str) {
-        echo($str);
+        print($str);
 
         ob_flush();
         flush();
@@ -64,7 +64,7 @@ class OutputStream {
      * @param string $str String to output.
      * @param string $format Format of the time label
      *            (optional, default: "\[Y-m-d H:i:s\]").
-     * @param integer $time Timestamp, if not passed - current time will be used.
+     * @param int $time Timestamp, if not passed - current time will be used.
      */
     public static function log($str, $format = "\[Y-m-d H:i:s\]", $time = null) {
         if (is_null($time)) {
@@ -87,7 +87,7 @@ class OutputStream {
      * @param string $str String to output.
      * @param string $format Format of the time label
      *            (optional, default: "\[Y-m-d H:i:s\]").
-     * @param integer $time Timestamp, if not passed - current time will be used.
+     * @param int $time Timestamp, if not passed - current time will be used.
      */
     public static function message($msgType, $str, $format = "\[Y-m-d H:i:s\]", $time = null) {
         if (strpos($str, "{{time}}") === false) {

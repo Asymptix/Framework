@@ -14,6 +14,7 @@ namespace Asymptix\core;
  */
 
 abstract class Object {
+
     /**
      * List of the database entity fields.
      *
@@ -26,7 +27,7 @@ abstract class Object {
      *
      * @var array
      */
-    protected $fieldsAliases = array();
+    protected $fieldsAliases = [];
 
     /**
      * Sets values of the object fields.
@@ -106,12 +107,13 @@ abstract class Object {
     public function getFieldsList($withAliases = false) {
         if ($withAliases && !empty($this->fieldsAliases)) {
             $fieldsList = $this->fieldsList;
-            foreach ($this->fieldsAliases as $alias => $fieldName) {
+            foreach (array_keys($this->fieldsAliases) as $alias) {
                 $fieldsList[$alias] = $this->getFieldValue($alias);
             }
 
             return $fieldsList;
         }
+
         return $this->fieldsList;
     }
 
@@ -144,13 +146,14 @@ abstract class Object {
      * @return mixed
      */
     private static function getEmptyValue($fieldValue, $newValue) {
-        if (is_integer($fieldValue)) {
+        if (is_int($fieldValue)) {
             return 0;
         } elseif (is_string($fieldValue)) {
             return "";
         } elseif (is_null($fieldValue)) {
             return null;
         }
+
         return $newValue;
     }
 
@@ -190,6 +193,7 @@ abstract class Object {
         switch ($method) {
             case ("set"):
                 $fieldValue = $methodParams[0];
+
                 return $this->setFieldValue($fieldName, $fieldValue);
             case ("get"):
                 return $this->getFieldValue($fieldName);
@@ -207,8 +211,7 @@ abstract class Object {
      * @return mixed The return value of the callback, or FALSE on error.
      */
     public function __set($fieldName, $fieldValue) {
-        return call_user_func_array(array($this, "set" . ucfirst($fieldName)), array($fieldValue));
-        //return $this->setFieldValue($this->getFieldName($fieldName), $fieldValue);
+        return call_user_func_array([$this, "set" . ucfirst($fieldName)], [$fieldValue]);
     }
 
     /**
@@ -219,7 +222,7 @@ abstract class Object {
      * @return mixed The return value of the callback, or FALSE on error.
      */
     public function __get($fieldName) {
-        return call_user_func_array(array($this, "get" . ucfirst($fieldName)), array());
-        //return $this->getFieldValue($this->getFieldName($fieldName));
+        return call_user_func_array([$this, "get" . ucfirst($fieldName)], []);
     }
+
 }

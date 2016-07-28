@@ -9,7 +9,7 @@ use Asymptix\web\Request;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2011 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2011 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -19,7 +19,7 @@ class Route {
     public $controller = null;
     public $action = null;
     public $id = null;
-    public $customFields = array();
+    public $customFields = [];
 
     public $isBackend = false;
 
@@ -55,7 +55,7 @@ class Route {
      *
      * @param array<string> $aliases List of aliases.
      *
-     * @return boolean
+     * @return bool
      */
     public function isOneOf($aliases) {
         return in_array($this->controller, $aliases);
@@ -95,7 +95,7 @@ class Route {
      *
      * @return string URL.
      */
-    public function getUrl($action, $id = null, $getParams = array()) {
+    public function getUrl($action, $id = null, $getParams = []) {
         $url = $this->controller . "/";
         if (!is_null($id)) {
             $url.= $action . "/" . $id;
