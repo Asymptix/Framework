@@ -5,7 +5,7 @@ preset: recommended
 linting: true
 
 enabled:
-  - align_equals
+  #- align_equals
   - combine_consecutive_unsets
   - echo_to_print
   #- modernize_types_casting
