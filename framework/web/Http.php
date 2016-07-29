@@ -2,8 +2,6 @@
 
 namespace Asymptix\web;
 
-use Asymptix\web\Session;
-
 /**
  * Http protocol functionality and other connected tools.
  *
@@ -17,7 +15,7 @@ use Asymptix\web\Session;
 class Http {
 
     const POST = "POST";
-    const GET = "GET";
+    const GET  = "GET";
 
     /**
      * Redirect to the given url.

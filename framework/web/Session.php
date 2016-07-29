@@ -77,8 +77,10 @@ class Session {
             if (!preg_match('/^[a-zA-Z0-9,-]{22,40}$/', $sessionId)) {
                 return false;
             }
+
             return session_start();
         }
+
         return $status;
     }
 
@@ -120,7 +122,7 @@ class Session {
      * Verify if session variable exists.
      *
      * @param string $fieldName
-     * @return boolean
+     * @return bool
      */
     public static function exists($fieldName) {
         return isset($_SESSION[$fieldName]);
@@ -137,6 +139,7 @@ class Session {
         if (self::exists($fieldName)) {
             return $_SESSION[$fieldName];
         }
+
         return null;
     }
 
@@ -144,7 +147,7 @@ class Session {
      * Removes varibale from session.
      *
      * @param string $fieldName Variable name.
-     * @return boolean True if variable removed or false if it doesn't exist.
+     * @return bool True if variable removed or false if it doesn't exist.
      */
     public static function remove($fieldName) {
         if (self::exists($fieldName)) {
@@ -152,23 +155,25 @@ class Session {
 
             return true;
         }
+
         return false;
     }
 
     /**
      * Destroys all data registered to a session.
      *
-     * @return boolean True on success or false on failure.
+     * @return bool True on success or false on failure.
      */
     public static function destroy() {
         session_unset();
+
         return session_destroy();
     }
 
     /**
      * Destroys all data registered to a session.
      *
-     * @return boolean True on success or false on failure.
+     * @return bool True on success or false on failure.
      */
     public static function close() {
         return self::destroy();

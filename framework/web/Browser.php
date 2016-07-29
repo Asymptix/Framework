@@ -87,24 +87,24 @@ class Browser {
 
         // Detect browser
         if (preg_match('/MSIE|Trident/i', $userAgent) && !preg_match('/Opera|OPR/i', $userAgent)) {
-            $browserFullName = 'Internet Explorer';
+            $browserFullName  = 'Internet Explorer';
             $browserShortName = "MSIE";
             $identifiers[] = "Trident";
         } elseif (preg_match('/Firefox/i', $userAgent)) {
-            $browserFullName = 'Mozilla Firefox';
+            $browserFullName  = 'Mozilla Firefox';
             $browserShortName = "Firefox";
         } elseif (preg_match('/Chrome/i', $userAgent) && !preg_match('/Opera|OPR/i', $userAgent)) {
-            $browserFullName = 'Google Chrome';
+            $browserFullName  = 'Google Chrome';
             $browserShortName = "Chrome";
         } elseif (preg_match('/Safari|AppleWebKit/i', $userAgent) && !preg_match('/Opera|OPR/i', $userAgent)) {
-            $browserFullName = 'Apple Safari';
+            $browserFullName  = 'Apple Safari';
             $browserShortName = "Safari";
         } elseif (preg_match('/Opera|OPR/i', $userAgent)) {
-            $browserFullName = 'Opera';
+            $browserFullName  = 'Opera';
             $browserShortName = "Opera";
             $identifiers[] = "OPR";
         } elseif (preg_match('/Netscape/i', $userAgent)) {
-            $browserFullName = 'Netscape';
+            $browserFullName  = 'Netscape';
             $browserShortName = "Netscape";
         }
 
@@ -112,7 +112,7 @@ class Browser {
          * Detect browser version number
          */
         $identifiers[] = $browserShortName;
-        self::$pattern = '#(?<browser>' . join('|', $identifiers) .
+        self::$pattern = '#(?<browser>' . implode('|', $identifiers) .
                 ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
         if (!preg_match_all(self::$pattern, $userAgent, $matches)) {
             // we have no matching number just continue

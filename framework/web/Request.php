@@ -3,8 +3,6 @@
 namespace Asymptix\web;
 
 use Asymptix\core\Tools;
-use Asymptix\web\Session;
-use Asymptix\web\Http;
 use Asymptix\helpers\Naming;
 
 /**
@@ -25,7 +23,7 @@ class Request {
      * @param string $submitFieldName Name of the submit field (button).
      *           Default: "submitBtn"
      *
-     * @return boolean
+     * @return bool
      */
     public static function isFormSubmitted($submitFieldName = "submitBtn") {
         return (self::getFieldValue($submitFieldName) !== null);
@@ -82,9 +80,10 @@ class Request {
         if (!is_null($value)) {
             if (is_array($value)) {
                 return $value;
-            } elseif (is_integer($value)) {
+            } elseif (is_int($value)) {
                 return intval($value);
             }
+
             return $value;
         }
 
@@ -104,6 +103,7 @@ class Request {
         if (is_null($fieldValue) && !is_null($defaultValue)) {
             return $defaultValue;
         }
+
         return $fieldValue;
     }
 
@@ -120,6 +120,7 @@ class Request {
         if (is_null($fieldValue) && !is_null($defaultValue)) {
             return $defaultValue;
         }
+
         return $fieldValue;
     }
 
@@ -136,6 +137,7 @@ class Request {
         if (is_null($fieldValue) && !is_null($defaultValue)) {
             return $defaultValue;
         }
+
         return $fieldValue;
     }
 
@@ -233,7 +235,7 @@ class Request {
                 case ('float'):
                 case ('double'):
                 case ('d'):
-                    $_FIELDS[$fieldName] = doubleval($_FIELDS[$fieldName]);
+                    $_FIELDS[$fieldName] = floatval($_FIELDS[$fieldName]);
                     break;
                 case ('string'):
                 case ('str'):
@@ -243,7 +245,7 @@ class Request {
                 case ('boolean'):
                 case ('bool'):
                 case ('b'):
-                    $_FIELDS[$fieldName] = (boolean) $_FIELDS[$fieldName];
+                    $_FIELDS[$fieldName] = (bool)$_FIELDS[$fieldName];
             }
         } else {
             throw new \Exception("No field '" . $fieldName . "' in global fields list.");
@@ -261,7 +263,7 @@ class Request {
         global $_FIELDS;
 
         foreach ($fieldNames as $fieldName) {
-            $_FIELDS[$fieldName] = (integer)(boolean)self::getFieldValue($fieldName);
+            $_FIELDS[$fieldName] = (int)(bool)self::getFieldValue($fieldName);
         }
     }
 
