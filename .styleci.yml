@@ -49,3 +49,5 @@ finder:
     - "docs"
   name:
     - "*.php"
+  not-name:
+    - "*.tpl.php"
