@@ -17,7 +17,7 @@ use Asymptix\core\Tools;
 abstract class DBObject extends \Asymptix\core\Object {
 
     /**
-     * Status constants
+     * Status constants.
      */
     const STATUS_ACTIVATED = 1;
     const STATUS_DEACTIVATED = 0;
@@ -26,7 +26,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     const STATUS_RESTORED = 0;
 
     /**
-     * DB Query object for Prepared Statement
+     * DB Query object for Prepared Statement.
      *
      * @var DBPreparedQuery
      */
@@ -46,6 +46,7 @@ abstract class DBObject extends \Asymptix\core\Object {
         if (is_null(static::ID_FIELD_NAME)) {
             return null;
         }
+
         return $this->getFieldValue(static::ID_FIELD_NAME);
     }
 
@@ -54,7 +55,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      *
      * @param mixed $recordId Key vaue.
      *
-     * @return boolean Success flag.
+     * @return bool Success flag.
      * @throws DBCoreException If object has no field with such name.
      */
     public function setId($recordId) {
@@ -82,7 +83,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Saves activation flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
+     * @return int Returns the number of affected rows on success, and -1 if
      *            the last query failed.
      */
     public function saveActivationFlag() {
@@ -99,7 +100,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Detects if current record is activated.
      *
-     * @return boolean
+     * @return bool
      *
      * @throws DBCoreException If record hos no 'activation' field.
      */
@@ -115,7 +116,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Activates record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
     public function activate() {
         $this->setFieldValue('activation', self::STATUS_ACTIVATED);
@@ -126,7 +127,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Deactivates record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
     public function deactivate() {
         $this->setFieldValue('activation', self::STATUS_DEACTIVATED);
@@ -148,7 +149,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Saves removement flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
+     * @return int Returns the number of affected rows on success, and -1 if
      *            the last query failed.
      */
     public function saveRemovementFlag() {
@@ -165,7 +166,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Detects if current record is removed.
      *
-     * @return boolean
+     * @return bool
      *
      * @throws DBCoreException If record hos no 'removed' field.
      */
@@ -181,7 +182,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Enable removed flag of the record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
     public function remove() {
         $this->setFieldValue('removed', self::STATUS_REMOVED);
@@ -192,7 +193,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Disable removed flag of the record and save changes into the database.
      *
-     * @return integer
+     * @return int
      */
     public function restore() {
         $this->setFieldValue('removed', self::STATUS_RESTORED);
@@ -214,12 +215,13 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Detects if current DBObject represents not existed DB record.
      *
-     * @return boolean
+     * @return bool
      */
     public function isNewRecord() {
         if (is_null(static::ID_FIELD_NAME)) {
             return true;
         }
+
         return ($this->id == 0);
     }
 
@@ -227,7 +229,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      * Saves DBObject to the database. If this is a new object - INSERT SQL
      *           instruction executes, if existed one - UPDATE.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return mixed Primary key value.
      * @throws DBCoreException If some database error occurred.
@@ -242,8 +244,8 @@ abstract class DBObject extends \Asymptix\core\Object {
             }
             throw new DBCoreException("Save database object error");
         }
-
         DBCore::updateDBObject($this, $debug);
+
         return $this->id;
     }
 
@@ -263,7 +265,7 @@ abstract class DBObject extends \Asymptix\core\Object {
         $this->dbQuery->conditions = $conditions;
         $this->dbQuery->fields = $fields;
 
-        /**
+        /*
          * Inits LIMIT if called dynamic select() or update() method.
          */
         if (is_null($this->dbQuery->limit)) {
@@ -365,15 +367,16 @@ abstract class DBObject extends \Asymptix\core\Object {
      */
     public function order($order = null) {
         $this->dbQuery->order = $order;
+
         return $this;
     }
 
     /**
      * Prepare DBObject for the select query (for LIMIT expression).
      *
-     * @param integer $offset Limit offset value (or count if this is single
+     * @param int $offset Limit offset value (or count if this is single
      *           parameter).
-     * @param integer $count Number of records to select.
+     * @param int $count Number of records to select.
      *
      * @return DBObject Current object.
      */
@@ -390,7 +393,7 @@ abstract class DBObject extends \Asymptix\core\Object {
     /**
      * Selects DB record(s) for current DBObject table according to params.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return mixed DBObject, array of DBObject or null.
      * @throws DBCoreException If some DB or query syntax errors occurred.
@@ -409,7 +412,7 @@ abstract class DBObject extends \Asymptix\core\Object {
                 break;
         }
 
-        /**
+        /*
          * Conditions
          */
         if ($this->isNewRecord()) {
@@ -422,7 +425,7 @@ abstract class DBObject extends \Asymptix\core\Object {
             $this->dbQuery->sqlPushValues([static::ID_FIELD_NAME => $this->id]);
         }
 
-        /**
+        /*
          * Order
          */
         if ($this->isNewRecord()) {
@@ -439,7 +442,7 @@ abstract class DBObject extends \Asymptix\core\Object {
             }
         }
 
-        /**
+        /*
          * Limit
          */
         $count = null;
@@ -485,10 +488,13 @@ abstract class DBObject extends \Asymptix\core\Object {
 
                     return $data;
                 }
+
                 return null;
             }
+
             return $this->dbQuery->go();
         }
+
         return null;
     }
 
@@ -528,7 +534,15 @@ abstract class DBObject extends \Asymptix\core\Object {
         return $dbObject->initQuery(DBQueryType::DELETE, $conditions);
     }
 
+    /**
+     * Returns DB table field name by it's camelcase variant.
+     *
+     * @param string $methodNameFragment
+     *
+     * @return string
+     */
     protected function getFieldName($methodNameFragment) {
         return substr(strtolower(preg_replace("#([A-Z]{1})#", "_$1", $methodNameFragment)), 1);
     }
+
 }

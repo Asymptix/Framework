@@ -13,18 +13,18 @@ namespace Asymptix\db;
  * @license http://opensource.org/licenses/MIT
  */
 class DBSelector extends \Asymptix\core\Object {
-    protected $fieldsList = array(
+    protected $fieldsList = [
         'conditions' => "",
         'order' => "",
         'offset' => 0,
         'count' => "all",
         'field' => ""
-    );
+    ];
 
     /**
      * Inform DBSelector to select only unique records with DISTINCT.
      *
-     * @var boolean
+     * @var bool
      */
     public $unique = false;
 
@@ -72,15 +72,13 @@ class DBSelector extends \Asymptix\core\Object {
      * Reset fields to the initial values.
      */
     public function reset() {
-        $this->setFieldsValues(
-            array(
-                'conditions' => "",
-                'order' => "",
-                'offset' => 0,
-                'count' => "all",
-                'field' => ""
-            )
-        );
+        $this->setFieldsValues([
+            'conditions' => "",
+            'order' => "",
+            'offset' => 0,
+            'count' => "all",
+            'field' => ""
+        ]);
     }
 
     /**
@@ -98,12 +96,13 @@ class DBSelector extends \Asymptix\core\Object {
     /**
      * Selects DBObject from the database.
      *
-     * @param boolean $debug Debug flag.
+     * @param bool $debug Debug flag.
      * @return DBObject
      */
     public function selectDBObject($debug = false) {
-        $query = "SELECT * FROM " . $this->dbObject->getTableName() .
-                  ($this->conditions != ""?" WHERE " . $this->conditions:"") . " LIMIT 1";
+        $query = "SELECT * FROM " . $this->dbObject->getTableName()
+               . ($this->conditions != "" ? " WHERE " . $this->conditions : "")
+               . " LIMIT 1";
 
         if (!$debug) {
             $stmt = DBCore::doSelectQuery($query);
@@ -111,8 +110,10 @@ class DBSelector extends \Asymptix\core\Object {
                 $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
 
                 $stmt->close();
+
                 return $dbObject;
             }
+
             return null;
         }
         DBQuery::showQueryDebugInfo($query);
@@ -125,7 +126,7 @@ class DBSelector extends \Asymptix\core\Object {
      *
      * @param string $fieldName Name of the field.
      * @param mixed $fieldValue Field value.
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return DBObject
      */
@@ -141,16 +142,18 @@ class DBSelector extends \Asymptix\core\Object {
 
         $fieldType = DBField::getType($fieldValue);
         if (!$debug) {
-            $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
+            $stmt = DBCore::doSelectQuery($query, $fieldType, [$fieldValue]);
             if ($stmt != false) {
                 $dbObject = DBCore::selectDBObjectFromStatement($stmt, $this->dbObject);
 
                 $stmt->close();
+
                 return $dbObject;
             }
+
             return null;
         }
-        DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
+        DBQuery::showQueryDebugInfo($query, $fieldType, [$fieldValue]);
 
         return null;
     }
@@ -159,7 +162,7 @@ class DBSelector extends \Asymptix\core\Object {
      * Selects DBObject by ID.
      *
      * @param mixed $objectId Id of the DB record (primary index).
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return DBObject
      */
@@ -167,18 +170,20 @@ class DBSelector extends \Asymptix\core\Object {
         if (is_null($objectId)) {
             $objectId = $this->dbObject->id;
         }
+
         return $this->selectDBObjectByField($this->dbObject->getIdFieldName(), $objectId, $debug);
     }
 
     /**
      * Selects DBObjects by some predefined condition.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return array<DBObject>
      */
     public function selectDBObjects($debug = false) {
-        $query = "SELECT" . ($this->unique?" DISTINCT":"") . " * FROM " . $this->dbObject->getTableName();
+        $query = "SELECT" . ($this->unique ? " DISTINCT" : "")
+               . " * FROM " . $this->dbObject->getTableName();
 
         if ($this->conditions != "") {
             $query .= " WHERE " . $this->conditions;
@@ -193,8 +198,10 @@ class DBSelector extends \Asymptix\core\Object {
                 $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, $this->dbObject);
 
                 $stmt->close();
+
                 return $dbObjects;
             }
+
             return [];
         }
         DBQuery::showQueryDebugInfo($query);
@@ -207,7 +214,7 @@ class DBSelector extends \Asymptix\core\Object {
      *
      * @param string $fieldName Name of the field.
      * @param mixed $fieldValue Field value.
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return array<DBObject>
      */
@@ -224,16 +231,18 @@ class DBSelector extends \Asymptix\core\Object {
 
         $fieldType = DBField::getType($fieldValue);
         if (!$debug) {
-            $stmt = DBCore::doSelectQuery($query, $fieldType, array($fieldValue));
+            $stmt = DBCore::doSelectQuery($query, $fieldType, [$fieldValue]);
             if ($stmt != false) {
                 $dbObjects = DBCore::selectDBObjectsFromStatement($stmt, get_class($this->dbObject));
 
                 $stmt->close();
+
                 return $dbObjects;
             }
+
             return [];
         }
-        DBQuery::showQueryDebugInfo($query, $fieldType, array($fieldValue));
+        DBQuery::showQueryDebugInfo($query, $fieldType, [$fieldValue]);
 
         return [];
     }
@@ -241,7 +250,7 @@ class DBSelector extends \Asymptix\core\Object {
     /**
      * Count number of records by some predefined condition.
      *
-     * @return integer Number of records.
+     * @return int Number of records.
      */
     public function count() {
         $query = "SELECT count(*) FROM " . $this->dbObject->getTableName();
@@ -256,7 +265,7 @@ class DBSelector extends \Asymptix\core\Object {
     /**
      * Selects max value of some field by some predefined condition.
      *
-     * @return integer Number of records.
+     * @return int Number of records.
      */
     public function max() {
         $query = "SELECT max(`" . $this->field . "`) FROM " . $this->dbObject->getTableName();
@@ -271,7 +280,7 @@ class DBSelector extends \Asymptix\core\Object {
     /**
      * Selects min value of some field by some predefined condition.
      *
-     * @return integer Number of records.
+     * @return int Number of records.
      */
     public function min() {
         $query = "SELECT min(`" . $this->field . "`) FROM " . $this->dbObject->getTableName();
@@ -292,6 +301,7 @@ class DBSelector extends \Asymptix\core\Object {
         if ($this->order != "") {
             return (" ORDER BY " . $this->order);
         }
+
         return (" ORDER BY " . $this->dbObject->getIdFieldName() . " DESC");
     }
 
@@ -305,8 +315,10 @@ class DBSelector extends \Asymptix\core\Object {
             if ($this->offset > 0) {
                 return (" LIMIT " . $this->offset . "," . $this->count);
             }
+
             return (" LIMIT " . $this->count);
         }
+
         return "";
     }
 
@@ -320,7 +332,7 @@ class DBSelector extends \Asymptix\core\Object {
      * @throws DBSelectorException
      */
     public function __call($methodName, $methodParams) {
-        /**
+        /*
          * Selects DBObject record by some field value.
          *
          * @param <mixed> Value of the field
@@ -342,7 +354,8 @@ class DBSelector extends \Asymptix\core\Object {
 
             return $this->selectDBObjectByField($fieldName, $fieldValue);
         }
-        /**
+
+        /*
          * Selects all class of DBObject records from database by some order.
          *
          * @param string SQL order string (optional).
@@ -362,7 +375,8 @@ class DBSelector extends \Asymptix\core\Object {
 
             return $dbObjects;
         }
-        /**
+
+        /*
          * Selects DBObject records from database.
          *
          * @return array<DBObject>
@@ -372,7 +386,8 @@ class DBSelector extends \Asymptix\core\Object {
 
             return $this->selectDBObjects();
         }
-        /**
+
+        /*
          * Selects DBObject record from database.
          *
          * @return array<DBObject>
@@ -383,15 +398,16 @@ class DBSelector extends \Asymptix\core\Object {
             return $this->selectDBObject();
         }
 
-       /*
-        * Try to call parent method __call() with same params by default
-        */
+        /*
+         * Try to call parent method __call() with same params by default
+         */
         $method = substr($methodName, 0, 3);
         $fieldName = $this->getFieldName(substr($methodName, 3));
 
         switch ($method) {
             case ("set"):
                 $fieldValue = $methodParams[0];
+
                 return $this->setFieldValue($fieldName, $fieldValue);
             case ("get"):
                 return $this->getFieldValue($fieldName);

@@ -8,7 +8,7 @@ namespace Asymptix\db;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2013 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2013 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -42,9 +42,9 @@ class DBTimedObject extends DBObject {
     /**
      * Save record to the database.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
-     * @return integer Id of the record.
+     * @return int Id of the record.
      */
     public function save($debug = false) {
         if ($this->isNewRecord()) { // new record
@@ -59,7 +59,7 @@ class DBTimedObject extends DBObject {
     /**
      * Saves activation flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
+     * @return int Returns the number of affected rows on success, and -1 if
      *            the last query failed.
      */
     public function saveActivationFlag() {
@@ -73,14 +73,14 @@ class DBTimedObject extends DBObject {
              WHERE " . static::ID_FIELD_NAME . " = ?
              LIMIT 1",
             "isii",
-            array($this->activation, $this->updateTime, $this->updateUserId, $this->id)
+            [$this->activation, $this->updateTime, $this->updateUserId, $this->id]
         );
     }
 
     /**
      * Saves removement flag to the database.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
+     * @return int Returns the number of affected rows on success, and -1 if
      *            the last query failed.
      */
     public function saveRemovementFlag() {
@@ -94,7 +94,7 @@ class DBTimedObject extends DBObject {
              WHERE " . static::ID_FIELD_NAME . " = ?
              LIMIT 1",
             "isii",
-            array($this->removed, $this->updateTime, $this->updateUserId, $this->id)
+            [$this->removed, $this->updateTime, $this->updateUserId, $this->id]
         );
     }
 

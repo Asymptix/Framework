@@ -44,7 +44,7 @@ class DBField {
      * @param mixed $value Value of the field.
      */
     public function __construct($type = "", $name = "", $value = null) {
-        if (!(boolean)preg_match("#^[a-zA-Z][a-zA-Z0-9_]*$#", $name)) {
+        if (!(bool)preg_match("#^[a-zA-Z][a-zA-Z0-9_]*$#", $name)) {
             throw new DBFieldException("Can't create DBField object: invalid field name '" . $name . "'");
         }
         $this->name = $name;
@@ -64,16 +64,16 @@ class DBField {
             if (!is_null($value)) {
                 switch ($this->type) {
                     case ("i"):
-                        $this->value = (integer)$value;
+                        $this->value = (int)$value;
                         break;
                     case ("d"):
-                        $this->value = (double)$value;
+                        $this->value = (float)$value;
                         break;
                     case ("s"):
                         $this->value = (string)$value;
                         break;
                     case ("b"):
-                        $this->value = (boolean)$value;
+                        $this->value = (bool)$value;
                         break;
                 }
             }
@@ -90,7 +90,7 @@ class DBField {
      * @throws DBFieldTypeException If invalid field type passed.
      */
     public static function castType($fieldType) {
-        $typesList = array(
+        $typesList = [
             'integer' => "i",
             'int'     => "i",
             'i'       => "i",
@@ -104,7 +104,7 @@ class DBField {
             'boolean' => "b",
             'bool'    => "b",
             'b'       => "b"
-        );
+        ];
 
         if (isset($typesList[$fieldType])) {
             return $typesList[$fieldType];
@@ -123,7 +123,7 @@ class DBField {
     public static function getType($fieldValue) {
         if (is_null($fieldValue)) { // Type is not principled for NULL
             return "i";
-        } else if (Tools::isInteger($fieldValue)) {
+        } elseif (Tools::isInteger($fieldValue)) {
             return "i";
         } elseif (Tools::isDouble($fieldValue)) {
             return "d";
@@ -150,13 +150,13 @@ class DBField {
     public static function castValue($type, $value) {
         switch (self::castType($type)) {
             case ("i"):
-                return (integer)$value;
+                return (int)$value;
             case ("d"):
-                return (double)$value;
+                return (float)$value;
             case ("s"):
                 return (string)$value;
             case ("b"):
-                return (boolean)$value;
+                return (bool)$value;
         }
 
         throw new DBFieldTypeException("Invalid SQL type");
@@ -179,7 +179,7 @@ class DBField {
             case ("d"):
                 return $value;
             case ("s"):
-                if (!in_array($value, array('NOW()'))) {
+                if (!in_array($value, ['NOW()'])) {
                     return "'" . $value . "'";
                 } else {
                     return $value;
@@ -188,6 +188,7 @@ class DBField {
                 if ($value) {
                     return "TRUE";
                 }
+
                 return "FALSE";
         }
 

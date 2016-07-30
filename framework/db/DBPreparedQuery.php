@@ -61,7 +61,7 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Verify if current DBPreparedQuery is have parameters for binding.
      *
-     * @return boolean
+     * @return bool
      */
     public function isBindable() {
         return ($this->params != null && count($this->params) > 0);
@@ -70,7 +70,7 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Verify if current DBPreparedQuery is valid for the execution.
      *
-     * @return boolean
+     * @return bool
      */
     public function isValid() {
         self::checkParameterTypes($this->params, $this->types);
@@ -81,7 +81,7 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Verify is DB query is SELECT type or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSelect() {
         return in_array($this->getType(), [
@@ -94,7 +94,7 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Executes SQL query.
      *
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
      * @return mixed Statement object or FALSE if an error occurred if SELECT
      *           query executed or number of affected rows on success if other
@@ -107,6 +107,7 @@ class DBPreparedQuery extends DBQuery {
             if ($this->isSelect()) {
                 return DBCore::doSelectQuery($this);
             }
+
             return DBCore::doUpdateQuery($this);
         }
     }
@@ -151,7 +152,7 @@ class DBPreparedQuery extends DBQuery {
             } else { // in case if we try send non-string parameters as a string value
                 switch ($type) {
                     case 'i':
-                        if (!(Tools::isNumeric($value) && ((string)(integer)$value === $value))) {
+                        if (!(Tools::isNumeric($value) && ((string)(int)$value === $value))) {
                             throw new DBCoreException(
                                 "Invalid query parameters types string ('" . $value . "' is not '" . $type . ")"
                             );
@@ -179,7 +180,7 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Return qwestion marks string for IN(...) SQL construction.
      *
-     * @param integer $length Length of the result string.
+     * @param int $length Length of the result string.
      *
      * @return string
      */
@@ -199,9 +200,10 @@ class DBPreparedQuery extends DBQuery {
         $chunks = [];
         foreach (array_keys($fieldsList) as $fieldName) {
             if ($fieldName != $idFieldName) {
-                $chunks[]= "`" . $fieldName . "` = ?";
+                $chunks[] = "`" . $fieldName . "` = ?";
             }
         }
+
         return implode(", ", $chunks);
     }
 
@@ -220,6 +222,7 @@ class DBPreparedQuery extends DBQuery {
                 $chunks[]= "`" . $fieldName . "` = '" . $fieldValue . "'";
             }
         }
+
         return implode(", ", $chunks);
     }
 
@@ -229,7 +232,7 @@ class DBPreparedQuery extends DBQuery {
      *    i - corresponding variable has type integer
      *    d - corresponding variable has type double
      *    s - corresponding variable has type string
-     *    b - corresponding variable is a blob and will be sent in packets
+     *    b - corresponding variable is a blob and will be sent in packets.
      *
      * @param array<mixed> $fieldsList List of the table fields (syntax: array[fieldName] = fieldValue)
      * @param string $idFieldName Name of the primary key field.
@@ -248,6 +251,7 @@ class DBPreparedQuery extends DBQuery {
                 }
             }
         }
+
         return $typesString;
     }
 
@@ -255,7 +259,7 @@ class DBPreparedQuery extends DBQuery {
      * Returns SQL types string of single type.
      *
      * @param string $type SQL type.
-     * @param integer $length Length of the SQL types string.
+     * @param int $length Length of the SQL types string.
      *
      * @return string
      * @throws DBFieldTypeException If invalid type passed.
@@ -283,11 +287,11 @@ class DBPreparedQuery extends DBQuery {
         foreach ($values as $fieldName => $fieldValue) {
             if (!is_array($fieldValue)) {
                 if (!is_null($fieldValue)) {
-                    $chunks[]= $fieldName . " = ?";
+                    $chunks[] = $fieldName . " = ?";
                     $this->types.= DBField::getType($fieldValue);
                     $this->params[] = $fieldValue;
                 } else {
-                    $chunks[]= $fieldName;
+                    $chunks[] = $fieldName;
                 }
             } else {
                 $condition = $fieldName;

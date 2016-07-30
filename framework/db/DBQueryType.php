@@ -7,7 +7,7 @@ namespace Asymptix\db;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -27,7 +27,8 @@ class DBQueryType {
      * Validates SQL query type value.
      *
      * @param string $type SQL query type to validate.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isValidQueryType($type) {
         return in_array($type, self::getQueryTypes());

@@ -9,7 +9,7 @@ use Asymptix\core\OutputStream;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -30,14 +30,14 @@ class DBQuery {
      *
      * @var array
      */
-    public $conditions = array();
+    public $conditions = [];
 
     /**
      * SQL fields list for INSERT/UPDATE queries.
      *
      * @var array
      */
-    public $fields = array();
+    public $fields = [];
 
     /**
      * SQL order list.
@@ -102,7 +102,7 @@ class DBQuery {
      * @param string $types SQL types string.
      * @param array $params List of SQL query parameters.
      */
-    public static function showQueryDebugInfo($query = "", $types = "", array $params = array()) {
+    public static function showQueryDebugInfo($query = "", $types = "", array $params = []) {
         OutputStream::start();
         if (!empty($query)) {
             if (empty($types) && empty($params)) {
@@ -112,7 +112,7 @@ class DBQuery {
                     $query = preg_replace('/\s+/', ' ', $query);
                     $preparedQuery = $query;
 
-                    $paramsStr = array();
+                    $paramsStr = [];
                     for ($i = 0; $i < strlen($types); $i++) {
                         $query = preg_replace("/\?/", DBField::sqlValue($types[$i], $params[$i]), $query, 1);
 
@@ -126,7 +126,7 @@ class DBQuery {
                 } else {
                     OutputStream::message(OutputStream::MSG_ERROR, "Number of types is not equal parameters number.");
                     OutputStream::message(OutputStream::MSG_INFO, "T: " . $types);
-                    OutputStream::message(OutputStream::MSG_INFO, "A: [" . implode(", ", $params)  . "]");
+                    OutputStream::message(OutputStream::MSG_INFO, "A: [" . implode(", ", $params) . "]");
                 }
             }
         } else {

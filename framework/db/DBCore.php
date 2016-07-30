@@ -16,35 +16,35 @@ use Asymptix\core\Tools;
  */
 class DBCore {
     /**
-     * An array containing all the opened connections
+     * An array containing all the opened connections.
      *
-     * @var array $connections
+     * @var array
      */
     protected $connections = [];
 
     /**
      * The incremented index of connections.
      *
-     * @var integer
+     * @var int
      */
     protected $index = 0;
 
     /**
      * Current connection index.
      *
-     * @var integer
+     * @var int
      */
     protected $currIndex = 0;
 
     /**
-     * Instance of a class
+     * Instance of a class.
      *
      * @var DBCore
      */
     protected static $instance;
 
     /**
-     * Returns an instance of this class
+     * Returns an instance of this class.
      *
      * @return DBCore
      */
@@ -52,13 +52,12 @@ class DBCore {
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
     /**
-     * Reset the internal static instance
-     *
-     * @return void
+     * Reset the internal static instance.
      */
     public static function resetInstance() {
         if (self::$instance) {
@@ -68,15 +67,13 @@ class DBCore {
     }
 
     /**
-     * Reset this instance of the manager
-     *
-     * @return void
+     * Reset this instance of the manager.
      */
     public function reset() {
         foreach ($this->connections as $conn) {
             $conn->close();
         }
-        $this->connections = array();
+        $this->connections = [];
         $this->index = 0;
         $this->currIndex = 0;
     }
@@ -173,7 +170,7 @@ class DBCore {
     }
 
     /**
-     * Returns all opened connections
+     * Returns all opened connections.
      *
      * @return array
      */
@@ -182,7 +179,7 @@ class DBCore {
     }
 
     /**
-     * Sets the current connection to $key
+     * Sets the current connection to $key.
      *
      * @param mixed $key The connection key
      *
@@ -200,7 +197,7 @@ class DBCore {
      *
      * @param mixed $key The connection key
      *
-     * @return boolean
+     * @return bool
      */
     public function contains($key) {
         return isset($this->connections[$key]);
@@ -209,14 +206,14 @@ class DBCore {
     /**
      * Returns the number of opened connections.
      *
-     * @return integer
+     * @return int
      */
     public function count() {
         return count($this->connections);
     }
 
     /**
-     * Returns an ArrayIterator that iterates through all connections
+     * Returns an ArrayIterator that iterates through all connections.
      *
      * @return ArrayIterator
      */
@@ -236,6 +233,7 @@ class DBCore {
         if (!isset($this->connections[$key])) {
             throw new DBCoreException('There is no open connection');
         }
+
         return $this->connections[$key];
     }
 
@@ -258,13 +256,13 @@ class DBCore {
      * @param array $params Parameters.
      */
     private static function bindParameters($stmt, $types, $params) {
-        $args   = array();
+        $args   = [];
         $args[] = $types;
 
         foreach ($params as &$param) {
             $args[] = &$param;
         }
-        call_user_func_array(array($stmt, 'bind_param'), $args);
+        call_user_func_array([$stmt, 'bind_param'], $args);
     }
 
     /**
@@ -274,28 +272,30 @@ class DBCore {
      * @param array $params Parameters.
      */
     public static function bindResults($stmt) {
-        $resultSet = array();
+        $resultSet = [];
         $metaData = $stmt->result_metadata();
         $fieldsCounter = 0;
         while ($field = $metaData->fetch_field()) {
             if (!isset($resultSet[$field->table])) {
-                $resultSet[$field->table] = array();
+                $resultSet[$field->table] = [];
             }
             $resultSet[$field->table][$field->name] = $fieldsCounter++;
             $parameterName = "variable" . $fieldsCounter; //$field->name;
             $$parameterName = null;
             $parameters[] = &$$parameterName;
         }
-        call_user_func_array(array($stmt, 'bind_result'), $parameters);
+        call_user_func_array([$stmt, 'bind_result'], $parameters);
         if ($stmt->fetch()) {
             foreach ($resultSet as &$tableResult) {
                 foreach ($tableResult as &$fieldValue) {
                     $fieldValue = $parameters[$fieldValue];
                 }
             }
+
             return $resultSet;
         }
         self::checkDbError($stmt);
+
         return null;
     }
 
@@ -309,7 +309,7 @@ class DBCore {
      *
      * @return mixed Statement object or FALSE if an error occurred.
      */
-    private static function doQuery($query, $types = "", $params = array()) {
+    private static function doQuery($query, $types = "", $params = []) {
         if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
             $dbQuery = new DBPreparedQuery($query, $types, $params);
         } else {
@@ -323,7 +323,9 @@ class DBCore {
             if ($dbQuery->isValid()) {
                 self::bindParameters($stmt, $dbQuery->types, $dbQuery->params);
             } else {
-                throw new DBCoreException("Number of types is not equal parameters number or types string is invalid");
+                throw new DBCoreException(
+                    "Number of types is not equal parameters number or types string is invalid"
+                );
             }
         }
 
@@ -342,9 +344,10 @@ class DBCore {
      * @param string $types Types string.
      * @param array $params Parameters.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if the last query failed.
+     * @return int Returns the number of affected rows on success and
+     *           -1 if the last query failed.
      */
-    public static function doUpdateQuery($query, $types = "", $params = array()) {
+    public static function doUpdateQuery($query, $types = "", $params = []) {
         if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
             $dbQuery = new DBPreparedQuery($query, $types, $params);
         } else {
@@ -377,7 +380,7 @@ class DBCore {
      *
      * @return mixed Statement object or FALSE if an error occurred.
      */
-    public static function doSelectQuery($query, $types = "", $params = array()) {
+    public static function doSelectQuery($query, $types = "", $params = []) {
         $stmt = self::doQuery($query, $types, $params);
 
         $stmt->store_result();
@@ -419,6 +422,7 @@ class DBCore {
                 return $fieldsList;
             }
         }
+
         return [];
     }
 
@@ -448,6 +452,7 @@ class DBCore {
             if (!empty($value)) {
                 return $value;
             }
+
             return "0";
         } elseif (strpos($type, "float") === 0
          || strpos($type, "double") === 0
@@ -455,8 +460,10 @@ class DBCore {
             if (!empty($value)) {
                 return $value;
             }
+
             return "0.0";
         }
+
         return $value;
     }
 
@@ -472,7 +479,7 @@ class DBCore {
         $extra = trim($attributes['extra']);
         $comment = trim($attributes['comment']);
 
-        $fieldStr= "'" . $field . "' => ";
+        $fieldStr = "'" . $field . "' => ";
         if ($attributes['null'] === 'YES' && is_null($attributes['default'])) {
             $fieldStr.= "null";
         } else {
@@ -513,12 +520,13 @@ class DBCore {
      * @return array<mixed>
      */
     private static function createValuesList($fieldsList, $idFieldName = "") {
-        $valuesList = array();
+        $valuesList = [];
         foreach ($fieldsList as $fieldName => $fieldValue) {
             if ($fieldName != $idFieldName) {
                 $valuesList[] = $fieldValue;
             }
         }
+
         return $valuesList;
     }
 
@@ -526,9 +534,9 @@ class DBCore {
      * Executes SQL INSERT query to the database.
      *
      * @param DBObject $dbObject DBObject to insert.
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
-     * @return integer Insertion ID (primary key value) or null on debug.
+     * @return int Insertion ID (primary key value) or null on debug.
      */
     public static function insertDBObject($dbObject, $debug = false) {
         $fieldsList = $dbObject->getFieldsList();
@@ -548,9 +556,11 @@ class DBCore {
 
         if ($debug) {
             DBQuery::showQueryDebugInfo($query, $typesString, $valuesList);
+
             return null;
         }
         self::doUpdateQuery($query, $typesString, $valuesList);
+
         return (self::connection()->insert_id);
     }
 
@@ -558,9 +568,9 @@ class DBCore {
      * Executes SQL UPDATE query to the database.
      *
      * @param DBObject $dbObject DBObject to update.
-     * @param boolean $debug Debug mode flag.
+     * @param bool $debug Debug mode flag.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
+     * @return int Returns the number of affected rows on success, and -1 if
      *           the last query failed.
      */
     public static function updateDBObject($dbObject, $debug = false) {
@@ -592,7 +602,7 @@ class DBCore {
      *
      * @param DBObject $dbObject DBObject to delete.
      *
-     * @return integer Returns the number of affected rows on success, and -1 if
+     * @return int Returns the number of affected rows on success, and -1 if
      *           the last query failed.
      */
     public static function deleteDBObject($dbObject) {
@@ -604,7 +614,7 @@ class DBCore {
             } else {
                 $typesString = "s";
             }
-            self::doUpdateQuery($query, $typesString, array($dbObject->getId()));
+            self::doUpdateQuery($query, $typesString, [$dbObject->getId()]);
 
             return (self::connection()->affected_rows);
         } else {
@@ -623,6 +633,7 @@ class DBCore {
      */
     public static function selectDBObjectFromResultSet($dbObject, $resultSet) {
         $dbObject->setFieldsValues($resultSet[$dbObject->getTableName()]);
+
         return $dbObject;
     }
 
@@ -703,8 +714,10 @@ class DBCore {
                     $objectsList[] = $dbObject;
                 }
             }
+
             return $objectsList;
         }
+
         return [];
     }
 
@@ -742,7 +755,7 @@ class DBCore {
      *           data selected.
      * @throws DBCoreException If no one or more than one records selected.
      */
-    public static function selectSingleRecord($query, $types = "", $params = array()) {
+    public static function selectSingleRecord($query, $types = "", $params = []) {
         if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
             $dbQuery = new DBPreparedQuery($query, $types, $params);
         } else {
@@ -763,6 +776,7 @@ class DBCore {
 
             return $record;
         }
+
         return null;
     }
 
@@ -777,7 +791,7 @@ class DBCore {
      * @return mixed
      * @throws DBCoreException If no one or more than one records selected.
      */
-    public static function selectSingleValue($query, $types = "", $params = array()) {
+    public static function selectSingleValue($query, $types = "", $params = []) {
         if (!Tools::isInstanceOf($query, new DBPreparedQuery())) {
             $dbQuery = new DBPreparedQuery($query, $types, $params);
         } else {
@@ -799,6 +813,7 @@ class DBCore {
 
             return $value;
         }
+
         return null;
     }
 
@@ -809,7 +824,7 @@ class DBCore {
      *    get[Users]()
      *    delete[Users]($ids)
      *    delete[User]($userId)
-     *    set[User]Activation($activationFieldName, $flagValue)
+     *    set[User]Activation($activationFieldName, $flagValue).
      *
      * @param string $methodName Name of the magic method.
      * @param array $methodParams List of dynamic parameters.
@@ -822,7 +837,7 @@ class DBCore {
             $methodName = substr($methodName, 0, strlen($methodName) - 3) . "ys";
         }
 
-        /**
+        /*
          * Get database record object by Id
          */
         if (preg_match("#get([a-zA-Z]+)ById#", $methodName, $matches)) {
@@ -831,7 +846,7 @@ class DBCore {
             return $dbSelector->selectDBObjectById($methodParams[0]);
         }
 
-        /**
+        /*
          * Get database record object by some field value
          */
         if (preg_match("#get([a-zA-Z]+)By([a-zA-Z]+)#", $methodName, $matches)) {
@@ -845,14 +860,14 @@ class DBCore {
             return $dbSelector->selectDBObjectByField($fieldName, $methodParams[0]);
         }
 
-        /**
+        /*
          * Get all database records
          */
         if (preg_match("#get([a-zA-Z]+)s#", $methodName, $matches)) {
             return self::Selector()->selectDBObjects();
         }
 
-        /**
+        /*
          * Delete selected records from the database
          */
         if (preg_match("#delete([a-zA-Z]+)s#", $methodName, $matches)) {
@@ -875,10 +890,11 @@ class DBCore {
 
                 return self::doUpdateQuery($query, $types, $idsList);
             }
+
             return 0;
         }
 
-        /**
+        /*
          * Delete selected record from the database
          */
         if (preg_match("#delete([a-zA-Z]+)#", $methodName, $matches)) {
@@ -888,7 +904,7 @@ class DBCore {
             );
         }
 
-        /**
+        /*
          * Set activation value of selected records
          */
         if (preg_match("#set([a-zA-Z]+)Activation#", $methodName, $matches)) {
@@ -917,7 +933,7 @@ class DBCore {
                     throw new DBCoreException("Class with name '" . $className . "' is not exists");
                 }
 
-                $query = "UPDATE " . $dbObject->getTableName() . " SET `" . $activationFieldName . "` = '" . $activationValue ."'
+                $query = "UPDATE " . $dbObject->getTableName() . " SET `" . $activationFieldName . "` = '" . $activationValue . "'
                           WHERE " . $dbObject->getIdFieldName() . " IN (" . DBPreparedQuery::sqlQMString($itemsNumber) . ")";
 
                 return self::doUpdateQuery($query, $types, $idsList);

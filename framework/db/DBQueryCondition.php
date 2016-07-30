@@ -30,35 +30,35 @@ class DBQueryCondition {
     public $type;
 
     /**
-     * Condition value
+     * Condition value.
      *
      * @var mixed
      */
     public $value;
 
     /**
-     * Result SQL condition string
+     * Result SQL condition string.
      *
      * @var string
      */
     private $sqlCondition;
 
     /**
-     * Result prepare statement SQL condition string
+     * Result prepare statement SQL condition string.
      *
      * @var string
      */
     private $preparedCondition = "";
 
     /**
-     * Types string for prepared statement
+     * Types string for prepared statement.
      *
      * @var string
      */
     private $preparedTypes = "";
 
     /**
-     * List with data for prepared statement
+     * List with data for prepared statement.
      *
      * @var array<mixed>
      */
@@ -85,7 +85,9 @@ class DBQueryCondition {
                 case ("!="):
                     $this->value = DBField::castValue($this->field->type, $value);
 
-                    $this->sqlCondition = "`" . $field->name . "` " . $this->type . " " . DBField::sqlValue($this->field->type, $value);
+                    $this->sqlCondition = "`" . $field->name . "` "
+                                        . $this->type . " "
+                                        . DBField::sqlValue($this->field->type, $value);
 
                     $this->preparedCondition = "`" . $field->name . "` " . $this->type . " ?";
                     $this->preparedTypes = $this->field->type;
@@ -98,7 +100,9 @@ class DBQueryCondition {
                     if ($this->field->type != "s") {
                         throw new DBQueryConditionException("Field type is not a string");
                     }
-                    $this->sqlCondition = "`" . $field->name . "` " . $this->type . " " . DBField::sqlValue($this->field->type, $value);
+                    $this->sqlCondition = "`" . $field->name . "` "
+                                        . $this->type . " "
+                                        . DBField::sqlValue($this->field->type, $value);
 
                     $this->preparedCondition = "`" . $field->name . "` " . $this->type . " ?";
                     $this->preparedTypes = $this->field->type;
@@ -126,7 +130,9 @@ class DBQueryCondition {
                             return;
                         }
 
-                        $this->sqlCondition = "`" . $field->name . "` " . $this->type . " (" . join(", ", $dataList) . ")";
+                        $this->sqlCondition = "`" . $field->name . "` "
+                                            . $this->type
+                                            . " (" . implode(", ", $dataList) . ")";
 
                         $this->preparedCondition = "`" . $field->name . "` " . $this->type . " (" . $qmStr . ")";
                         $this->preparedTypes = $tStr;
@@ -197,6 +203,7 @@ class DBQueryCondition {
                 }
 
                 $cond .= ")";
+
                 return $cond;
             }
         } else {
@@ -211,6 +218,7 @@ class DBQueryCondition {
             } elseif (Tools::isInstanceOf($queryCondition, "\Asymptix\db\DBQueryCondition")) {
                 return (" " . $queryCondition->sqlCondition);
             }
+
             return "";
         }
     }
