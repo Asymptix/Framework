@@ -109,6 +109,7 @@ class Route {
                 $url.= $key . "=" . $value;
             }
         }
+
         return $url;
     }
 

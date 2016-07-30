@@ -54,6 +54,7 @@ class Tools {
         if (strlen($strVal) && $strVal[0] == '-') {
             return ctype_digit(substr($strVal, 1));
         }
+
         return ctype_digit($strVal);
     }
 
@@ -85,6 +86,7 @@ class Tools {
         if ($stringValue === (string)$doubleValue) {
             return true;
         }
+
         return false;
     }
 
@@ -145,6 +147,7 @@ class Tools {
         if (isset($object) && is_object($object)) {
             return !empty($object);
         }
+
         return false;
     }
 

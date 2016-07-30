@@ -12,7 +12,6 @@ namespace Asymptix\core;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-
 abstract class Object {
 
     /**
@@ -67,6 +66,7 @@ abstract class Object {
                     }
                 }
             }
+
             return $count;
         } else {
             return false;

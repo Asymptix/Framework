@@ -253,7 +253,7 @@ class Validator {
      *
      * @param string $value Value of the variable.
      *
-     * @return boolean
+     * @return bool
      */
     public static function isUrl($value) {
         return self::validateRegexp(
