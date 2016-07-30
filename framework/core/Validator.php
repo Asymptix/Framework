@@ -2,7 +2,6 @@
 
 namespace Asymptix\core;
 
-use Asymptix\core\Errors;
 use Asymptix\web\Session;
 use Asymptix\web\Request;
 
@@ -23,7 +22,8 @@ class Validator {
      *
      * @param string $fieldValue Value of the field.
      * @param string $regexp Regular expression.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validateRegexp($fieldValue, $regexp) {
         return preg_match($regexp, $fieldValue);
@@ -33,7 +33,8 @@ class Validator {
      * Validate if field value is not empty.
      *
      * @param string $fieldName Name of the field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validateNotEmpty($fieldName) {
         $fieldValue = Request::getFieldValue($fieldName);
@@ -42,8 +43,10 @@ class Validator {
         }
         if (empty($fieldValue)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::FIELD_CANT_BE_EMPTY);
+
             return false;
         }
+
         return true;
     }
 
@@ -51,14 +54,17 @@ class Validator {
      * Validate if checkbox is checked.
      *
      * @param string $fieldName Name of the field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validateChecked($fieldName) {
         $fieldValue = trim(Request::getFieldValue($fieldName));
         if (empty($fieldValue)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::CHECK_THIS_FIELD);
+
             return false;
         }
+
         return true;
     }
 
@@ -66,13 +72,15 @@ class Validator {
      * Validate if field value is empty.
      *
      * @param string $fieldName Name of the field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validateEmpty($fieldName) {
         $fieldValue = trim(Request::getFieldValue($fieldName));
         if (empty($fieldValue)) {
             return true;
         }
+
         return false;
     }
 
@@ -81,14 +89,16 @@ class Validator {
      *
      * @param string $fieldName Name of the field.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateNoSpaces($fieldName) {
         $fieldValue = Request::getFieldValue($fieldName);
         if (strpos($fieldValue, " ") !== false) {
             Errors::saveErrorFor($fieldName, \__ERRORS::SPACES_INACCEPTABLE);
+
             return false;
         }
+
         return true;
     }
 
@@ -97,12 +107,13 @@ class Validator {
      *
      * @param string $fieldName Login field name.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateLogin($fieldName) {
         if (!validateNotEmpty($fieldName)) {
             return false;
         }
+
         return validateNoSpaces($fieldName);
     }
 
@@ -112,18 +123,20 @@ class Validator {
      * @param string $passwordFieldName Name of password field.
      * @param string $rePasswordFieldName Name of password repeting field.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validatePassword($passwordFieldName, $rePasswordFieldName) {
         $password = trim(Request::getFieldValue($passwordFieldName));
         $rePassword = trim(Request::getFieldValue($rePasswordFieldName));
         if (empty($password)) {
             Errors::saveErrorFor($passwordFieldName, \__ERRORS::EMPTY_PASSWORD);
+
             return false;
         }
 
         if ($password != $rePassword) {
             Errors::saveErrorFor($rePasswordFieldName, \__ERRORS::PASSWORDS_ARE_DIFFERENT);
+
             return false;
         }
 
@@ -135,7 +148,7 @@ class Validator {
      *
      * @param string $fieldName Name of the captcha field.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateCaptcha($fieldName) {
         if (!validateNotEmpty($fieldName)) {
@@ -146,8 +159,10 @@ class Validator {
         }
         if (Request::getFieldValue($fieldName) != Session::get($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_CAPTCHA_CODE);
+
             return false;
         }
+
         return true;
     }
 
@@ -156,17 +171,20 @@ class Validator {
      *
      * @param string $fieldName Name of the field.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateEmail($fieldName) {
         $fieldValue = trim(Request::getFieldValue($fieldName));
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_EMAIL);
+
             return false;
         } elseif (!self::validateRegexp($fieldValue, "#^[A-Za-z0-9\._-]+@([A-Za-z0-9-]+\.)+[A-Za-z0-9-]+$#")) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_EMAIL);
+
             return false;
         }
+
         return true;
     }
 
@@ -175,12 +193,13 @@ class Validator {
      *
      * @param string $value Value of the variable.
      *
-     * @return boolean
+     * @return bool
      */
     public static function isEmail($value) {
         if (empty($value)) {
             return false;
         }
+
         return self::validateRegexp($value, "#^[A-Za-z0-9\._-]+@([A-Za-z0-9-]+\.)+[A-Za-z0-9-]+$#");
     }
 
@@ -211,16 +230,18 @@ class Validator {
      *
      * @param string $fieldName Name of the field.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateUrl($fieldName) {
         $fieldValue = Request::getFieldValue($fieldName);
 
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::URL_EMPTY);
+
             return false;
         } elseif (!self::validateRegexp($fieldValue, "<^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~/|/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$>")) {
             Errors::saveErrorFor($fieldName, \__ERRORS::URL_INVALID);
+
             return false;
         }
 
@@ -248,7 +269,7 @@ class Validator {
      * @param string $fieldName Name of the field.
      * @param string $maxTextLength Text length limit.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateTextMaxLength($fieldName, $maxTextLength) {
         $text = trim(strip_tags(Request::getFieldValue($fieldName)));
@@ -257,8 +278,10 @@ class Validator {
                 $fieldName,
                 str_replace("[[1]]", $maxTextLength, \__ERRORS::MAX_TEXT_LENGTH)
             );
+
             return false;
         }
+
         return true;
     }
 
@@ -269,7 +292,7 @@ class Validator {
      * @param string $fieldName Name of the field.
      * @param string $minTextLength Text length limit.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateTextMinLength($fieldName, $minTextLength) {
         $text = trim(strip_tags(Request::getFieldValue($fieldName)));
@@ -278,8 +301,10 @@ class Validator {
                 $fieldName,
                 str_replace("[[1]]", $minTextLength, \__ERRORS::MIN_TEXT_LENGTH)
             );
+
             return false;
         }
+
         return true;
     }
 
@@ -287,52 +312,73 @@ class Validator {
      * Validate if field value is integer.
      *
      * @param string $fieldName Name of the field.
-     * @return boolean
+     * @return bool
      */
     public static function validateInteger($fieldName) {
         $fieldValue = trim(Request::getFieldValue($fieldName));
         if (!self::validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::FIELD_CANT_BE_EMPTY);
+
             return false;
         } elseif (!Tools::isInteger($fieldValue)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_INTEGER);
+
             return false;
         }
+
         return true;
     }
 
     /**
-     * Validate if field value is double.
+     * Validate if field value is double(float).
      *
      * @param string $fieldName Name of the field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validateDouble($fieldName) {
         $fieldValue = trim(Request::getFieldValue($fieldName));
-        $doubleValue = (double) $fieldValue;
+        $doubleValue = (float)$fieldValue;
         if (!validateNotEmpty($fieldName)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::FIELD_CANT_BE_EMPTY);
+
             return false;
         } elseif (sprintf("%.2f", $doubleValue) != $fieldValue) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_NUMBER);
+
             return false;
         }
         changeFieldValue($fieldName, $doubleValue);
+
         return true;
+    }
+
+    /**
+     * Validate if field value is double(float).
+     *
+     * @param string $fieldName Name of the field.
+     *
+     * @return bool
+     */
+    public static function validateFloat($fieldName) {
+        return self::validateDouble($fieldName);
     }
 
     /**
      * Validate if field value is positive numeric value.
      *
      * @param string $fieldName Name of the field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validatePositive($fieldName) {
         $fieldValue = trim(Request::getFieldValue($fieldName));
         if ($fieldValue <= 0) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INVALID_POSITIVE);
+
             return false;
         }
+
         return true;
     }
 
@@ -341,7 +387,8 @@ class Validator {
      *
      * @param string $loginFieldName Name of the login field.
      * @param string $passwordFieldName Name of the password field.
-     * @return boolean
+     *
+     * @return bool
      */
     public static function validateSignIn($loginFieldName, $passwordFieldName) {
         $login = Request::getFieldValue($loginFieldName);
@@ -366,7 +413,7 @@ class Validator {
      * @global array $_FILES Global array of uploaded files.
      * @param string $fileFieldName Name of the file field.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateFileUpload($fileFieldName) {
         global $_FILES;
@@ -375,6 +422,7 @@ class Validator {
             return true;
         }
         Errors::saveErrorFor($fileFieldName, \__ERRORS::FILE_UPLOAD_ERROR);
+
         return false;
     }
 
@@ -384,14 +432,16 @@ class Validator {
      * @param string $fieldName Field name.
      * @param array $range Array with values.
      *
-     * @return boolean
+     * @return bool
      */
     public static function validateRange($fieldName, $range) {
         $fieldValue = Request::getFieldValue($fieldName);
         if (!in_array($fieldValue, $range)) {
             Errors::saveErrorFor($fieldName, \__ERRORS::INCORRECT_VALUE);
+
             return false;
         }
+
         return true;
     }
 
