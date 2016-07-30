@@ -1,19 +1,18 @@
 <?php
 
-require_once("/core/ui/UIComponent.php");
-require_once("/core/ui/components/UIListOption.php");
+namespace Asymptix\ui\components;
 
 /**
  * DropBox UI component class.
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIDropDown extends UIComponent {
+class UIDropDown extends \Asymptix\ui\UIComponent {
     /**
      * Default drop-down list HTML template.
      */
@@ -24,7 +23,7 @@ class UIDropDown extends UIComponent {
      *
      * @var string
      */
-    private $autofocus = "";
+    public $autofocus = "";
 
     /**
      * When true (not empty), it disables the drop-down list (empty or 'disabled',
@@ -32,14 +31,14 @@ class UIDropDown extends UIComponent {
      *
      * @var string
      */
-    private $disabled = "";
+    public $disabled = "";
 
     /**
      * Defines one ore more forms the select field belongs to (optional).
      *
      * @var string
      */
-    private $form = "";
+    public $form = "";
 
     /**
      * Generate HTML of the list <select> element for drop-down list.
@@ -50,10 +49,10 @@ class UIDropDown extends UIComponent {
      *           for the drop-down element (optional).
      * @param string $template Path to the template file of the drop-down (optional).
      */
-    public function UIDropDown($dataSet = array(), $currentValue = null, $attributesList = array(), $template = "") {
+    public function __construct($dataSet = [], $currentValue = null, $attributesList = [], $template = "") {
         if (empty($template)) {
             $template = self::DEFAULT_TEMPLATE;
         }
-        parent::UIComponent($attributesList, $template, $dataSet, $currentValue);
+        parent::__construct($attributesList, $template, $dataSet, $currentValue);
     }
 }

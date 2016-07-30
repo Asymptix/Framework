@@ -7,7 +7,7 @@ namespace Asymptix\ui;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -23,7 +23,7 @@ abstract class UIControl extends UIComponent {
     /**
      * Set if control is scrollable or not.
      *
-     * @var boolean
+     * @var bool
      */
     protected $scrollable = false;
 }

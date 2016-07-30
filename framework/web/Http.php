@@ -96,6 +96,7 @@ class Http {
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { //to check ip is pass from proxy
             return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
+
         return $_SERVER['REMOTE_ADDR'];
     }
 
@@ -149,8 +150,10 @@ class Http {
             if (substr($matches[1], 0, 1) == "/") {
                 return $urlParts['scheme'] . "://" . $urlParts['host'] . trim($matches[1]);
             }
+
             return trim($matches[1]);
         }
+
         return false;
     }
 
@@ -185,6 +188,7 @@ class Http {
         if (count($redirects) > 0) {
             return array_pop($redirects);
         }
+
         return $url;
     }
 

@@ -7,7 +7,7 @@ namespace Asymptix\ui\controls;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -28,9 +28,9 @@ class UIDialog extends \Asymptix\ui\UIControl {
      *
      * @var array<UIButton>
      */
-    protected $buttons = array();
+    protected $buttons = [];
 
-    public function __construct($attributesList = array(), $buttons = array(), $template = "") {
+    public function __construct($attributesList = [], $buttons = [], $template = "") {
         $this->buttons = $buttons;
 
         if (empty($template)) {

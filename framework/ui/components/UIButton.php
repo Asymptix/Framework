@@ -7,7 +7,7 @@ namespace Asymptix\ui\components;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -24,7 +24,7 @@ class UIButton extends \Asymptix\ui\UIComponent {
 
     protected $isClose = false;
 
-    public function __construct($attribs = array(), $template = null, $show = false) {
+    public function __construct($attribs = [], $template = null, $show = false) {
         if (empty($template)) {
             $template = __DIR__ . self::DEFAULT_TEMPLATE;
         }

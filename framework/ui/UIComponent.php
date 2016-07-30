@@ -7,7 +7,7 @@ namespace Asymptix\ui;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -38,14 +38,14 @@ abstract class UIComponent {
      *
      * @var array<string>
      */
-    protected $class = array();
+    protected $class = [];
 
     /**
      * Specifies a set of CSS style pairs for style attribute of the HTML element.
      *
      * @var array<string, string>
      */
-    protected $style = array();
+    protected $style = [];
 
     /**
      * Specifies that the element is not relevant. Hidden elements are not
@@ -67,7 +67,7 @@ abstract class UIComponent {
      *
      * @var array
      */
-    protected $dataSet = array();
+    protected $dataSet = [];
 
     /**
      * Current value for the component.
@@ -91,7 +91,7 @@ abstract class UIComponent {
      * @param <type> $dataSet
      * @param <type> $currentValue
      */
-    protected function __construct($attributesList = array(), $template = "", $dataSet = array(), $currentValue = null) {
+    protected function __construct($attributesList = [], $template = "", $dataSet = [], $currentValue = null) {
         $this->setAttributes($attributesList);
         $this->dataSet = $dataSet;
         $this->currentValue = $currentValue;
@@ -125,6 +125,7 @@ abstract class UIComponent {
     protected function show() {
         if (!empty($this->template)) {
             include($this->template);
+
             return;
         }
         include(self::DEFAULT_TEMPLATE);
@@ -133,7 +134,7 @@ abstract class UIComponent {
     /**
      * css($propertyName) Get the value of a CSS property;
      * css($propertyName, "") Unset a CSS property;
-     * css($propertyName, $propertyValue) Set the value of a CSS property
+     * css($propertyName, $propertyValue) Set the value of a CSS property.
      *
      * @param string $propertyName Name of a CSS property.
      * @param mixed $propertyValue Value of a CSS property.
@@ -145,6 +146,7 @@ abstract class UIComponent {
             if (isset($this->style[$propertyName])) {
                 return $this->style[$propertyName];
             }
+
             return null;
         } else {
             if ($propertyValue === "") {
@@ -162,11 +164,12 @@ abstract class UIComponent {
         foreach ($this->style as $propertyName => $propertyValue) {
             $style .= $propertyName . ":" . $propertyValue . ";";
         }
+
         return $style;
     }
 
     public function setStyle($style) {
-        $this->style = array();
+        $this->style = [];
         $stylesList = array_filter(explode(";", $style));
         foreach ($stylesList as $style) {
             $stylePair = explode(":", $style);
@@ -181,11 +184,11 @@ abstract class UIComponent {
     }
 
     /**
-     * Determine whether element is assigned the given class
+     * Determine whether element is assigned the given class.
      *
      * @param string $className Name of the class
      *
-     * @return boolean
+     * @return bool
      */
     public function hasClass($className) {
         return (array_search($className, $this->class) !== false);
@@ -198,7 +201,7 @@ abstract class UIComponent {
 
     public function removeClass($className = null) {
         if (is_null($className)) {
-            $this->class = array();
+            $this->class = [];
         } else {
             $key = array_search($className, $this->class);
             if ($key !== false) {
@@ -212,7 +215,7 @@ abstract class UIComponent {
     }
 
     public function setClass($class) {
-        $this->class = array();
+        $this->class = [];
         $class = preg_replace("#( ){2,}#", " ", $class);
         $classesList = array_filter(explode(" ", $class));
         foreach ($classesList as $className) {

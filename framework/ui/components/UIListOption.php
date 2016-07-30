@@ -1,18 +1,18 @@
 <?php
 
-require_once("/core/ui/UIComponent.php");
+namespace Asymptix\ui\components;
 
 /**
  * DropDown List UI component class.
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIListOption extends UIComponent {
+class UIListOption extends \Asymptix\ui\UIComponent {
     /**
      * Default drop-down list HTML template.
      */
@@ -24,14 +24,14 @@ class UIListOption extends UIComponent {
      *
      * @var string
      */
-    private $disabled = "";
+    public $disabled = "";
 
     /**
      * Defines a label to use when using <optgroup>.
      *
      * @var string
      */
-    private $label = "";
+    public $label = "";
 
     /**
      * Defines the value of the option to be sent to the server.
@@ -48,35 +48,35 @@ class UIListOption extends UIComponent {
      * @param string,integer $currentValue Current selected list option value (optional).
      * @param string $template HTML template of this component (optional).
      */
-    public function UIListOption($optionValue, $option, $currentValue, $template = "") {
+    public function __construct($optionValue, $option, $currentValue, $template = "") {
         if (empty($template)) {
             $template = self::DEFAULT_TEMPLATE;
         }
         if (isObject($option)) {
-            parent::UIComponent(
-                array(
+            parent::__construct(
+                [
                     'value' => $option->id,
                     'title' => $option->title
-                ),
+                ],
                 $template,
-                array(),
+                [],
                 $currentValue
             );
         } elseif (is_array($option)) {
-            parent::UIComponent(
+            parent::__construct(
                 $option,
                 $template,
-                array(),
+                [],
                 $currentValue
             );
         } else {
-            parent::UIComponent(
-                array(
+            parent::__construct(
+                [
                     'value' => $optionValue,
                     'title' => $option
-                ),
+                ],
                 $template,
-                array(),
+                [],
                 $currentValue
             );
         }

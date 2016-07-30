@@ -1,18 +1,18 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/../UIControl.php");
+namespace Asymptix\ui\controls;
 
 /**
  * Pagination UI control class.
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIPagination extends UIControl {
+class UIPagination extends \Asymptix\ui\UIControl {
     /**
      * Default dialog panel HTML template.
      */
@@ -32,13 +32,13 @@ class UIPagination extends UIControl {
      * Display Pagination control.
      *
      * @param string $url Basic URL of the pagination links (common part).
-     * @param integer $pagesNumber Total pages number.
-     * @param integer $currentPage Current page number.
-     * @param integer $pagesOffset Number of visible pagination links before and
+     * @param int $pagesNumber Total pages number.
+     * @param int $currentPage Current page number.
+     * @param int $pagesOffset Number of visible pagination links before and
      *           after current page link.
      * @param string $template Path to the pagination HTML template.
      */
-    public function UIPagination($url = "", $pagesNumber = 1, $currentPage = 1, $pagesOffset = 3, $template = "") {
+    public function __construct($url = "", $pagesNumber = 1, $currentPage = 1, $pagesOffset = 3, $template = "") {
         $this->url = $url;
 
         $this->pagesNumber = $pagesNumber;
@@ -51,7 +51,7 @@ class UIPagination extends UIControl {
             if (empty($template)) {
                 $template = self::DEFAULT_TEMPLATE;
             }
-            parent::UIComponent(array(), $template);
+            parent::__construct([], $template);
         }
     }
 
@@ -75,10 +75,16 @@ class UIPagination extends UIControl {
     }
 
     public static function getCurrentPageNumber($page, $totalPages) {
-        $page = (integer)$page;
+        $page = (int)$page;
 
-        if ($page < 1) return 1;
-        if ($page > $totalPages) return $totalPages;
+        if ($page < 1) {
+            return 1;
+        }
+
+        if ($page > $totalPages) {
+            return $totalPages;
+        }
+
         return $page;
     }
 

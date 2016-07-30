@@ -1,18 +1,18 @@
 <?php
 
-require_once("/core/ui/UIComponent.php");
+namespace Asymptix\ui\components;
 
 /**
  * CheckBox UI component class.
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UICheckBox extends UIComponent {
+class UICheckBox extends \Asymptix\ui\UIComponent {
     /**
      * Default checkbox HTML template.
      */
@@ -50,7 +50,7 @@ class UICheckBox extends UIComponent {
     /**
      * Indicates that the input element should be checked when it first loads.
      *
-     * @var boolean
+     * @var bool
      */
     protected $checked = false;
 
@@ -60,7 +60,7 @@ class UICheckBox extends UIComponent {
      * @param array<string => string> $attributesList List of the component attributes.
      * @param string $template Path to the components template file.
      */
-    public function UICheckBox($attributesList, $template) {
-        parent::UIComponent($attributesList, $template);
+    public function __construct($attributesList, $template) {
+        parent::__construct($attributesList, $template);
     }
 }
