@@ -7,7 +7,7 @@ namespace Asymptix\localization;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2010 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2010 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -32,8 +32,15 @@ class Language {
      *
      * @var array<string, string>
      */
-    public $titles = array();
+    public $titles = [];
 
+    /**
+     * Inits Language object.
+     *
+     * @param string $code Code of the language.
+     * @param array $titles List of languages titles on this language.
+     * @param string $flag Flag file name.
+     */
     public function __construct($code, $titles, $flag = "") {
         $this->code = $code;
         $this->titles = $titles;

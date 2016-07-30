@@ -23,33 +23,34 @@ class Languages {
 
     public static function getLanguages() {
         if (is_null(self::$langs)) {
-            self::$langs = array(
-                'en' => new Language('en', array(
+            self::$langs = [
+                'en' => new Language('en', [
                     'en' => "English",
                     'de' => "Englisch",
                     'ru' => "Английский",
                     'uk' => "Англійська"
-                ), 'gb'),
-                'de' => new Language('de', array(
+                ], 'gb'),
+                'de' => new Language('de', [
                     'en' => "German",
                     'de' => "Deutsch",
                     'ru' => "Немецкий",
                     'uk' => "Німецька"
-                ), 'de'),
-                'ru' => new Language('ru', array(
+                ], 'de'),
+                'ru' => new Language('ru', [
                     'en' => "Russian",
                     'de' => "Rusisch",
                     'ru' => "Русский",
                     'uk' => "Російська"
-                ), 'ru'),
-                'uk' => new Language('uk', array(
+                ], 'ru'),
+                'uk' => new Language('uk', [
                     'en' => "Ukrainian",
                     'de' => "Ukrainisch",
                     'ru' => "Украинский",
                     'uk' => "Українська"
-                ), 'ua'),
-            );
+                ], 'ua'),
+            ];
         }
+
         return self::$langs;
     }
 

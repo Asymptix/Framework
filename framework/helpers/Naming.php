@@ -23,8 +23,8 @@ class Naming {
      */
     public static function parseComplexName($fieldName) {
         $normName = str_replace(
-            array('][', '[', ']'),
-            array('|', '|', ''),
+            ['][', '[', ']'],
+            ['|', '|', ''],
             $fieldName
         );
 
@@ -120,6 +120,7 @@ class Naming {
             } else { // Simple key is provided
                 $array[$complexName] = $value;
             }
+
             return;
         }
         throw new \Exception("No name provided");
@@ -156,6 +157,7 @@ class Naming {
             } elseif (isset($array[$complexName])) { // Simple key is provided
                 unset($array[$complexName]);
             }
+
             return;
         }
         throw new \Exception("No name provided");

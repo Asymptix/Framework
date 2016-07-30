@@ -84,7 +84,7 @@ class Email {
      * @param string $format E-mail format ("text" or "html").
      * @param string $replyTo Reply to e-mail address.
      *
-     * @return boolean Returns TRUE if the mail was successfully accepted for
+     * @return bool Returns TRUE if the mail was successfully accepted for
      *           delivery, FALSE otherwise.
      */
     protected function sendMail($email, $subject, $message, $format = self::FORMAT_TEXT, $replyTo = "") {
@@ -96,7 +96,7 @@ class Email {
             $headers.= "Content-type: text/html; charset=utf-8\r\n";
         }
 
-        /**
+        /*
          * Send generated message
          */
         return mail($email, $subject, $message, $headers);
@@ -117,7 +117,7 @@ class Email {
      * @return bool Returns TRUE if the mail was successfully accepted for delivery,
      *           FALSE otherwise.
      */
-    public static function send($to, $subject, $message, $headers = array(), $parameters = "") {
+    public static function send($to, $subject, $message, $headers = [], $parameters = "") {
         if (is_array($message)) {
             $tplPath = $message[0];
             $tplVars = $message[1];
@@ -138,7 +138,7 @@ class Email {
      * @param string $format E-mail format ("text" or "html").
      * @param string $replyTo Reply to e-mail address.
      *
-     * @return boolean Returns TRUE if the mail was successfully accepted for
+     * @return bool Returns TRUE if the mail was successfully accepted for
      *           delivery, FALSE otherwise.
      */
     protected function sendNotification(
@@ -161,4 +161,4 @@ class Email {
 
 }
 
-class EmailException extends \Exception {};
+class EmailException extends \Exception {}

@@ -46,6 +46,7 @@ class LocationDetector {
         if (is_null($this->provider)) {
             throw new LocationDetectorException("Invalid data provider.");
         }
+
         return self::_get($ip, $type, $this->provider);
     }
 
@@ -58,7 +59,7 @@ class LocationDetector {
         if ($response === false) {
             throw new LocationDetectorException("Can't receive response from data provider.");
         }
-        
+
         $geoData = @json_decode($response);
         switch ($provider) {
             case (self::PROVIDER_GEOPLUGIN_NET):
@@ -78,13 +79,14 @@ class LocationDetector {
                                 "continent_code" => @$geoData->geoplugin_continentCode
                             ];
                         case (self::TYPE_ADDRESS):
-                            $address = array($geoData->geoplugin_countryName);
+                            $address = [$geoData->geoplugin_countryName];
                             if (@strlen($geoData->geoplugin_regionName) >= 1) {
                                 $address[] = $geoData->geoplugin_regionName;
                             }
                             if (@strlen($geoData->geoplugin_city) >= 1) {
                                 $address[] = $geoData->geoplugin_city;
                             }
+
                             return implode(", ", array_reverse($address));
                         case (self::TYPE_CITY):
                             return @$geoData->geoplugin_city;
@@ -100,6 +102,7 @@ class LocationDetector {
                             throw new LocationDetectorException("Invalid return type.");
                     }
                 }
+
                 return null;
 
             case (self::PROVIDER_IPINFO_IO):
@@ -113,6 +116,7 @@ class LocationDetector {
                             throw new LocationDetectorException("Invalid return type.");
                     }
                 }
+
                 return null;
 
             case (self::PROVIDER_FREEGEOIP_IO):
@@ -126,6 +130,7 @@ class LocationDetector {
                             throw new LocationDetectorException("Invalid return type.");
                     }
                 }
+
                 return null;
         }
     }

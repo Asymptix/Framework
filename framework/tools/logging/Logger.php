@@ -189,6 +189,7 @@ class Logger {
         switch ($this->direction) {
             case (self::TO_OUTPUT_STREAM):
                 OutputStream::close();
+
                 return;
             case (self::TO_FILE):
                 // nothing to do

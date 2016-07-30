@@ -16,12 +16,12 @@ class LogDBObject extends \Asymptix\db\DBObject {
 
     const TABLE_NAME = "log";
     const ID_FIELD_NAME = "";
-    protected $fieldsList = array(
+    protected $fieldsList = [
         'type' => "", // varchar(10), default ''
         'message' => "", // text, not null, default ''
         'count' => 0, // int(6) unsigned, not null, default ''
         'last_seen' => "CURRENT_TIMESTAMP", // datetime, not null, default 'CURRENT_TIMESTAMP'
-    );
+    ];
 
     /**
      * Log method, must be in all classes for Logger class functionality.
@@ -41,9 +41,9 @@ class LogDBObject extends \Asymptix\db\DBObject {
         $query = "INSERT INTO " . self::TABLE_NAME . " (type, message, count, last_seen) VALUES (?, ?, 1, ?)
                   ON DUPLICATE KEY UPDATE count = count + 1, last_seen = ?";
         try {
-            return DBCore::doUpdateQuery($query, "ssss", array(
+            return DBCore::doUpdateQuery($query, "ssss", [
                 $type, $message, date("Y-m-d H:i:s", $time), date("Y-m-d H:i:s", $time)
-            ));
+            ]);
         } catch (\Asymptix\db\DBCoreException $e) {
             print($e->getMessage());
         }

@@ -11,7 +11,7 @@ use Asymptix\core\Errors;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2010 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2010 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -27,7 +27,7 @@ class Localization {
      * @return array<string> Localized value as associative array of string values
      *           for all languages.
      */
-    static public function localize($value = "") {
+    public static function localize($value = "") {
         $localizedValue = Languages::$langs;
         if (is_array($value)) {
             foreach ($localizedValue as $langKey => &$lValue) {
@@ -53,9 +53,9 @@ class Localization {
      *
      * @param string $fieldName Name of the field.
      *
-     * @return boolean
+     * @return bool
      */
-    static public function validateNotEmpty($fieldName) {
+    public static function validateNotEmpty($fieldName) {
         $fieldValue = Request::getFieldValue($fieldName);
         if (is_array($fieldValue)) {
             foreach ($fieldValue as $value) {
@@ -69,6 +69,7 @@ class Localization {
         } else {
             return validateNotEmpty($fieldName);
         }
+
         return true;
     }
 }

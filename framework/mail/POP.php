@@ -44,7 +44,7 @@ class POP {
      * Open connection to POP server.
      *
      * @param string $host POP server host (default: localhost).
-     * @param integer $port POP server port (default: 110)
+     * @return int $port POP server port (default: 110)
      * @param string $username User name.
      * @param string $password User password.
      *
@@ -58,10 +58,10 @@ class POP {
             fgets($sock, 1024);
 
             // Connection accepted
-            fputs($sock, "USER " . $username . "\r\n");
+            fwrite($sock, "USER " . $username . "\r\n");
             $userresponse = fgets($sock, 1024);
             if ($userresponse[0] == "+") { // User accepted
-                fputs($sock, "PASS " . $password . "\r\n");
+                fwrite($sock, "PASS " . $password . "\r\n");
                 $passresponse = fgets($sock, 1024);
                 if ($passresponse[0] != "+") { // Wrong password
                     $passresponse = str_replace("\r", "", str_replace("\n", "", $passresponse));
@@ -81,6 +81,7 @@ class POP {
             );
         }
         $this->connection = $sock;
+
         return $sock;
     }
 
@@ -88,7 +89,7 @@ class POP {
      * Close connection to the POP server.
      */
     public function close() {
-        fputs($this->connection, "QUIT\r\n");
+        fwrite($this->connection, "QUIT\r\n");
         $quitresponse = fgets($this->connection, 1024);
         $quitresponse = "";
         fclose($this->connection);
@@ -97,12 +98,12 @@ class POP {
     /**
      * Delete message from POP server.
      *
-     * @param integer $messageId Id of the message.
+     * @return int $messageId Id of the message.
      *
      * @return string Response string.
      */
     public function delete($messageId) {
-        fputs($this->connection, "DELE $messageId\r\n");
+        fwrite($this->connection, "DELE $messageId\r\n");
 
         return fgets($this->connection, 1024);
     }
@@ -113,38 +114,39 @@ class POP {
      * @return type
      */
     public function countMessages() {
-        fputs($this->connection, "STAT\r\n");
+        fwrite($this->connection, "STAT\r\n");
         $statresponse = fgets($this->connection, 1024);
         $avar = explode(" ", $statresponse);
 
-        return (integer)$avar[1];
+        return (int)$avar[1];
     }
 
     /**
      * Return message header.
      *
-     * @param integer $messageNumber Number of the message.
+     * @return int $messageNumber Number of the message.
      *
      * @return string
      */
     public function messageHeader($messageNumber) {
-        fputs($this->connection, "TOP $messageNumber 0\r\n");
+        fwrite($this->connection, "TOP $messageNumber 0\r\n");
         $buffer = "";
         $headerReceived = 0;
-        while( $headerReceived == 0 ) {
-            $temp = fgets( $this->connection, 1024 );
+        while ($headerReceived == 0) {
+            $temp = fgets($this->connection, 1024);
             $buffer .= $temp;
-            if( $temp == ".\r\n" ) {
+            if ($temp == ".\r\n") {
                 $headerReceived = 1;
             }
         }
+
         return $buffer;
     }
 
     /**
      * Return parsed message header.
      *
-     * @param integer $messageNumber Number of the message.
+     * @return int $messageNumber Number of the message.
      *
      * @return array
      */
@@ -157,12 +159,12 @@ class POP {
     /**
      * Return message by number.
      *
-     * @param integer $messageNumber Number of the message
+     * @return int $messageNumber Number of the message
      *
      * @return string
      */
     public function getMessage($messageNumber) {
-        fputs($this->connection, "RETR $messageNumber\r\n");
+        fwrite($this->connection, "RETR $messageNumber\r\n");
         $headerReceived = 0;
         $buffer = "";
         while ($headerReceived == 0) {
@@ -175,6 +177,7 @@ class POP {
                 $headerReceived = 1;
             }
         }
+
         return $buffer;
     }
 
@@ -186,7 +189,7 @@ class POP {
     public function getMessages() {
         $messages = [];
 
-        for ($i=1; ; $i++) {
+        for ($i = 1; ; $i++) {
             $message = $this->getMessage($i);
             if ($message === false) {
                 break;
@@ -194,6 +197,7 @@ class POP {
 
             $messages[] = $message;
         }
+
         return $messages;
     }
 
@@ -205,7 +209,7 @@ class POP {
     public function getBouncedEmails($delete = true, $number = null) {
         $emails = [];
 
-        for ($i = 1; (is_null($number) ? true : $i <= $number) ; $i++) {
+        for ($i = 1; (is_null($number) ? true : $i <= $number); $i++) {
             $message = $this->getMessage($i);
             if ($message !== false) {
                 $markers = [
@@ -265,7 +269,7 @@ class POP {
     public function getEmails($delete = true, $number = null) {
         $emails = [];
 
-        for ($i = 1; (is_null($number) ? true : $i <= $number) ; $i++) {
+        for ($i = 1; (is_null($number) ? true : $i <= $number); $i++) {
             $message = $this->getMessage($i);
             if ($message !== false) {
                 $failSignaturePos = 0;
@@ -321,7 +325,7 @@ class POP {
      *
      * @param string $email Email address.
      *
-     * @return boolean
+     * @return bool
      */
     private function isBouncedEmail($email) {
         $email = trim($email);
@@ -333,8 +337,10 @@ class POP {
             if (in_array($domain, $this->bouncedWhiteDomains)) {
                 return false;
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -350,7 +356,7 @@ class POP {
         $len = count($avar);
         $ret = $L2 = $L3 = null;
         for ($i = 0; $i < $len; $i++) {
-            if( isset( $avar[$i] ) && isset( $avar[$i][0] ) && isset( $avar[$i][1] ) && isset( $avar[$i][2] ) ){
+            if (isset($avar[$i]) && isset($avar[$i][0]) && isset($avar[$i][1]) && isset($avar[$i][2])) {
                 $L2 = $avar[$i][0] . $avar[$i][1];
                 $L3 = $avar[$i][0] . $avar[$i][1] . $avar[$i][2];
                 if ($L2 != "  " && $L3 != "Rec" && $L2 != "") {
@@ -360,6 +366,7 @@ class POP {
                 }
             }
         }
+
         return $ret;
     }
 
@@ -369,7 +376,7 @@ class POP {
      * @return array
      */
     public function uniqueListing() {
-        fputs($this->connection, "UIDL\r\n");
+        fwrite($this->connection, "UIDL\r\n");
         $response = "";
 
         while (true) {
@@ -387,6 +394,7 @@ class POP {
                 $em2[] = $t[1];
             }
         }
+
         return $em2;
     }
 }
