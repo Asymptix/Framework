@@ -10,7 +10,7 @@ use Asymptix\db\DBObject;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -22,9 +22,9 @@ class DBObjectArrayMapper implements DBObjectProcessor {
      *
      * @var array
      */
-    private $fields = array();
+    private $fields = [];
 
-    public function __construct($fields = array()) {
+    public function __construct($fields = []) {
         $this->fields = $fields;
     }
 
@@ -33,7 +33,7 @@ class DBObjectArrayMapper implements DBObjectProcessor {
             return $dbObject->getFieldsList();
         }
 
-        $data = array();
+        $data = [];
         foreach ($this->fields as $field) {
             $data[$field] = $dbObject->getFieldValue($field);
         }

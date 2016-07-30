@@ -9,7 +9,7 @@ use Asymptix\db\DBObject;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
