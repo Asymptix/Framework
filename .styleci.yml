@@ -7,7 +7,7 @@ linting: true
 enabled:
   #- align_double_arrow
   #- align_equals
-  - binary_operator_spaces
+  #- binary_operator_spaces                                                    x
   - blank_line_after_namespace
   - blank_line_after_opening_tag
   - blank_line_before_return
@@ -36,7 +36,7 @@ enabled:
   - lowercase_constants
   - lowercase_keywords
   - method_argument_space
-  #- method_separation
+  #- method_separation                                                         x
   #- modernize_types_casting
   - native_function_casing
   #- new_with_braces
