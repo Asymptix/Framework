@@ -7,7 +7,7 @@ namespace Asymptix\core;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2015, Dmytro Zarezenko
+ * @copyright (c) 2015 - 2016, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -28,9 +28,11 @@ class String {
     public static function upperCaseFirst($str, $encoding = 'utf8') {
         if ($encoding) {
             $firstLetter = mb_substr(mb_strtoupper($str, $encoding), 0, 1, $encoding);
+
             return ($firstLetter . mb_substr($str, 1, null, $encoding));
         } else {
             $firstLetter = mb_substr(mb_strtoupper($str), 0, 1);
+
             return ($firstLetter . mb_substr($str, 1));
         }
     }
@@ -49,9 +51,11 @@ class String {
     public static function lowerCaseFirst($str, $encoding = 'utf8') {
         if ($encoding) {
             $firstLetter = mb_substr(mb_strtoupper($str, $encoding), 0, 1, $encoding);
+
             return ($firstLetter . mb_substr($str, 1, null, $encoding));
         } else {
             $firstLetter = mb_substr(mb_strtoupper($str), 0, 1);
+
             return ($firstLetter . mb_substr($str, 1));
         }
     }

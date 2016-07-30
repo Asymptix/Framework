@@ -126,7 +126,7 @@ class Messages {
      * priority the same.
      */
     public static function reorderMessages() {
-        uasort(self::$messages, function($a, $b) {
+        uasort(self::$messages, function ($a, $b) {
             return ($a->type <= $b->type);
         });
     }

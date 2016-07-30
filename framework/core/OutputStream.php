@@ -109,7 +109,7 @@ class OutputStream {
      * @param string $str String to output.
      * @param string $format Format of the time label
      *            (optional, default: "\[Y-m-d H:i:s\]").
-     * @param integer $time Timestamp, if not passed - current time will be used.
+     * @param int $time Timestamp, if not passed - current time will be used.
      */
     public static function msg($msgType, $str, $format = "\[Y-m-d H:i:s\]", $time = null) {
         self::message($msgType, $str, $format, $time);

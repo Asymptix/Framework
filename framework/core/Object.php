@@ -79,7 +79,7 @@ abstract class Object {
      * @param string $fieldName Name of the field.
      * @param mixed $fieldValue Value of the field.
      *
-     * @return Object Object itself on success (for the method chaining support).
+     * @return object Object itself on success (for the method chaining support).
      * @throws \Exception If object has no field with such name.
      */
     public function setFieldValue($fieldName, $fieldValue) {
