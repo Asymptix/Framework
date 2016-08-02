@@ -1,8 +1,21 @@
 <?php
 
-$_PATH = "../";
+$_PATH = null;
+$paths = ["../", "./"];
+$isFound = false;
+foreach ($paths as $_PATH) {
+    if (file_exists($_PATH . "vendor/autoload.php")) {
+        require_once($_PATH . "vendor/autoload.php");
+        $isFound = true;
 
-require_once($_PATH . "vendor/autoload.php");
+        break;
+    }
+}
+
+if (!$isFound) {
+    throw new Exception('Unable to load dependencies');
+}
+
 spl_autoload_register(function ($className) {
     global $_PATH;
 
