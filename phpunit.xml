@@ -16,6 +16,8 @@
     <testsuites>
         <testsuite name="Asymptix PHP Framework">
             <directory suffix="Test.php">./tests</directory>
+            <exclude>./tests/db/</exclude>
+            <exclude>./tests/email/</exclude>
         </testsuite>
     </testsuites>
     <filter>
