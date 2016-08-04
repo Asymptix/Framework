@@ -1,6 +1,6 @@
 <?php
 
-namespace Asymptix\core;
+namespace Asymptix\helpers;
 
 /**
  * Strings connected methods.
@@ -12,7 +12,7 @@ namespace Asymptix\core;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class String {
+class StringHelper {
 
     /**
      * Returns a string with the first character of str capitalized, if that
