@@ -69,6 +69,32 @@ class DBQueryType {
         }
     }
 
+    /**
+     * Detects if DB query type is selector query type.
+     *
+     * @param string $queryType Query type constant.
+     *
+     * @return bool
+     */
+    public static function isSelector($queryType) {
+        return in_array($queryType, [
+            self::SELECT, self::DESCRIBE, self::SHOW
+        ]);
+    }
+
+    /**
+     * Detects if DB query type is modifier query type.
+     *
+     * @param string $queryType Query type constant.
+     *
+     * @return bool
+     */
+    public static function isModifier($queryType) {
+        return in_array($queryType, [
+            self::INSERT, self::UPDATE, self::DELETE, self::TRUNCATE
+        ]);
+    }
+
 }
 
 /**

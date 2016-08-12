@@ -475,7 +475,7 @@ abstract class DBObject extends \Asymptix\core\Object {
                 $this->dbQuery->params
             );
         } else {
-            if ($this->dbQuery->isSelect()) {
+            if ($this->dbQuery->isSelector()) {
                 $stmt = $this->dbQuery->go();
                 if ($stmt !== false) {
                     $data = null;

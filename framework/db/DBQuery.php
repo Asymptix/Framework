@@ -96,6 +96,24 @@ class DBQuery {
     }
 
     /**
+     * Detects if DB query is selector query.
+     *
+     * @return bool
+     */
+    public function isSelector() {
+        return DBQueryType::isSelector($this->getType());
+    }
+
+    /**
+     * Detects if DB query is modifier query.
+     *
+     * @return bool
+     */
+    public function isModifier() {
+        return DBQueryType::isModifier($this->getType());
+    }
+
+    /**
      * Outputs DB query debug information to the stream.
      *
      * @param string $query SQL query.
