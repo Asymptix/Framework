@@ -335,6 +335,20 @@ class DBCore {
         return $stmt;
     }
 
+    /**
+     * Execute DB SQL queries using Prepared Statements.
+     *
+     * @param mixed $query SQL query template string or DBPreparedQuery object
+     *           if single parameter.
+     * @param string $types Types string (ex: "isdb").
+     * @param array $params Parameters in the same order like types string.
+     *
+     * @return mixed Statement object or FALSE if an error occurred.
+     */
+    public static function query($query, $types = "", $params = []) {
+        return (new DBPreparedQuery($query, $types, $params))->go();
+    }
+
 
     /**
      * Execute update DB SQL queries using Prepared Statements.
