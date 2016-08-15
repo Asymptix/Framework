@@ -40,17 +40,17 @@ class Tools {
     }
 
     /**
-     * Check data for Integer.
+     * Checks if value is an integer or integer string.
      *
-     * @param mixed $input Data.
+     * @param mixed $value Data.
      * @return bool Returns TRUE if $input is a integer, FALSE otherwise.
      */
-    public static function isInteger($input) {
-        if (is_array($input)) {
+    public static function isInteger($value) {
+        if (is_array($value)) {
             return false;
         }
 
-        $strVal = trim(strval($input));
+        $strVal = trim(strval($value));
         if (strlen($strVal) && $strVal[0] == '-') {
             return ctype_digit(substr($strVal, 1));
         }
@@ -61,23 +61,33 @@ class Tools {
     /**
      * Check data for double.
      *
-     * @param mixed $input Data.
-     * @return bool Returns TRUE if $input is a double, FALSE otherwise.
+     * @param mixed $value Data.
+     * @return bool Returns TRUE if $input is a double value, FALSE otherwise.
      */
-    public static function isDouble($input) {
-        return is_float($input);
+    public static function isDouble($value) {
+        return is_float($value);
+    }
+
+    /**
+     * Check data for float.
+     *
+     * @param mixed $value Data.
+     * @return bool Returns TRUE if $input is a float value, FALSE otherwise.
+     */
+    public static function isFloat($value) {
+        return self::isDouble($value);
     }
 
     /**
      * Verify if some string is string representation of some double value.
      * Decimal point may be `.` and `,`.
      *
-     * @param string $input
+     * @param string $value
      * @return bool
      */
-    public static function isDoubleString($input) {
-        $doubleValue = (float)$input;
-        $stringValue = str_replace(",", ".", (string)$input);
+    public static function isDoubleString($value) {
+        $doubleValue = (float)$value;
+        $stringValue = str_replace(",", ".", (string)$value);
 
         if (is_numeric($stringValue)) {
             return true;
@@ -101,39 +111,49 @@ class Tools {
     }
 
     /**
+     * Convert string representation of some double value to float.
+     *
+     * @param string $value
+     * @return float
+     */
+    public static function toFloat($value) {
+        return self::toDouble($value);
+    }
+
+    /**
      * Finds whether a variable is a number or a numeric string.
      *
-     * @param mixed $input The variable being evaluated.
+     * @param mixed $value The variable being evaluated.
      *
      * @return bool Returns TRUE if $input is a number or a numeric string,
      *           FALSE otherwise.
      */
-    public static function isNumeric($input) {
-        return is_numeric(strval($input));
+    public static function isNumeric($value) {
+        return is_numeric(strval($value));
     }
 
     /**
      * Find whether a variable is a boolean value.
      *
-     * @param mixed $input The variable being evaluated.
+     * @param mixed $value The variable being evaluated.
      *
      * @return bool bool Returns TRUE if $input is a number or a numeric string,
      *           FALSE otherwise.
      */
-    public static function isBoolean($input) {
-        return is_bool($input);
+    public static function isBoolean($value) {
+        return is_bool($value);
     }
 
     /**
      * Find whether a variable is a string value.
      *
-     * @param mixed $input The variable being evaluated.
+     * @param mixed $value The variable being evaluated.
      *
      * @return bool bool Returns TRUE if $input is a number or a numeric string,
      *           FALSE otherwise.
      */
-    public static function isString($input) {
-        return is_string($input);
+    public static function isString($value) {
+        return is_string($value);
     }
 
     /**
