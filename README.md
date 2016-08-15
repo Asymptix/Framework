@@ -12,20 +12,6 @@ The Fast and Easy PHP Framework for Rapid Development.
 [![Code Climate](https://codeclimate.com/github/Asymptix/Framework/badges/gpa.svg)](https://codeclimate.com/github/Asymptix/Framework)
 [![License](https://poser.pugx.org/asymptix/framework/license)](https://packagist.org/packages/asymptix/framework)
 
-DIRECTORY STRUCTURE
----
-
-```
-classes/             example project classes
-classes/db/          example DB beans classes
-conf/                configuration files
-controllers/         example controllers
-framework/           core framework code
-modules/             example modules
-templates/           example templates
-tests/               tests of the core framework code
-```
-
 REQUIREMENTS
 ---
 
