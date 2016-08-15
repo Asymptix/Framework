@@ -11,4 +11,11 @@ coding_style:
         concatenation: true
       other:
         after_type_cast: false
-build: true
+build:
+  tests:
+    override:
+      -
+        command: 'phpunit --configuration=phpunit.xml --coverage-clover=phpunit-coverage.xml'
+        coverage:
+          file: 'phpunit-coverage.xml'
+          format: 'php-clover'
