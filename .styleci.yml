@@ -136,7 +136,6 @@ finder:
   path:
     - "framework/"
   exclude:
-    - "tests"
     - "docs"
   name:
     - "*.php"
