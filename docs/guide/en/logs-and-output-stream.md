@@ -68,7 +68,7 @@ $logger->log(Logger::LOG_ERROR, "Hello, world!");
 
 $logger->close();
 
-// Log to the DB with using bean class extended from __\Asymptix\db\DBObject__
+// Log to the DB with using bean class extended from \Asymptix\db\DBObject
 $logger = new Logger(Logger::TO_DB, new Asymptix\tools\logging\LogDBObject);
 
 $logger->log(Logger::LOG_INFO, "Hello, world!");
@@ -81,3 +81,8 @@ $logger->log(Logger::LOG_ERROR, "Hello, world!");
 
 $logger->close();
 ```
+
+In case of using database oriented logs you must to create your own bean class with the
+`public static function log($type, $message, $time = null)` method.
+
+Example [\Asymptix\tools\logging\LogDBObject](https://github.com/Asymptix/Framework/blob/master/framework/tools/logging/LogDBObject.php)

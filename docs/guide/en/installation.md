@@ -1,4 +1,4 @@
-INSTALLATION & CONFIGURATION
+Installation & Configuration
 ---
 
 To install framework use [Composer](https://getcomposer.org/) `composer install` command with `composer.json` configuration file.
