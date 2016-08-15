@@ -61,7 +61,6 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObject
-     * @todo   Implement testSelectDBObject().
      */
     public function testSelectDBObject_Exists() {
         $selector = new DBSelector(new User());
@@ -74,7 +73,6 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObject
-     * @todo   Implement testSelectDBObject().
      */
     public function testSelectDBObject_NotExists() {
         $selector = new DBSelector(new User());
@@ -86,7 +84,6 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObjectByField
-     * @todo   Implement testSelectDBObjectByField().
      */
     public function testSelectDBObjectByField_Exists() {
         $selector = new DBSelector(new User());
@@ -99,7 +96,6 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObjectByField
-     * @todo   Implement testSelectDBObjectByField().
      */
     public function testSelectDBObjectByField_NotExists() {
         $selector = new DBSelector(new User());
@@ -110,8 +106,31 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjectByField
+     */
+    public function testSelectDBObjectByField_WithOrder_1() {
+        $selector = new DBSelector(new User);
+        $selector->order = "email ASC";
+        $user = $selector->selectDBObjectByField('language', "en");
+
+        $this->assertInstanceOf("db\access\User", $user, "Not an instanse of User class");
+        $this->assertEquals(self::EMAIL_EXISTS, $user->email);
+    }
+
+    /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjectByField
+     */
+    public function testSelectDBObjectByField_WithOrder_2() {
+        $selector = new DBSelector(new User);
+        $selector->order = "email DESC";
+        $user = $selector->selectDBObjectByField('language', "en");
+
+        $this->assertInstanceOf("db\access\User", $user, "Not an instanse of User class");
+        $this->assertNotEquals(self::EMAIL_EXISTS, $user->email);
+    }
+
+    /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObjectById
-     * @todo   Implement testSelectDBObjectById().
      */
     public function testSelectDBObjectById() {
         $selector = new DBSelector(new User());
@@ -123,7 +142,6 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
-     * @todo   Implement testSelectDBObjects().
      */
     public function testSelectDBObjects() {
         $selector = new DBSelector(new User());
@@ -134,8 +152,88 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
+     */
+    public function testSelectDBObjects_LimitAll() {
+        $selector = new DBSelector(new User());
+
+        $selector->count = "all";
+        $users = $selector->selectDBObjects();
+
+        $usersNumber = $selector->count();
+
+        $this->assertTrue(is_array($users));
+        $this->assertTrue(isset($users[$this->user->id]));
+        $this->assertEquals(count($users), $usersNumber);
+    }
+
+    /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
+     */
+    public function testSelectDBObjects_LimitValue() {
+        $count = 1;
+
+        $selector = new DBSelector(new User());
+
+        $selector->count = $count;
+        $users = $selector->selectDBObjects();
+
+        $this->assertTrue(is_array($users));
+        $this->assertEquals(count($users), $count);
+    }
+
+    /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
+     */
+    public function testSelectDBObjects_LimitZero() {
+        $count = 0;
+
+        $selector = new DBSelector(new User());
+
+        $selector->count = $count;
+        $users = $selector->selectDBObjects();
+
+        $this->assertTrue(is_array($users));
+        $this->assertEquals(count($users), $count);
+    }
+
+    /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
+     */
+    public function testSelectDBObjects_LimitAndOffset() {
+        $count = 1;
+        $offset = 1;
+
+        $selector = new DBSelector(new User());
+
+        $selector->count = $count;
+        $selector->offset = $offset;
+        $users = $selector->selectDBObjects();
+
+        $this->assertTrue(is_array($users));
+        $this->assertEquals(count($users), $count);
+    }
+
+    /**
+     * @covers \Asymptix\core\DB\DBSelector::selectDBObjects
+     */
+    public function testSelectDBObjects_Offset() {
+        $offset = 1;
+
+        $selector = new DBSelector(new User());
+
+        $selector->count = 100;
+        $selector->offset = $offset;
+        $users = $selector->selectDBObjects();
+
+        $usersNumber = $selector->count();
+
+        $this->assertTrue(is_array($users));
+        $this->assertEquals(count($users), $usersNumber - $offset);
+    }
+
+    /**
      * @covers \Asymptix\core\DB\DBSelector::selectDBObjectsByField
-     * @todo   Implement testSelectDBObjectsByField().
      */
     public function testSelectDBObjectsByField() {
         $selector = new DBSelector(new User());
@@ -148,7 +246,6 @@ class DBSelectorTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \Asymptix\core\DB\DBSelector::count
-     * @todo   Implement testCount().
      */
     public function testCount() {
         $selector = new DBSelector(new User());
