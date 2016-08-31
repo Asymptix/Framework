@@ -22,6 +22,7 @@ class DBQueryType {
     const DESCRIBE = 'DESCRIBE';
     const SHOW = 'SHOW';
     const TRUNCATE = 'TRUNCATE';
+    const ALTER = 'ALTER';
 
     /**
      * Validates SQL query type value.
@@ -91,7 +92,8 @@ class DBQueryType {
      */
     public static function isModifier($queryType) {
         return in_array($queryType, [
-            self::INSERT, self::UPDATE, self::DELETE, self::TRUNCATE
+            self::INSERT, self::UPDATE, self::DELETE,
+            self::TRUNCATE, self::ALTER
         ]);
     }
 
