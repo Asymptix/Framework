@@ -236,7 +236,7 @@ abstract class DBObject extends \Asymptix\core\Object {
      */
     public function save($debug = false) {
         if ($this->isNewRecord()) {
-            $insertionId = DBCore::insertDBObject($this, $debug);
+            $insertionId = DBCore::insertDBObject($this, false, $debug);
             if (Tools::isInteger($insertionId) && $insertionId > 0) {
                 $this->setId($insertionId);
 
@@ -247,6 +247,19 @@ abstract class DBObject extends \Asymptix\core\Object {
         DBCore::updateDBObject($this, $debug);
 
         return $this->id;
+    }
+
+    /**
+     * Inserts DBObject to the database.
+     *
+     * @param bool $ignore Ignore unique indexes or not.
+     * @param bool Debug mode flag.
+     *
+     * @return mixed Primary key value.
+     * @throws DBCoreException If some database error occurred.
+     */
+    public function insert($ignore = false, $debug = false) {
+        return DBCore::insertDBObject($this, $ignore, $debug);
     }
 
     /**

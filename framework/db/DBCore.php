@@ -548,21 +548,22 @@ class DBCore {
      * Executes SQL INSERT query to the database.
      *
      * @param DBObject $dbObject DBObject to insert.
+     * @param bool $ignore Ignore unique indexes or not.
      * @param bool $debug Debug mode flag.
      *
      * @return int Insertion ID (primary key value) or null on debug.
      */
-    public static function insertDBObject($dbObject, $debug = false) {
+    public static function insertDBObject($dbObject, $ignore = false, $debug = false) {
         $fieldsList = $dbObject->getFieldsList();
         $idFieldName = $dbObject->getIdFieldName();
 
         if (Tools::isInteger($fieldsList[$idFieldName])) {
-            $query = "INSERT INTO " . $dbObject->getTableName() . "
+            $query = "INSERT " . ($ignore ? 'IGNORE' : 'INTO') . " " . $dbObject->getTableName() . "
                           SET " . DBPreparedQuery::sqlQMValuesString($fieldsList, $idFieldName);
             $typesString = DBPreparedQuery::sqlTypesString($fieldsList, $idFieldName);
             $valuesList = self::createValuesList($fieldsList, $idFieldName);
         } else {
-            $query = "INSERT INTO " . $dbObject->getTableName() . "
+            $query = "INSERT " . ($ignore ? 'IGNORE' : 'INTO') . " " . $dbObject->getTableName() . "
                           SET " . DBPreparedQuery::sqlQMValuesString($fieldsList);
             $typesString = DBPreparedQuery::sqlTypesString($fieldsList);
             $valuesList = self::createValuesList($fieldsList);
