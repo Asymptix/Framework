@@ -269,7 +269,6 @@ class DBCore {
      * Return parameters from the statment with dynamic number of parameters.
      *
      * @param resource $stmt Statement.
-     * @param array $params Parameters.
      */
     public static function bindResults($stmt) {
         $resultSet = [];
