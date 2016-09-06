@@ -2,12 +2,16 @@ filter:
   excluded_paths:
     - 'tests/*'
     - '*.tpl.php'
+
 checks:
   php: true
+
 coding_style:
   php:
     spaces:
       around_operators:
-        concatenation: true
+        concatenation: false
       other:
         after_type_cast: false
+
+build: false
