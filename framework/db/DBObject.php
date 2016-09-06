@@ -339,6 +339,68 @@ abstract class DBObject extends \Asymptix\core\Object {
     }
 
     /**
+     * Returns result of the COUNT() SQL query.
+     *
+     * @param array $conditions Conditions list.
+     * @param type $debug Debug mode flag.
+     *
+     * @return int
+     */
+    public static function _count($conditions = [], $debug = false) {
+        $dbQuery = (new DBPreparedQuery())->prepare(
+            "SELECT COUNT(*) as 'val' FROM " . static::TABLE_NAME,
+            $conditions
+        );
+
+        if (!$debug) {
+            return (int)DBCore::selectSingleValue($dbQuery);
+        }
+        $dbQuery->debug();
+    }
+
+    /**
+     * Returns result of the MAX($field) SQL query.
+     *
+     * @param string $field Name of the field.
+     * @param array $conditions Conditions list.
+     * @param type $debug Debug mode flag.
+     *
+     * @return int
+     */
+    public static function _max($field, $conditions = [], $debug = false) {
+        $dbQuery = (new DBPreparedQuery())->prepare(
+            "SELECT MAX(`" . $field . "`) as 'val' FROM " . static::TABLE_NAME,
+            $conditions
+        );
+
+        if (!$debug) {
+            return DBCore::selectSingleValue($dbQuery);
+        }
+        $dbQuery->debug();
+    }
+
+    /**
+     * Returns result of the MIN($field) SQL query.
+     *
+     * @param string $field Name of the field.
+     * @param array $conditions Conditions list.
+     * @param type $debug Debug mode flag.
+     *
+     * @return int
+     */
+    public static function _min($field, $conditions = [], $debug = false) {
+        $dbQuery = (new DBPreparedQuery())->prepare(
+            "SELECT MIN(`" . $field . "`) as 'val' FROM " . static::TABLE_NAME,
+            $conditions
+        );
+
+        if (!$debug) {
+            return DBCore::selectSingleValue($dbQuery);
+        }
+        $dbQuery->debug();
+    }
+
+    /**
      * Prepare DBObject for the UPDATE SQL query.
      *
      * @param type $fields List of fields to be updated
