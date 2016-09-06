@@ -269,13 +269,22 @@ abstract class DBObject extends \Asymptix\core\Object {
      * @param array $conditions List of conditions for WHERE instruction.
      * @param array $fields List of fields for INSERT or UPDATE types of SQL queries.
      *
-     * @return DBObject Itself.
+     * @return DBObject Oneself.
+     * @throws DBCoreException If some error occurred.
      */
     public function initQuery($queryType, $conditions = [], $fields = []) {
         $this->dbQuery = new DBPreparedQuery();
 
         $this->dbQuery->setType($queryType);
+
+        if (!is_array($conditions)) {
+            throw new DBCoreException("Invalid conditions array");
+        }
         $this->dbQuery->conditions = $conditions;
+
+        if (!is_array($fields)) {
+            throw new DBCoreException("Invalid fields array");
+        }
         $this->dbQuery->fields = $fields;
 
         /*
