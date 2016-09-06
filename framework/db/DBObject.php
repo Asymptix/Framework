@@ -482,11 +482,7 @@ abstract class DBObject extends \Asymptix\core\Object {
         }
 
         if ($debug) {
-            DBQuery::showQueryDebugInfo(
-                $this->dbQuery->query,
-                $this->dbQuery->types,
-                $this->dbQuery->params
-            );
+            $this->dbQuery->debug();
         } else {
             if ($this->dbQuery->isSelector()) {
                 $stmt = $this->dbQuery->go();

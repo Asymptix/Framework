@@ -89,7 +89,7 @@ class DBPreparedQuery extends DBQuery {
      */
     public function go($debug = false) {
         if ($debug) {
-            DBQuery::showQueryDebugInfo($this->query, $this->types, $this->params);
+            $this->debug();
         } else {
             if ($this->isSelector()) {
                 return DBCore::doSelectQuery($this);
@@ -97,6 +97,13 @@ class DBPreparedQuery extends DBQuery {
 
             return DBCore::doUpdateQuery($this);
         }
+    }
+
+    /**
+     * Shows debug information for the SQL query without execution.
+     */
+    public function debug() {
+        self::showQueryDebugInfo($this->query, $this->types, $this->params);
     }
 
     /**
