@@ -816,13 +816,14 @@ class DBCore {
 
         if ($stmt !== false) {
             $value = null;
-            if ($stmt->num_rows === 1) {
+            $numRows = $stmt->num_rows;
+            if ($numRows === 1) {
                 $stmt->bind_result($value);
                 $stmt->fetch();
             }
             $stmt->close();
 
-            if (is_null($value)) {
+            if ($numRows !== 1) {
                 throw new DBCoreException("No one or more than one records selected.");
             }
 
