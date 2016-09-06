@@ -79,6 +79,102 @@ class DBPreparedQuery extends DBQuery {
     }
 
     /**
+     * Adds conditions WHERE SQL string to the SQL query.
+     */
+    public function prepareConditions() {
+        if (!empty($this->conditions)) {
+            $this->query.= " WHERE ";
+            $this->sqlPushValues($this->conditions, " AND ");
+        }
+    }
+
+    /**
+     * Adds ORDER SQL string to the SQL query.
+     */
+    public function prepareOrder() {
+        if (!empty($this->order)) {
+            $this->query.= " ORDER BY";
+            if (is_array($this->order)) {
+                foreach ($this->order as $fieldName => $ord) {
+                    $this->query.= " " . $fieldName . " " . $ord . ",";
+                }
+                $this->query = substr($this->query, 0, strlen($this->query) - 1);
+            } elseif (is_string($this->order)) {
+                $this->query.= " " . $this->order;
+            }
+        }
+    }
+
+    /**
+     * Adds LIMIT SQL string to the SQL query.
+     *
+     * @throws DBCoreException If some error occurred.
+     */
+    public function prepareLimit() {
+        if (!is_null($this->limit)) {
+            if (Tools::isInteger($this->limit)) {
+                $this->query.= " LIMIT " . $this->limit;
+                $count = $this->limit;
+            } elseif (is_array($this->limit) && count($this->limit) == 2) {
+                $offset = $this->limit[0];
+                $count = $this->limit[1];
+                if (Tools::isInteger($offset) && Tools::isInteger($count)) {
+                    $this->query.= " LIMIT " . $offset . ", " . $count;
+                } else {
+                    throw new DBCoreException("Invalid LIMIT param in select() method.");
+                }
+            } else {
+                throw new DBCoreException("Invalid LIMIT param in select() method.");
+            }
+        }
+    }
+
+    /**
+     * Prepares SQL query to the execution.
+     *
+     * @param string $query Initial SQL query string.
+     * @param array $conditions Conditions list.
+     * @param array $order List of order conditions (fieldName => order),
+     *           order may be 'ASC' OR 'DESC'.
+     * @param int $offset Limit offset value (or count if this is single
+     *           parameter).
+     * @param int $count Number of records to select.
+     *
+     * @return DBPreparedQuery Oneself after modifications.
+     * @throws DBCoreException If some error occurred.
+     */
+    public function prepare($query, $conditions = null, $order = null, $offset = null, $count = null) {
+        if (empty($query)) {
+            throw new DBCoreException("Nothing to run, SQL query is not initialized");
+        }
+        $this->query = $query;
+
+        if (!is_null($conditions)) {
+            if (!is_array($conditions)) {
+                throw new DBCoreException("Invalid conditions array");
+            }
+            $this->conditions = $conditions;
+        }
+        $this->prepareConditions();
+
+        if (!is_null($order)) {
+            $this->order = $order;
+        }
+        $this->prepareOrder();
+
+        if (!is_null($offset)) {
+            if (is_null($count)) {
+                $this->dbQuery->limit = $offset;
+            } else {
+                $this->dbQuery->limit = [$offset, $count];
+            }
+        }
+        $this->prepareLimit();
+
+        return $this;
+    }
+
+    /**
      * Executes SQL query.
      *
      * @param bool $debug Debug mode flag.
