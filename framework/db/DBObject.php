@@ -500,10 +500,7 @@ abstract class DBObject extends \Asymptix\core\Object {
          * Conditions
          */
         if ($this->isNewRecord()) {
-            if (!empty($this->dbQuery->conditions)) {
-                $this->dbQuery->query.= " WHERE ";
-                $this->dbQuery->sqlPushValues($this->dbQuery->conditions, " AND ");
-            }
+            $this->dbQuery->prepareConditions();
         } else {
             $this->dbQuery->query.= " WHERE ";
             $this->dbQuery->sqlPushValues([static::ID_FIELD_NAME => $this->id]);
@@ -513,17 +510,7 @@ abstract class DBObject extends \Asymptix\core\Object {
          * Order
          */
         if ($this->isNewRecord()) {
-            if (!empty($this->dbQuery->order)) {
-                $this->dbQuery->query.= " ORDER BY";
-                if (is_array($this->dbQuery->order)) {
-                    foreach ($this->dbQuery->order as $fieldName => $ord) {
-                        $this->dbQuery->query.= " " . $fieldName . " " . $ord . ",";
-                    }
-                    $this->dbQuery->query = substr($this->dbQuery->query, 0, strlen($this->dbQuery->query) - 1);
-                } elseif (is_string($this->dbQuery->order)) {
-                    $this->dbQuery->query.= " " . $this->dbQuery->order;
-                }
-            }
+            $this->dbQuery->prepareOrder();
         }
 
         /*
@@ -531,22 +518,7 @@ abstract class DBObject extends \Asymptix\core\Object {
          */
         $count = null;
         if ($this->isNewRecord()) {
-            if (!is_null($this->dbQuery->limit)) {
-                if (Tools::isInteger($this->dbQuery->limit)) {
-                    $this->dbQuery->query.= " LIMIT " . $this->dbQuery->limit;
-                    $count = $this->dbQuery->limit;
-                } elseif (is_array($this->dbQuery->limit) && count($this->dbQuery->limit) == 2) {
-                    $offset = $this->dbQuery->limit[0];
-                    $count = $this->dbQuery->limit[1];
-                    if (Tools::isInteger($offset) && Tools::isInteger($count)) {
-                        $this->dbQuery->query.= " LIMIT " . $offset . ", " . $count;
-                    } else {
-                        throw new DBCoreException("Invalid LIMIT param in select() method.");
-                    }
-                } else {
-                    throw new DBCoreException("Invalid LIMIT param in select() method.");
-                }
-            }
+            $count = $this->dbQuery->prepareLimit();
         } else {
             $this->dbQuery->query.= " LIMIT 1";
             $count = 1;

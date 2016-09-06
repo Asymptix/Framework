@@ -108,9 +108,11 @@ class DBPreparedQuery extends DBQuery {
     /**
      * Adds LIMIT SQL string to the SQL query.
      *
+     * @return mixed Number of records will be selected or null.
      * @throws DBCoreException If some error occurred.
      */
     public function prepareLimit() {
+        $count = null;
         if (!is_null($this->limit)) {
             if (Tools::isInteger($this->limit)) {
                 $this->query.= " LIMIT " . $this->limit;
@@ -127,6 +129,8 @@ class DBPreparedQuery extends DBQuery {
                 throw new DBCoreException("Invalid LIMIT param in select() method.");
             }
         }
+
+        return $count;
     }
 
     /**
