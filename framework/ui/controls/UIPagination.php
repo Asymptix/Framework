@@ -2,6 +2,8 @@
 
 namespace Asymptix\ui\controls;
 
+use Asymptix\core\Tools;
+
 /**
  * Pagination UI control class.
  *
@@ -16,7 +18,7 @@ class UIPagination extends \Asymptix\ui\UIControl {
     /**
      * Default dialog panel HTML template.
      */
-    const DEFAULT_TEMPLATE = "core/ui/templates/controls/ui_pagination.tpl.php";
+    const DEFAULT_TEMPLATE = "vendor/asymptix/framework/core/ui/templates/controls/ui_pagination.tpl.php";
 
     public $url = "";
 
@@ -47,11 +49,17 @@ class UIPagination extends \Asymptix\ui\UIControl {
 
         if ($this->pagesNumber > 1) {
             $this->correctPages();
+        }
 
-            if (empty($template)) {
-                $template = self::DEFAULT_TEMPLATE;
-            }
-            parent::__construct([], $template);
+        if (empty($template)) {
+            $template = self::DEFAULT_TEMPLATE;
+        }
+        parent::__construct([], $template);
+    }
+
+    public function show() {
+        if ($this->pagesNumber > 1) {
+            parent::show();
         }
     }
 
@@ -76,8 +84,9 @@ class UIPagination extends \Asymptix\ui\UIControl {
 
     public static function getCurrentPageNumber($page, $totalPages) {
         $page = (int)$page;
+        $totalPages = (int)$totalPages;
 
-        if ($page < 1) {
+        if ($page < 1 || $totalPages < 1) {
             return 1;
         }
 
