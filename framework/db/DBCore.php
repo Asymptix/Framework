@@ -623,17 +623,17 @@ class DBCore {
         if (!empty($dbObject) && is_object($dbObject)) {
             $query = "DELETE FROM " . $dbObject->getTableName() .
                      " WHERE " . $dbObject->getIdFieldName() . " = ? LIMIT 1";
+
+            $typesString = "s";
             if (Tools::isInteger($dbObject->getId())) {
                 $typesString = "i";
-            } else {
-                $typesString = "s";
             }
-            self::doUpdateQuery($query, $typesString, [$dbObject->getId()]);
-
-            return (self::connection()->affected_rows);
-        } else {
-            return false;
+            return self::doUpdateQuery(
+                $query, $typesString, [$dbObject->getId()]
+            );
         }
+
+        return false;
     }
 
     /**
