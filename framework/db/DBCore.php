@@ -628,6 +628,7 @@ class DBCore {
             if (Tools::isInteger($dbObject->getId())) {
                 $typesString = "i";
             }
+
             return self::doUpdateQuery(
                 $query, $typesString, [$dbObject->getId()]
             );
