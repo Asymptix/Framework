@@ -96,8 +96,6 @@ abstract class UIComponent {
         $this->dataSet = $dataSet;
         $this->currentValue = $currentValue;
         $this->template = $template;
-
-        $this->show();
     }
 
     /**
@@ -122,7 +120,7 @@ abstract class UIComponent {
      *
      * @return nothing
      */
-    protected function show() {
+    public function show() {
         if (!empty($this->template)) {
             include($this->template);
 
