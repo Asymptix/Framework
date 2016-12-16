@@ -13,7 +13,8 @@ use Asymptix\core\OutputStream;
  * @copyright (c) 2016, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class Logger {
+class Logger
+{
 
     /**
      * Log messages types constants.
@@ -204,4 +205,5 @@ class Logger {
 
 }
 
-class LoggerException extends \Exception {}
+class LoggerException extends \Exception
+{}

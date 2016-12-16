@@ -12,7 +12,8 @@ namespace Asymptix\ui\controls;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIDialog extends \Asymptix\ui\UIControl {
+class UIDialog extends \Asymptix\ui\UIControl
+{
     /**
      * Default dialog panel HTML template.
      */

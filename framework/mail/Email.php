@@ -15,7 +15,8 @@ use Asymptix\core\Content;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Email {
+class Email
+{
 
     /**
      * Mail format constants.
@@ -161,4 +162,5 @@ class Email {
 
 }
 
-class EmailException extends \Exception {}
+class EmailException extends \Exception
+{}

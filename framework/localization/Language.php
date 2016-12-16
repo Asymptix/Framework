@@ -12,7 +12,8 @@ namespace Asymptix\localization;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Language {
+class Language
+{
     /**
      * ISO 639-1 standard two-letter language code.
      *

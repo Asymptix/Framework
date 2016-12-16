@@ -15,7 +15,8 @@ use Asymptix\core\Route;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class View {
+class View
+{
 
     /**
      * @var Route

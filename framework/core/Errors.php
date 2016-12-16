@@ -22,7 +22,8 @@ $_ERRORS = [];
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Errors {
+class Errors
+{
 
     /**
      * Display error of script execution.

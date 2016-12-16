@@ -14,7 +14,8 @@ use Asymptix\core\Tools;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBPreparedQuery extends DBQuery {
+class DBPreparedQuery extends DBQuery
+{
 
     /**
      * DB query template.
@@ -36,7 +37,6 @@ class DBPreparedQuery extends DBQuery {
      * @var array
      */
     public $params = [];
-
 
     /* Service variables */
 

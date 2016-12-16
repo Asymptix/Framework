@@ -14,7 +14,8 @@ use Asymptix\helpers\Naming;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Session {
+class Session
+{
 
     /**
      * Start new or resume existing session.

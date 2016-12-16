@@ -12,7 +12,8 @@ namespace Asymptix\helpers;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class StringHelper {
+class StringHelper
+{
 
     /**
      * Returns a string with the first character of str capitalized, if that

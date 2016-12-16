@@ -12,7 +12,8 @@ namespace Asymptix\db;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBQueryType {
+class DBQueryType
+{
 
     const SELECT = 'SELECT';
     const INSERT = 'INSERT';
@@ -102,4 +103,5 @@ class DBQueryType {
 /**
  * Service exception class.
  */
-class DBQueryTypeException extends \Exception {}
+class DBQueryTypeException extends \Exception
+{}

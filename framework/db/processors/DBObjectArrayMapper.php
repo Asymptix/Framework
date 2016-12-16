@@ -15,7 +15,8 @@ use Asymptix\db\DBObject;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBObjectArrayMapper implements DBObjectProcessor {
+class DBObjectArrayMapper implements DBObjectProcessor
+{
 
     /**
      * Array with fields names.

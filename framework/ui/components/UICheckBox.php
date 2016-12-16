@@ -12,7 +12,8 @@ namespace Asymptix\ui\components;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UICheckBox extends \Asymptix\ui\UIComponent {
+class UICheckBox extends \Asymptix\ui\UIComponent
+{
     /**
      * Default checkbox HTML template.
      */

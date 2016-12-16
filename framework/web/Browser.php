@@ -12,7 +12,8 @@ namespace Asymptix\web;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Browser {
+class Browser
+{
     /**
      * Browser detection RegEx pattern.
      *

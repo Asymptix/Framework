@@ -13,7 +13,8 @@ namespace Asymptix\db;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBTimedObject extends DBObject {
+class DBTimedObject extends DBObject
+{
 
     /**
      * Changes record creation time and user Id.

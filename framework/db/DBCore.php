@@ -14,7 +14,8 @@ use Asymptix\core\Tools;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBCore {
+class DBCore
+{
     /**
      * An array containing all the opened connections.
      *
@@ -347,7 +348,6 @@ class DBCore {
     public static function query($query, $types = "", $params = []) {
         return (new DBPreparedQuery($query, $types, $params))->go();
     }
-
 
     /**
      * Execute update DB SQL queries using Prepared Statements.
@@ -838,4 +838,5 @@ class DBCore {
 /**
  * Service exception class.
  */
-class DBCoreException extends \Exception {}
+class DBCoreException extends \Exception
+{}

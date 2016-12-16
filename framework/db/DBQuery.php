@@ -14,7 +14,8 @@ use Asymptix\core\OutputStream;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBQuery {
+class DBQuery
+{
 
     /* Service variables */
 

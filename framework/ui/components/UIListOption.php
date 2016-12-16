@@ -12,7 +12,8 @@ namespace Asymptix\ui\components;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIListOption extends \Asymptix\ui\UIComponent {
+class UIListOption extends \Asymptix\ui\UIComponent
+{
     /**
      * Default drop-down list HTML template.
      */

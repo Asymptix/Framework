@@ -16,7 +16,8 @@ use Asymptix\core\Errors;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Localization {
+class Localization
+{
     /**
      * Return localized value for some value.
      *

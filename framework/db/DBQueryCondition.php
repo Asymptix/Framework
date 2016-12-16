@@ -14,7 +14,8 @@ use Asymptix\core\Tools;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBQueryCondition {
+class DBQueryCondition
+{
     /**
      * Database condition field.
      *
@@ -286,4 +287,5 @@ class DBQueryCondition {
 /**
  * Service exception class.
  */
-class DBQueryConditionException extends \Exception {}
+class DBQueryConditionException extends \Exception
+{}
