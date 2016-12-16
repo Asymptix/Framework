@@ -13,7 +13,7 @@ enabled:
   - blank_line_before_return
   #- braces
   #- cast_spaces
-  - class_definition
+  #- class_definition
   - combine_consecutive_unsets
   - concat_with_spaces
   #- concat_without_spaces
@@ -41,7 +41,7 @@ enabled:
   - native_function_casing
   #- new_with_braces
   - no_alias_functions
-  - no_blank_lines_after_class_opening
+  #- no_blank_lines_after_class_opening
   - no_blank_lines_after_phpdoc
   #- no_blank_lines_before_namespace
   - no_closing_tag
