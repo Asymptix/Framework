@@ -348,7 +348,6 @@ class DBCore {
         return (new DBPreparedQuery($query, $types, $params))->go();
     }
 
-
     /**
      * Execute update DB SQL queries using Prepared Statements.
      *

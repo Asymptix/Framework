@@ -37,9 +37,6 @@ class DBPreparedQuery extends DBQuery {
      */
     public $params = [];
 
-
-    /* Service variables */
-
     /**
      * Creates and initialize DBPreparedQuery object.
      *
