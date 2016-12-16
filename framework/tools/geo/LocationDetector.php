@@ -13,7 +13,8 @@ namespace Asymptix\tools\geo;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class LocationDetector {
+class LocationDetector
+{
 
     const PROVIDER_IPINFO_IO = "http://ipinfo.io/[IP]/json";
     const PROVIDER_GEOPLUGIN_NET = "http://www.geoplugin.net/json.gp?ip=[IP]";
@@ -136,4 +137,5 @@ class LocationDetector {
     }
 }
 
-class LocationDetectorException extends \Exception {}
+class LocationDetectorException extends \Exception
+{}

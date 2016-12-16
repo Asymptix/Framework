@@ -14,7 +14,8 @@ use Asymptix\core\Route;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-abstract class Controller {
+abstract class Controller
+{
 
     /**
      * @var Route

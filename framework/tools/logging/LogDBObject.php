@@ -12,7 +12,8 @@ use Asymptix\db\DBCore;
  * @copyright (c) 2016, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
-class LogDBObject extends \Asymptix\db\DBObject {
+class LogDBObject extends \Asymptix\db\DBObject
+{
 
     const TABLE_NAME = "log";
     const ID_FIELD_NAME = "";

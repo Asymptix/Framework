@@ -12,7 +12,8 @@ namespace Asymptix\localization;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Languages {
+class Languages
+{
 
     /**
      * Stores all needed languages and titles in different languages.

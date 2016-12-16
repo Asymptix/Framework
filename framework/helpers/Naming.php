@@ -12,7 +12,8 @@ namespace Asymptix\helpers;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Naming {
+class Naming
+{
 
     /**
      * Parse usual HTML notation complex field name into array.

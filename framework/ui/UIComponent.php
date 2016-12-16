@@ -12,7 +12,8 @@ namespace Asymptix\ui;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-abstract class UIComponent {
+abstract class UIComponent
+{
     /**
      * Path to the components default template file.
      */

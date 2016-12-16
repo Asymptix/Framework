@@ -14,7 +14,8 @@ use Asymptix\web\Request;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Route {
+class Route
+{
 
     public $controller = null;
     public $action = null;

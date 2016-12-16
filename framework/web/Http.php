@@ -12,7 +12,8 @@ namespace Asymptix\web;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Http {
+class Http
+{
 
     const POST = "POST";
     const GET  = "GET";
@@ -316,4 +317,5 @@ class Http {
 /**
  * Service exception class.
  */
-class HttpException extends \Exception {}
+class HttpException extends \Exception
+{}

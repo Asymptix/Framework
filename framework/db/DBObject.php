@@ -14,7 +14,8 @@ use Asymptix\core\Tools;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-abstract class DBObject extends \Asymptix\core\Object {
+abstract class DBObject extends \Asymptix\core\Object
+{
 
     /**
      * Status constants.

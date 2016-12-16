@@ -12,7 +12,8 @@ namespace Asymptix\mail;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class POP {
+class POP
+{
 
     /**
      * Email regular expression.
@@ -399,4 +400,5 @@ class POP {
     }
 }
 
-class POPServerException extends \Exception {}
+class POPServerException extends \Exception
+{}

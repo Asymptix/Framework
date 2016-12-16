@@ -12,7 +12,8 @@ namespace Asymptix\db;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBSelector extends \Asymptix\core\Object {
+class DBSelector extends \Asymptix\core\Object
+{
     protected $fieldsList = [
         'conditions' => "",
         'order' => "",
@@ -420,4 +421,5 @@ class DBSelector extends \Asymptix\core\Object {
 /**
  * Service exception class.
  */
-class DBSelectorException extends \Exception {}
+class DBSelectorException extends \Exception
+{}

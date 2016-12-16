@@ -12,7 +12,8 @@ namespace Asymptix\app;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Application {
+class Application
+{
 
     /**
      * Current application controller object.

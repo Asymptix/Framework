@@ -12,7 +12,8 @@ namespace Asymptix\core;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Content {
+class Content
+{
 
     /**
      * Renders some template to the string value.

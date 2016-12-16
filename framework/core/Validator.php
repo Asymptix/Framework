@@ -15,7 +15,8 @@ use Asymptix\web\Request;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Validator {
+class Validator
+{
 
     /**
      * Validate field value by regular expression.

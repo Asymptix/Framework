@@ -12,7 +12,8 @@ namespace Asymptix\core;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-abstract class Object {
+abstract class Object
+{
 
     /**
      * List of the database entity fields.

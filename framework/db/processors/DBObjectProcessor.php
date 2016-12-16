@@ -14,7 +14,8 @@ use Asymptix\db\DBObject;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-interface DBObjectProcessor {
+interface DBObjectProcessor
+{
 
     public function __invoke(DBObject $dbObject);
 

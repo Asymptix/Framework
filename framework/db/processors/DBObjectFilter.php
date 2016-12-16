@@ -14,7 +14,8 @@ use Asymptix\db\DBObject;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class DBObjectFilter implements DBObjectProcessor {
+class DBObjectFilter implements DBObjectProcessor
+{
 
     /**
      * Field name.

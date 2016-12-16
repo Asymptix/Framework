@@ -12,7 +12,8 @@ namespace Asymptix\ui;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-abstract class UIControl extends UIComponent {
+abstract class UIControl extends UIComponent
+{
     /**
      * Tip text or message for the control.
      *

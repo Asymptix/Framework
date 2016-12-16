@@ -12,7 +12,8 @@ namespace Asymptix\ui\components;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIButton extends \Asymptix\ui\UIComponent {
+class UIButton extends \Asymptix\ui\UIComponent
+{
 
     const DEFAULT_TEMPLATE = "/../templates/components/ui_button.tpl.php";
 

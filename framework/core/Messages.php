@@ -12,7 +12,8 @@ namespace Asymptix\core;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Messages {
+class Messages
+{
 
     const MSG_EMPTY = 0;
     const MSG_INFO = 1;
@@ -155,7 +156,8 @@ class Messages {
 /**
  * Message item helper class.
  */
-class __MSG {
+class __MSG
+{
 
     public $type = null;
     public $text = "";

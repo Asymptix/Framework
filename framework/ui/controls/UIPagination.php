@@ -14,7 +14,8 @@ use Asymptix\core\Tools;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UIPagination extends \Asymptix\ui\UIControl {
+class UIPagination extends \Asymptix\ui\UIControl
+{
     /**
      * Default dialog panel HTML template.
      */

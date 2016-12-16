@@ -12,7 +12,8 @@ namespace Asymptix\ui\controls;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class UICheckBoxPanel extends \Asymptix\ui\UIControl {
+class UICheckBoxPanel extends \Asymptix\ui\UIControl
+{
     /**
      * Default checkbox panel HTML template.
      */

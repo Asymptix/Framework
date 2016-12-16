@@ -12,7 +12,8 @@ namespace Asymptix\core;
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-class Tools {
+class Tools
+{
 
     /**
      * Returns TRUE if filter exists or FALSE otherwise.
