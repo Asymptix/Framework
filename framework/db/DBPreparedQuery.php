@@ -46,7 +46,7 @@ class DBPreparedQuery extends DBQuery {
      */
     public function __construct($query = "", $types = "", $params = []) {
         $this->query = $query;
-        $this->types = $types;
+        $this->types = str_replace(["|"], "", $types);
         $this->params = $params;
 
         if (!empty($this->query)) {
