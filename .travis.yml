@@ -10,7 +10,7 @@ php:
   - '7.0'
   - '7.1'
   - hhvm
-  - nightly
+  #- nightly
 
 before_script:
   - composer install --no-interaction
