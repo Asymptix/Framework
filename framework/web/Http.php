@@ -45,8 +45,9 @@ class Http {
      *
      * @param string $url URL redirect to.
      * @param array<mixed> $postData List of post params to save.
+     * @param bool $serialize Serialize transmitted POST data values or not.
      */
-    public static function httpRedirect($url = "", $postData = []) {
+    public static function httpRedirect($url = "", $postData = [], $serialize = true) {
         if (preg_match("#^http[s]?://.+#", $url)) { // absolute url
             if (function_exists("http_redirect")) {
                 http_redirect($url);
@@ -61,7 +62,7 @@ class Http {
                     }
 
                     foreach ($postData as $fieldName => $fieldValue) {
-                        Session::set("_post[{$fieldName}]", serialize($fieldValue));
+                        Session::set("_post[{$fieldName}]", $serialize ? serialize($fieldValue) : $fieldValue);
                     }
                 } else {
                     throw new HttpException("Wrong POST data.");
@@ -80,9 +81,10 @@ class Http {
      *
      * @param string $url URL redirect to.
      * @param array<mixed> $postData List of post params to save.
+     * @param bool $serialize Serialize transmitted POST data values or not.
      */
-    public static function redirect($url = "", $postData = []) {
-        self::httpRedirect($url, $postData);
+    public static function redirect($url = "", $postData = [], $serialize = true) {
+        self::httpRedirect($url, $postData, $serialize);
     }
 
     /**
