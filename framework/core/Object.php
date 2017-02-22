@@ -114,7 +114,9 @@ abstract class Object {
             return $fieldsList;
         }
 
-        return $this->fieldsList;
+        return array_map(function($e) {
+            return stripslashes($e);
+        }, $this->fieldsList);
     }
 
     /**
@@ -131,7 +133,7 @@ abstract class Object {
         }
 
         if (isset($this->fieldsList[$fieldName])) {
-            return $this->fieldsList[$fieldName];
+            return stripslashes($this->fieldsList[$fieldName]);
         } else {
             throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
         }
