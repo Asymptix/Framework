@@ -56,7 +56,9 @@ class DBQueryType {
      * @throws DBCoreException If SQL query is invalid.
      */
     public static function detectQueryType($query) {
-        $chunks = explode(" ", trim($query));
+        $query = trim(str_replace(["\r\n", "\n"], " ", $query));
+
+        $chunks = explode(" ", $query);
         if (!isset($chunks[0])) {
             throw new DBQueryTypeException("Invalid SQL query format (can't detect query type)");
         } else {
