@@ -114,7 +114,7 @@ abstract class Object {
             return $fieldsList;
         }
 
-        return array_map(function($e) {
+        return array_map(function ($e) {
             return stripslashes($e);
         }, $this->fieldsList);
     }
