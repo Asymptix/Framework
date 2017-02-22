@@ -7,7 +7,7 @@ namespace Asymptix\core;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2016, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2017, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
