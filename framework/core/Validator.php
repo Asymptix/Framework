@@ -259,7 +259,7 @@ class Validator {
         $topLevelDomainsList = [
             'com', 'org', 'net', 'gov', 'mil', 'biz', 'info', 'mobi', 'name',
             'aero', 'jobs', 'museum', 'travel',
-            'xyz', 'news', 'blog', 'photo', 'rest'
+            'xyz', 'news', 'blog', 'photo', 'rest', 'click'
         ];
 
         return self::validateRegexp(
