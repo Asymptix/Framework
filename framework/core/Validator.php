@@ -257,9 +257,18 @@ class Validator {
      */
     public static function isUrl($value) {
         $topLevelDomainsList = [
-            'com', 'org', 'net', 'gov', 'mil', 'biz', 'info', 'mobi', 'name',
-            'aero', 'jobs', 'museum', 'travel',
-            'xyz', 'news', 'blog', 'photo', 'rest', 'click'
+            // 3 letters
+            'com', 'org', 'net', 'gov', 'mil', 'biz', 'xyz', 'int', 'edu',
+
+            // 4 letters
+            'info', 'mobi', 'name', 'aero', 'jobs', 'news', 'blog', 'rest',
+            'arpa',
+
+            // 5 letters
+            'photo', 'click', 'cloud',
+
+            // 6 letters
+            'museum', 'travel', 'review',
         ];
 
         return self::validateRegexp(
