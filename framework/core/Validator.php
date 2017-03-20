@@ -258,7 +258,7 @@ class Validator {
     public static function isUrl($value) {
         $topLevelDomainsList = [
             // 3 letters
-            'com', 'org', 'net', 'gov', 'mil', 'biz', 'xyz', 'int', 'edu',
+            'com', 'org', 'net', 'gov', 'mil', 'biz', 'xyz', 'int', 'edu', 'win',
 
             // 4 letters
             'info', 'mobi', 'name', 'aero', 'jobs', 'news', 'blog', 'rest',
