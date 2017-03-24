@@ -27,7 +27,7 @@ To install basic framework libs use [Composer](https://getcomposer.org/) `compos
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-		"asymptix/framework": ">=2.0.0"
+        "asymptix/framework": ">=2.0.0"
     }
 }
 ```
@@ -48,4 +48,4 @@ You may see example in the __index.php__ file:
 header('X-Powered-By: Asymptix PHP Framework, PHP/' . phpversion());
 ```
 
-Copyright (c) 2016 Asymptix.
+Copyright (c) 2009-2016 Asymptix.
