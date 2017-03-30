@@ -26,7 +26,7 @@ class Validator {
      * @return bool
      */
     public static function validateRegexp($fieldValue, $regexp) {
-        return preg_match($regexp, $fieldValue);
+        return (bool)preg_match($regexp, $fieldValue);
     }
 
     /**
