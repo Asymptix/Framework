@@ -270,6 +270,25 @@ class Http {
     }
 
     /**
+     * Validates URL existence with cURL request.
+     *
+     * @param string $url URL.
+     *
+     * @return bool
+     */
+    public static function urlExists($url) {
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
+    /**
      * Force HTTP status code.
      *
      * @param int $code Status code.
