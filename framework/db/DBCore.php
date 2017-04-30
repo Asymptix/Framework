@@ -9,7 +9,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2016, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2017, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -531,7 +531,7 @@ class DBCore {
      * @param string $idFieldName Name of the primary key field.
      * @return array<mixed>
      */
-    private static function createValuesList($fieldsList, $idFieldName = "") {
+    public static function createValuesList($fieldsList, $idFieldName = "") {
         $valuesList = [];
         foreach ($fieldsList as $fieldName => $fieldValue) {
             if ($fieldName != $idFieldName) {
