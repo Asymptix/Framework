@@ -259,10 +259,11 @@ class Validator {
         $topLevelDomainsList = [
             // 3 letters
             'com', 'org', 'net', 'gov', 'mil', 'biz', 'xyz', 'int', 'edu', 'win',
+            'top', 'ltd',
 
             // 4 letters
             'info', 'mobi', 'name', 'aero', 'jobs', 'news', 'blog', 'rest',
-            'arpa',
+            'arpa', 'guru', 'club', 'asia', 'site', 'tech', 'link', 'life',
 
             // 5 letters
             'photo', 'click', 'cloud',
