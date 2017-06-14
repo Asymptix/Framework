@@ -465,6 +465,10 @@ abstract class DBObject extends \Asymptix\core\Object {
      * @return DBObject Current object.
      */
     public function limit($offset = 1, $count = null) {
+        if (is_null($offset)) {
+            return $this;
+        }
+
         if (is_null($count)) {
             $this->dbQuery->limit = $offset;
         } else {
