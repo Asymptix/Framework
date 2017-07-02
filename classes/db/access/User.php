@@ -3,6 +3,7 @@
 namespace db\access;
 
 use Asymptix\core\Tools;
+use Asymptix\db\DBCore;
 
 /**
  * Simple User bean class.
@@ -10,7 +11,7 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2017, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
 class User extends \Asymptix\db\DBTimedObject {
@@ -88,19 +89,21 @@ class User extends \Asymptix\db\DBTimedObject {
      * @return mixed User object on success or integer result code if some problems occurred.
      */
     public static function login($login, $password) {
-        $selector = new DBSelector(new User());
-        $user = $selector->selectDBObjectByField('email', $login);
-        if (Tools::isInstanceOf($user, new User())) {
+        $user = self::_select(['email' => $login])->limit(1)->go();
+        if ($user) {
             if ($user->isActivated()) {
                 if ($user->password == self::passwordEncode($password)) {
                     $user->updateLoginTime();
+
                     return $user;
                 }
 
                 return self::LOGIN_INVALID_PASSWORD;
             }
+
             return self::LOGIN_NOT_ACTIVATED;
         }
+
         return self::LOGIN_INVALID_USERNAME;
     }
 
@@ -124,7 +127,7 @@ class User extends \Asymptix\db\DBTimedObject {
     public static function checkLoggedIn() {
         global $_USER;
 
-        if (Tools::isInstanceOf($_USER, new User())) {
+        if (Tools::isInstanceOf($_USER, new self)) {
             return true;
         }
         return false;
@@ -163,6 +166,8 @@ class User extends \Asymptix\db\DBTimedObject {
      * Logout functionality.
      */
     public static function logout() {
+        global $_USER;
+
         $_USER = null;
         session_unset();
     }
