@@ -22,7 +22,7 @@ $request = $_SERVER['REQUEST_URI'];
 /**
  * Fetch arguments of the request and separate request string from arguments.
  */
-$_ARGS = array();
+$_ARGS = [];
 $qmPosition = strrpos($request, "?");
 if ($qmPosition !== false) {
     $argumentsStr = substr($request, $qmPosition + 1);
@@ -39,7 +39,7 @@ if ($qmPosition !== false) {
  * Pagination
  */
 if (isset($_ARGS['pn'])) {
-    $_REQUEST['pn'] = (integer)$_ARGS['pn'];
+    $_REQUEST['pn'] = (int)$_ARGS['pn'];
 }
 
 $_ROUTE = new Route($request);
@@ -52,11 +52,11 @@ if (empty($_ROUTE->controller)) {
 /**
  * Switches to the needed control
  */
-$_ROUTE->isBackend = !in_array($_ROUTE->controller, array(
+$_ROUTE->isBackend = !in_array($_ROUTE->controller, [
     'index',
     'login', 'logout', 'forgot-password', 'sign-up',
     'pricing', 'contact-us'
-));
+]);
 
 if ($_ROUTE->isBackend && !User::checkLoggedIn()) {
     $_ROUTE->isBackend = false;
