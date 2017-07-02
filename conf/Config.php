@@ -7,7 +7,7 @@ namespace conf;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2015, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2017, Dmytro Zarezenko
  * @license http://opensource.org/licenses/MIT
  */
 class Config {
@@ -41,15 +41,15 @@ class Config {
      *
      * @var array
      */
-    public static $db = array(
-        'default' => array(
+    public static $db = [
+        'default' => [
             'HOST' => "localhost",
             'DBNAME' => "dbname",
             'USER' => "root",
             'PASSWORD' => "pass",
             'DB_CHARSET' => "utf8"
-        )
-    );
+        ]
+    ];
 
     /**
      * Returns database configuration for current hostname.
