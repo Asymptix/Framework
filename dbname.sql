@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `log_errors` (
   `line` int(5) unsigned NOT NULL,
   `message` text NOT NULL,
   `count` int(6) unsigned NOT NULL,
-  `last_seen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_seen` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   UNIQUE KEY `unique_error` (`script`,`line`,`type`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
