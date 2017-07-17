@@ -1,0 +1,102 @@
+<?php
+
+require_once("./modules/autoload.php");
+require_once("./modules/dbconnection.php");
+
+use Asymptix\db\DBCore;
+
+const TPL_BEAN =
+'<?php
+
+namespace {{NAMESPACE}};
+
+/**
+ * TODO: change class description
+ *
+ * @author {{AUTHOR}} <{{EMAIL}}>
+ * @copyright (c) {{YEAR}}, {{AUTHOR}}
+ */
+class {{CLASS_NAME}} extends \Asymptix\db\DBObject {
+    const TABLE_NAME = \'{{TABLE_NAME}}\';
+    const ID_FIELD_NAME = \'{{PRIMARY_KEY}}\';
+    protected $fieldsList = [
+{{FIELDS_LIST}}
+    ];
+
+    protected $fieldsAliases = []; // TODO: fill fields aliases if needed
+
+}
+';
+
+$command = getArg(1, "generator <action>:<entity> [table_name|...] [class|...]");
+
+$command = explode(":", $command);
+switch ($command[0]) {
+    case "create":
+        $whatToCreate = isset($command[1]) ? $command[1] : null;
+        if (empty($whatToCreate)) {
+            echo "Nothing to create!\n";
+            exit();
+        }
+
+        switch ($whatToCreate) {
+            case "bean":
+                $tableName = getArg(2, "Invalid DB table name!");
+                $classPath = getArg(3, "Invalid class path!");
+                $classPathArray = explode("\\", $classPath);
+                $className = $classPathArray[count($classPathArray) - 1];
+                unset($classPathArray[count($classPathArray) - 1]);
+
+                echo "Reading structure for table '" . $tableName . "'...\n";
+                $idFieldName = 'id';
+                $fieldsListStr = "";
+                $fieldsList = DBCore::getTableFieldsList($tableName);
+                if (!empty($fieldsList)) {
+                    foreach ($fieldsList as $field => $attributes) {
+                        if ($attributes['key'] === 'PRI') {
+                            $idFieldName = $field;
+                        }
+                        $fieldsListStr.= "        " . DBCore::getPrintableFieldString($field, $attributes);
+                    }
+                    $fieldsListStr = substr($fieldsListStr, 0, strlen($fieldsListStr) - 1);
+                    $content = str_replace([
+                        '{{NAMESPACE}}',
+                        '{{CLASS_NAME}}', '{{TABLE_NAME}}', '{{PRIMARY_KEY}}', '{{FIELDS_LIST}}',
+                        '{{YEAR}}'
+                    ], [
+                        implode("\\", $classPathArray),
+                        $className, $tableName, $idFieldName, $fieldsListStr,
+                        date("Y")
+                    ], TPL_BEAN);
+                    file_put_contents("./classes/" . str_replace("\\", "/", $classPath) . ".php", $content);
+                    echo "Class '" . $className . ".php' generated.\n";
+                } else {
+                    echo "Can't read structure for table '" . $tableName . "'.\n";
+                }
+
+                break;
+            case "controller":
+
+                break;
+            default:
+                echo "Can't create something like `{$whatToCreate}`!\n";
+                exit();
+        }
+
+        break;
+    default:
+        echo "Invalid command!\n";
+        exit();
+}
+
+function getArg($index, $message) {
+    global $argv;
+
+    $arg = isset($argv[$index]) ? $argv[$index] : null;
+    if (empty($arg)) {
+        echo $message . "\n";
+        exit();
+    }
+
+    return $arg;
+}
