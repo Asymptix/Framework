@@ -9,7 +9,7 @@ use Asymptix\web\Request;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2011 - 2016, Dmytro Zarezenko
+ * @copyright (c) 2011 - 2017, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
@@ -95,8 +95,10 @@ class Route {
      *
      * @return string URL.
      */
-    public function getUrl($action, $id = null, $getParams = []) {
+    public function getUrl($action = null, $id = null, $getParams = []) {
         $url = $this->controller . "/";
+
+        $action = is_null($action) ? $this->action : $action;
         if (!is_null($id)) {
             $url.= $action . "/" . $id;
         } else {
