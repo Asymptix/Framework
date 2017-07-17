@@ -260,11 +260,11 @@ class Validator {
             // 3 letters
             'com', 'org', 'net', 'gov', 'mil', 'biz', 'xyz', 'int', 'edu', 'win',
             'top', 'ltd',
-            'fund',
 
             // 4 letters
             'info', 'mobi', 'name', 'aero', 'jobs', 'news', 'blog', 'rest',
             'arpa', 'guru', 'club', 'asia', 'site', 'tech', 'link', 'life',
+            'fund',
 
             // 5 letters
             'photo', 'click', 'cloud',
