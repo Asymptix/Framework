@@ -435,7 +435,7 @@ class Validator {
     public static function validateFileUpload($fileFieldName) {
         global $_FILES;
 
-        if ($_FILES[$fileFieldName]['error'] == UPLOAD_ERR_OK) {
+        if (isset($_FILES[$fileFieldName]) && $_FILES[$fileFieldName]['error'] == UPLOAD_ERR_OK) {
             return true;
         }
         Errors::saveErrorFor($fileFieldName, \__ERRORS::FILE_UPLOAD_ERROR);
