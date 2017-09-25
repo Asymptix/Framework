@@ -57,7 +57,7 @@ class Logger {
      * Initiates Logger setting and starts logging.
      *
      * @param int $direction Output direction.
-     * @param mixed $output Output file name od DB object.
+     * @param mixed $output Output file name or DB object.
      *
      * @throws LoggerException
      */
@@ -121,7 +121,7 @@ class Logger {
     }
 
     /**
-     * Main logging method, performes log writing.
+     * Main logging method, performs log writing.
      *
      * @param int $type Log message type.
      * @param string $message Message text.
@@ -178,6 +178,25 @@ class Logger {
             default:
                 throw new LoggerException("Invalid logging output direction type");
         }
+    }
+
+    /**
+     * Terminal logging method, performs log to the terminal (CLI).
+     *
+     * @param string $message Log message text.
+     * @param string $timeFormat Time label format.
+     * @param int $time Timestamp.
+     */
+    public static function terminal($message, $timeFormat = "\[Y-m-d H:i:s\]", $time = null) {
+        if (strpos($message, "{{time}}") === false) {
+            $message = "{{time}} " . $message;
+        }
+
+        if (is_null($time)) {
+            $time = time();
+        }
+
+        print(str_replace("{{time}}", date($timeFormat, $time), $message) . "\n");
     }
 
     /**
