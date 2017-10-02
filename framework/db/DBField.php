@@ -172,6 +172,10 @@ class DBField {
      * @throws DBFieldTypeException If invalid field type provided.
      */
     public static function sqlValue($type, $value) {
+        if (is_null($value)) {
+            return "NULL";
+        }
+
         $type = self::castType($type);
         $value = self::castValue($type, $value);
         switch ($type) {

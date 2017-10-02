@@ -87,7 +87,7 @@ abstract class Object {
             $fieldName = $this->fieldsAliases[$fieldName];
         }
 
-        if (isset($this->fieldsList[$fieldName])) {
+        if (array_key_exists($fieldName, $this->fieldsList)) {
             $this->fieldsList[$fieldName] = $fieldValue;
 
             return $this;
@@ -115,7 +115,11 @@ abstract class Object {
         }
 
         return array_map(function ($e) {
-            return stripslashes($e);
+            if (is_string($e) && !is_null($e)) {
+                return stripslashes($e);
+            }
+
+            return $e;
         }, $this->fieldsList);
     }
 
@@ -132,7 +136,7 @@ abstract class Object {
             $fieldName = $this->fieldsAliases[$fieldName];
         }
 
-        if (isset($this->fieldsList[$fieldName])) {
+        if (array_key_exists($fieldName, $this->fieldsList)) {
             return stripslashes($this->fieldsList[$fieldName]);
         } else {
             throw new \Exception("Object '" . get_class($this) . "' hasn't field '" . $fieldName . "'");
