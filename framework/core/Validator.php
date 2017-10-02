@@ -271,6 +271,9 @@ class Validator {
 
             // 6 letters
             'museum', 'travel', 'review',
+
+            // 7 letters
+            'network',
         ];
 
         return self::validateRegexp(
