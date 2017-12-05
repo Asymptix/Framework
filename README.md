@@ -48,4 +48,4 @@ You may see example in the __index.php__ file:
 header('X-Powered-By: Asymptix PHP Framework, PHP/' . phpversion());
 ```
 
-Copyright (c) 2009-2016 Asymptix.
+Copyright (c) 2009-2017 Asymptix.
