@@ -9,12 +9,12 @@ use Asymptix\core\Tools;
  *
  * @category Asymptix PHP Framework
  * @author Dmytro Zarezenko <dmytro.zarezenko@gmail.com>
- * @copyright (c) 2009 - 2016, Dmytro Zarezenko
+ * @copyright (c) 2009 - 2018, Dmytro Zarezenko
  *
  * @git https://github.com/Asymptix/Framework
  * @license http://opensource.org/licenses/MIT
  */
-abstract class DBObject extends \Asymptix\core\Object {
+abstract class DBObject extends \Asymptix\core\BasicObject {
 
     /**
      * Status constants.
